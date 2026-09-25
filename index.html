@@ -835,7 +835,7 @@ function rollWx(d){const t=WXP[season(d)[0]],tot=Object.values(t).reduce((a,b)=>
 const wxMul=()=>{const w=WX[S.wx.t],h=holiday(S.day);return w.m*(w.patio?1+.1*S.upg.patio:1)*(h?h[1]:1)};
 const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `${se[1]} ${se[0]}, ${w.e} ${w.n}${h?`, <b>${h[0]}</b>`:''}`};
 // Online leaderboard: paste your Google Apps Script web app URL here (see leaderboard-apps-script.gs). Leave empty for on-device only.
-const LB_URL='';
+const LB_URL='https://script.google.com/macros/s/AKfycbwqn0F_h2hLybTh73bg3_E2C_k_HGa3XmYTGmq3MbbFe5wb6s2GiaKT3fw45h50PDaIpQ/exec';
 // Firebase leaderboard: paste the firebaseConfig object from Firebase Console > Project settings > Your apps.
 // Leave as null to keep the leaderboard on this device only.
 const FIREBASE_CONFIG=null;
@@ -1531,12 +1531,13 @@ function payOff(i){const l=S.loans[i],c=payoff(l);if(S.money<c)return;S.money-=c
 function ipo(){const v=valuation();if(v<25000||S.ipo.sold)return;S.money+=v*.2;S.ipo.sold=.2;save();sfx.coin();toast('🔔 Saigonesee is now a public company!');manage()}
 function shares(d){const v=valuation();if(d>0){if(S.ipo.sold>=.49)return;S.money+=v*.095;S.ipo.sold=Math.min(.49,S.ipo.sold+.1)}else{if(S.money<v*.105)return;S.money-=v*.105;S.ipo.sold=Math.max(0,Math.round((S.ipo.sold-.1)*100)/100)}save();manage()}
 function acceptCat(id){const o=S.catOffers.find(x=>x.id===id);if(!o||S.catJob)return;S.catJob=o;S.catOffers=S.catOffers.filter(x=>x!==o);save();toast('📦 Catering booked for today');manage()}
+let LBP=null;
 function companyScore(){return valuation()+Math.max(0,S.money)}
 function saveScore(reason){
   const e={name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
   let hof=[];try{hof=JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(x){}
   hof.push(e);hof.sort((a,b)=>b.value-a.value);hof=hof.slice(0,10);try{localStorage.setItem('saigonesee-hof',JSON.stringify(hof))}catch(x){}
-  if(LB_URL){try{fetch(LB_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(e)})}catch(x){}}
+  if(LB_URL){try{LBP=fetch(LB_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(e)}).catch(()=>{})}catch(x){}}
   fbSave(e);
   return hof;
 }
@@ -1553,7 +1554,7 @@ function board(from){
   <p style="font-weight:800">On this device</p>${rows(hof)}
   <button class="big" onclick="${back}">Back</button>`);
   if(FIREBASE_CONFIG||/\.web\.app$|\.firebaseapp\.com$/.test(location.hostname))fbTop().then(l=>{const el=$('lbOnline');if(el)el.innerHTML=l?rows(l):'<p class="note">Could not load the online leaderboard.</p>'}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
-  else if(LB_URL)fetch(LB_URL).then(r=>r.json()).then(l=>{const el=$('lbOnline');if(el)el.innerHTML=rows(l.slice(0,20))}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
+  else if(LB_URL)(LBP||Promise.resolve()).then(()=>fetch(LB_URL+'?t='+Date.now())).then(r=>r.json()).then(l=>{const el=$('lbOnline');if(el)el.innerHTML=rows(l.slice(0,20))}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
 }
 function toggleApp(a){const s0=S.apps[a];if(!s0){if(S.money<APPS[a].fee)return;S.money-=APPS[a].fee;S.apps[a]={on:true}}else s0.on=!s0.on;save();manage()}
 function research(id){const r=REC.find(x=>x.id===id);if(S.money<rdCost(r)||S.rd.length>=1+S.upg.lab)return;
