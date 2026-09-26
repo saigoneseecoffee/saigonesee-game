@@ -614,6 +614,40 @@ body{background-color:#0E0E0E;background-image:
 .addons{background:#111;color:#F3D03E;border-radius:14px;padding:10px 14px;margin:8px 0 10px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13.5px;font-weight:700}
 .addons b{grid-column:1/-1;color:#fff;font-size:15px}
 .addons div{color:#FDF3C4}
+/* ticket auto-fit levels */
+#app .cust.many .oi .nm,#app .street.rows2 .oi .nm{display:block!important;-webkit-line-clamp:unset!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important}
+#app .cust.many .bubble .mods,#app .street.rows2 .bubble .mods{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+#app .cust.many .bubble[data-fit="0"] .oi .mini,#app .cust.many .bubble[data-fit="1"] .oi .mini{display:block}
+#app .cust.many .bubble[data-fit="0"] .oi .nm{font-size:12.5px}
+#app .cust{max-height:310px!important}
+#app .bubble[data-fit="1"] .oi .it{font-size:18px}
+#app .bubble[data-fit="1"] .oi .nm{font-size:11.5px;line-height:1.15}
+#app .bubble[data-fit="1"] .oi .mini{font-size:9.5px;letter-spacing:0}
+#app .bubble[data-fit="1"] .oi .mods{font-size:9.5px}
+#app .bubble[data-fit="2"] .oi .it{font-size:15px;line-height:1}
+#app .bubble[data-fit="2"] .oi .nm{font-size:10.5px;line-height:1.1}
+#app .bubble[data-fit="2"] .oi .mini{display:none}
+#app .bubble[data-fit="2"] .oi .mods{font-size:9px;line-height:1.1}
+#app .bubble[data-fit="2"] .oi .by{font-size:9px}
+#app .bubble[data-fit="3"] .oi .it{display:none}
+#app .bubble[data-fit="3"] .oi .nm{font-size:10px;line-height:1.1}
+#app .bubble[data-fit="3"] .oi .mini{display:none}
+#app .bubble[data-fit="3"] .oi .mods{font-size:9px;line-height:1.1}
+#app .bubble[data-fit="3"] .oi .by{font-size:8.5px}
+#app .bubble[data-fit="3"] .oi+.oi{margin-top:0;padding-top:1px}
+#app .bubble.scroll{overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  -webkit-mask-image:linear-gradient(#000 85%,transparent);mask-image:linear-gradient(#000 85%,transparent);padding-bottom:14px}
+#app .bubble.scroll>.who+.oi,#app .bubble.scroll>.oi:last-child{margin-top:0;margin-bottom:0}
+/* v38: readable minimum sizes, scroll instead of shrinking further */
+#app .bubble .who{font-size:13px!important}
+#app .bubble[data-fit] .oi .nm{font-size:max(12.5px,var(--nm,12.5px))!important;line-height:1.15!important}
+#app .bubble[data-fit="0"] .oi .nm{--nm:14px}
+#app .bubble[data-fit] .oi .mods{font-size:11.5px!important;line-height:1.2!important}
+#app .bubble[data-fit] .oi .by{font-size:11px!important}
+#app .bubble[data-fit="1"] .oi .it{font-size:20px}
+#app .bubble[data-fit="2"] .oi .it,#app .bubble[data-fit="3"] .oi .it{display:block;font-size:17px}
+#app .street.rows2 .bubble[data-fit] .oi .nm{font-size:11.5px!important}
+#app .street.rows2 .bubble[data-fit] .oi .mods{font-size:10.5px!important}
 </style>
 </head>
 <body>
@@ -1132,7 +1166,7 @@ function place(o,slot){
   c.items.forEach(it=>it.byEl=it.el.querySelector('.by'));
   if(reg)el.classList.add('regular');if(o.del)el.classList.add('deliv');if(o.inf)el.classList.add('inf');
   el.onclick=()=>serve(c);
-  R.cust[slot]=c;$('street').children[slot].appendChild(el);markMatches();
+  R.cust[slot]=c;$('street').children[slot].appendChild(el);markMatches();requestAnimationFrame(()=>fitTicket(c));
   const pr=recs.reduce((a,r)=>a+pRatio(r),0)/recs.length,balk=(reg||o.del||o.inf)?0:Math.min(.8,Math.max(0,(pr-1.2-.1*S.upg.tv)*1.5));
   if(Math.random()<balk){c.balk=true;c.whoEl.textContent='💸 '+fmt(recs.reduce((a,r)=>a+price(r),0))+'?!';
     setTimeout(()=>{if(R&&R.cust[slot]===c){removeCust(c,'🙄');R.balked++;if(R.balked%3===1)toast('Customers are walking out over prices')}},900)}
@@ -1199,6 +1233,13 @@ function eventsTick(){
   if(e.k==='fun')funEvent();
   if(e.k==='theft'){const l=Math.round(50+Math.random()*100);S.money-=l;R.news.push('🚨 $'+l+' went missing from the register');toast('🚨 Someone took $'+l+' from the register! Cameras would help')}
 }
+// Shrink a ticket step by step until every item fits; scroll inside as a last resort
+function fitTicket(c){
+  const b=c&&c.el&&c.el.querySelector('.bubble');if(!b)return;b.classList.remove('scroll');
+  for(let lv=0;lv<=3;lv++){b.dataset.fit=lv;if(b.scrollHeight<=b.clientHeight+1)return}
+  b.classList.add('scroll');
+}
+window.addEventListener('resize',()=>{if(R)R.cust.forEach(c=>c&&fitTicket(c))});
 function queueTick(dt){
   if(!R.queue.length){if($('queue').dataset.n!=='0'){$('queue').dataset.n='0';renderQueue()}return}
   let ch=false;
@@ -1289,7 +1330,7 @@ function crewTick(dt){
       if(!best){w.cool=.4;return}
       const [c,it]=best;
       it.rec.ing.forEach(k=>{S.inv[k]--;R.used[k]=(R.used[k]||0)+1});it.by=w;w.c=c;w.it=it;w.sp=w.s.skills[stOf(it.rec)]*spMul(w.s)*stMul(stOf(it.rec))*recMul(it.rec)*(c.del&&S.upg.sealer?.8:1);w.t=w.sp;
-      it.el.classList.add('byc');it.byEl.textContent=w.s.face+' '+w.s.name;stock();markMatches();
+      it.el.classList.add('byc');it.byEl.textContent=w.s.face+' '+w.s.name;stock();markMatches();fitTicket(c);
     }
   });
 }
