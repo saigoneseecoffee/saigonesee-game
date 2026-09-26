@@ -648,6 +648,27 @@ body{background-color:#0E0E0E;background-image:
 #app .bubble[data-fit="2"] .oi .it,#app .bubble[data-fit="3"] .oi .it{display:block;font-size:17px}
 #app .street.rows2 .bubble[data-fit] .oi .nm{font-size:11.5px!important}
 #app .street.rows2 .bubble[data-fit] .oi .mods{font-size:10.5px!important}
+.finsum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 8px}
+.finsum div{background:#111;color:#F3D03E;border-radius:12px;padding:8px 12px}
+.finsum small{display:block;color:#ddd!important;font-size:12px}.finsum b{font-size:19px}
+.srow{display:flex;align-items:center;gap:10px;width:100%;background:#fff;border:1px solid #E7E0CC;border-radius:12px;padding:10px;margin:6px 0;text-align:left;font:inherit;color:#111}
+.srow .te,.th .te{font-size:28px}
+.srow .sn{flex:1;min-width:0;display:flex;flex-direction:column}.srow .sn b{font-size:15px}.srow .sn small{font-size:12px}
+.srow .sp{display:flex;flex-direction:column;align-items:flex-end;min-width:74px}.srow .sp b{font-size:15px}
+.spk{width:70px;height:28px}.tview .spk{width:100%;height:70px;background:#fff;border:1px solid #E7E0CC;border-radius:10px;margin:6px 0}
+.pct{font-size:12px;font-weight:800}.pct.up,.upt{color:#2E9B6F}.pct.dn,.dnt{color:#B3261E}
+.back{background:none;border:none;font:inherit;font-weight:800;padding:4px 0;color:#111}
+.th{display:flex;gap:10px;align-items:center}.th small{display:block;font-size:12.5px}
+.tp{font-size:24px;margin-top:6px}.tp b{font-family:"Baloo 2",sans-serif}
+.qty{display:flex;align-items:center;justify-content:center;gap:16px}
+.qty button{width:48px;height:48px;border-radius:12px;border:2px solid #111;background:#fff;font-size:24px;font-weight:800}
+.qty b{font-size:26px;min-width:80px;text-align:center}
+.qchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0}
+.qchips button{border:2px solid #111;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-weight:800;font-size:13px}
+.qchips button:disabled{opacity:.35}
+.tbtn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.tbtn button{min-height:52px;border-radius:14px;font:inherit;font-size:18px;font-weight:800;border:none}
+.buyb{background:#2E9B6F;color:#fff}.sellb{background:#B3261E;color:#fff}.tbtn button:disabled{opacity:.35}
 </style>
 </head>
 <body>
@@ -1428,6 +1449,7 @@ function endDay(){
   if(S.day>=5&&Math.random()<.2){const fr=['main',...S.branches].filter(l=>!S.comps.some(c=>c.loc===l));
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
   genReviews();S.buzz*=.8;
+  finDay();
   if(R.cat){R.news.push('📦 Catering for '+R.cat.client+' was not finished');S.rating=Math.max(1,S.rating-.15);R.cat=null;S.catJob=null}
   // finance
   let loanPay=0;S.loans.forEach(l=>{if(S.money>=l.pay){S.money-=l.pay;loanPay+=l.pay;l.left--}else{S.rating=Math.max(1,S.rating-.1);l.pay*=1.05;R.news.push('🏦 Missed a loan payment. Late fee added')}});
@@ -1452,7 +1474,7 @@ function endDay(){
     R.news.push('📦 New catering request. See 🏦 Finance')}
   const d=S.day;
   if(S.rating<2){
-    const sum=summary();saveScore('closed');const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;save();
+    const sum=summary();saveScore('closed');const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;initFin();S.life={profit:0,rev:0,served:0,sold:{},best:{d:0,p:0},addons:0};save();
     showModal(`<h2>The shop had to close</h2><p>Your rating fell below 2 stars after day ${d}. Serve customers faster and get their orders right.</p>${sum}<button class="big" onclick="market()">Start over</button>`);
     R=null;return;
   }
@@ -1490,6 +1512,13 @@ function summary(){
   <div class="stat"><b>Cash on hand</b><b>${fmt(S.money)}</b></div>
   <div class="stat"><span>Tomorrow</span><span>${R.tmr||''}</span></div>
   ${R.done.length?`<div class="stat"><span>🔬 New on the menu</span><span>${R.done.map(r=>r.e+' '+r.n).join(', ')}</span></div>`:''}
+  ${R.fin&&(R.fin.port>0||R.fin.log.length)?`<p style="font-weight:800;margin:10px 0 2px">📈 Investments</p>
+   <div class="stat"><span>Portfolio value</span><b>${fmt(R.fin.port)}</b></div>
+   ${R.fin.move?`<div class="stat"><span>Stocks today</span><b class="${R.fin.move>=0?'upt':'dnt'}">${R.fin.move>=0?'+':'-'}${fmt(Math.abs(R.fin.move))}</b></div>`:''}
+   ${R.fin.div?`<div class="stat"><span>Dividends</span><span>+${fmt(R.fin.div)}</span></div>`:''}
+   ${R.fin.int?`<div class="stat"><span>Bank interest</span><span>+${fmt(R.fin.int)}</span></div>`:''}
+   ${R.fin.rent?`<div class="stat"><span>Rent collected</span><span>+${fmt(R.fin.rent)}</span></div>`:''}
+   ${R.fin.log.filter(l=>!l.startsWith('📰')||Object.keys(S.fin.hold).some(k=>l.includes(STOCKS.find(t=>t.sym===k).n))).map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}`:''}
   ${R.boardPay?`<div class="stat"><span>👔 Board salaries</span><span>-${fmt(R.boardPay)}</span></div>`:''}
   ${R.board&&R.board.length?`<p style="font-weight:800;margin:10px 0 2px">👔 Board report</p>${R.board.map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}`:''}
   ${R.news.map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}
@@ -1501,7 +1530,7 @@ let MT='staff',ML='main';
 function manage(tab){
   if(tab)MT=tab;
   const sc=$('card').scrollTop,locs=['main',...S.branches];if(!locs.includes(ML))ML='main';
-  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['stats','📊 Stats']];
+  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['invest','📈 Invest'],['stats','📊 Stats']];
   let body='';
   if(MT==='staff'){
     body=`<div class="tabs sm">${locs.map(l=>`<button class="${l===ML?'on':''}" onclick="ML='${l}';manage()">${locName(l)} ${crewAt(l).length}/${cap(l)}</button>`).join('')}</div>`;
@@ -1567,11 +1596,12 @@ function manage(tab){
      `<div class="upg"><div><b>Sell 10% more</b><br><small>Raise ${fmt(v*.095)}. You can sell up to 49%.</small></div><button ${S.ipo.sold>=.49?'disabled':''} onclick="shares(1)">Sell</button></div><div class="upg"><div><b>Buy back 10%</b><br><small>Costs ${fmt(v*.105)}</small></div><button ${S.money<v*.105?'disabled':''} onclick="shares(-1)">Buy</button></div>`)+
     `<button class="big alt" onclick="board('manage')">🏆 Leaderboard</button>`;
   }
+  if(MT==='invest'){body=gateOk('invest')||portfolio()>0?investBody():gateCard('invest','Save up first. Investing unlocks when your café hits these goals.')}
   if(MT==='stats'){
     const L=S.life,top=Object.entries(L.sold).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const row=(k,v)=>`<div class="stat"><span>${k}</span><b>${v}</b></div>`;
     body=row('Days open',S.day-1)+row('Customers served (all shops)',L.served.toLocaleString())+row('Total sales',fmt(L.rev))+row('Total profit',fmt(L.profit))+
-      row('Best day',L.best.d?`Day ${L.best.d}: ${fmt(L.best.p)}`:'—')+row('Add-ons sold',L.addons)+row('Menu items researched',S.known.length+' / '+REC.length)+
+      row('Best day',L.best.d?`Day ${L.best.d}: ${fmt(L.best.p)}`:'—')+row('Add-ons sold',L.addons)+row('Investments',fmt(portfolio()))+row('Investment income',fmt(S.fin.inc.div+S.fin.inc.int+S.fin.inc.rent+S.fin.inc.gain))+row('Menu items researched',S.known.length+' / '+REC.length)+
       row('Locations',1+S.branches.length)+row('Staff',S.staff.length)+row('Regulars',S.regs.length)+
       `<p style="font-weight:800;margin:12px 0 4px">🏅 Best sellers</p>`+(top.length?top.map(([id,n],i)=>{const r=REC.find(x=>x.id===id);return r?`<div class="stat"><span>${i+1}. ${r.e} ${r.n}</span><b>${n}</b></div>`:''}).join(''):'<p class="note">Sell some items first.</p>')+
       `<p style="font-weight:800;margin:12px 0 4px">🔓 Coming up</p>`+Object.keys(GATES).filter(g=>!gateOk(g)&&!(g==='branch'&&S.branches.length)&&!(APPS[g]&&S.apps[g])&&!(g==='board'&&Object.keys(S.board).length)).map(g=>gateCard(g)).join('')||'<p class="note">Everything is unlocked!</p>';
@@ -1610,7 +1640,7 @@ function takeName(){const el=$('pname0');const v=(el&&el.value||'').trim().slice
 // Money invested in upgrades and equipment still counts toward the score
 function upgValue(){return UPG.filter(u=>u.id).reduce((a,u)=>{let v=0;for(let i=0;i<(S.upg[u.id]||0);i++)v+=u.base*Math.pow(1.6,i);return a+v},0)}
 function staffValue(){return S.staff.reduce((a,x)=>a+30*lvl(x),0)}
-function companyScore(){return valuation()+Math.max(0,S.money)+upgValue()*.9+staffValue()+Object.keys(S.board||{}).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].fee*.5,0)}
+function companyScore(){return portfolio()+valuation()+Math.max(0,S.money)+upgValue()*.9+staffValue()+Object.keys(S.board||{}).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].fee*.5,0)}
 function saveScore(reason){
   if(!S.pid){S.pid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);save()}
   const e={pid:S.pid,name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
@@ -1640,7 +1670,109 @@ function board(from){
   if(FIREBASE_CONFIG||/\.web\.app$|\.firebaseapp\.com$/.test(location.hostname))fbTop().then(l=>{const el=$('lbOnline');if(el)el.innerHTML=l?rows(l):'<p class="note">Could not load the online leaderboard.</p>'}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
   else if(LB_URL)(LBP||Promise.resolve()).then(()=>fetch(LB_URL+'?t='+Date.now())).then(r=>r.json()).then(l=>{const el=$('lbOnline');if(el)el.innerHTML=rows(l.slice(0,20))}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
 }
+// ================= INVESTING =================
+const STOCKS=[
+  {sym:'MKT',n:'US Market Index Fund',e:'📊',p:450,vol:.009,drift:.0006,div:0,d:'Tracks the whole market. Slow and steady.'},
+  {sym:'LTSB',n:'Lotus Bank',e:'🏦',p:35,vol:.015,drift:.0005,div:.0012,d:'Stable bank that pays a daily dividend.'},
+  {sym:'CAFE',n:'Global Coffee Co.',e:'☕',p:88,vol:.02,drift:.0007,div:.001,d:'Coffee giant. Pays a small dividend.'},
+  {sym:'PHO',n:'Pho Nation Inc.',e:'🍜',p:42,vol:.025,drift:.0008,div:.0008,d:'Fast-growing noodle chain.'},
+  {sym:'SHIP',n:'Harbor Shipping',e:'🚢',p:55,vol:.03,drift:.0005,div:.001,d:'Ships goods out of Boston Harbor.'},
+  {sym:'FNWY',n:'Fenway Media',e:'⚾',p:64,vol:.03,drift:.0006,div:0,d:'Sports TV and streaming.'},
+  {sym:'BRBT',n:'Boston Robotics',e:'🤖',p:120,vol:.045,drift:.0013,div:0,d:'Robots! Big swings up and down.'},
+  {sym:'GRNE',n:'Green Wave Energy',e:'🌱',p:18,vol:.05,drift:.001,div:0,d:'Solar and wind. Very bumpy ride.'},
+  {sym:'SAI',n:'SaiCoin (crypto)',e:'🪙',p:5,vol:.12,drift:.001,div:0,d:'A meme coin. Could double or crash any day!'},
+];
+const NEWS_UP=['lands a big new contract','beats earnings expectations','gets a surprise buyout offer','goes viral online','opens a new flagship store'];
+const NEWS_DN=['misses earnings','faces a lawsuit','loses its CEO','has a product recall','gets bad press'];
+const PROPS=[
+  {id:'condo',n:'Condo in Quincy',e:'🏢',price:25000,rent:110},
+  {id:'duplex',n:'Duplex in Weymouth',e:'🏘️',price:60000,rent:280},
+  {id:'triple',n:'Triple-decker in Dorchester',e:'🏠',price:110000,rent:520},
+  {id:'beach',n:'Beach house on Cape Cod',e:'🏖️',price:150000,rent:620,seasonal:1},
+  {id:'retail',n:'Retail building in Braintree',e:'🏬',price:300000,rent:1400},
+  {id:'tower',n:'Office tower in Downtown Boston',e:'🏙️',price:1500000,rent:7000},
+];
+const BANK={save:.001,cds:[{days:10,rate:.003},{days:30,rate:.0045}]};
+function initFin(){
+  S.fin=S.fin||{};const F=S.fin;F.hold=F.hold||{};F.px=F.px||{};F.hist=F.hist||{};F.save=F.save||0;F.cds=F.cds||[];F.props=F.props||{};F.pval=F.pval||{};F.inc=F.inc||{div:0,int:0,rent:0,gain:0};
+  STOCKS.forEach(t=>{if(F.px[t.sym]==null){F.px[t.sym]=t.p;let p=t.p;const h=[];for(let i=0;i<14;i++){p*=Math.exp((Math.random()-.5)*t.vol*2);h.push(+p.toFixed(2))}F.hist[t.sym]=h;F.px[t.sym]=h[h.length-1]}});
+  PROPS.forEach(r=>{if(F.pval[r.id]==null)F.pval[r.id]=r.price});
+}
+const gauss=()=>{let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const px=sym=>S.fin.px[sym];
+const stockVal=()=>Object.entries(S.fin.hold).reduce((a,[k,h])=>a+h.sh*px(k),0);
+const propVal=()=>Object.keys(S.fin.props).reduce((a,k)=>a+S.fin.pval[k],0);
+const cdVal=()=>S.fin.cds.reduce((a,c)=>a+c.amt,0);
+const portfolio=()=>stockVal()+S.fin.save+cdVal()+propVal();
+const rentOf=r=>{if(!r.seasonal)return r.rent;const se=season(S.day)[0];return r.rent*(se==='Summer'?2:se==='Winter'?.3:1)};
+function finDay(){
+  const F=S.fin,log=[];let div=0,int=0,rent=0;const v0=stockVal();
+  STOCKS.forEach(t=>{let r=t.drift+t.vol*gauss();
+    if(Math.random()<.06){const up=Math.random()<.55,j=(t.vol>.08?.25:.08)+Math.random()*(t.vol>.08?.5:.15);r+=up?j:-j;log.push(`📰 ${t.e} ${t.n} ${up?pick(NEWS_UP):pick(NEWS_DN)} (${up?'+':'-'}${Math.round(j*100)}%)`)}
+    F.px[t.sym]=Math.max(.05,+(F.px[t.sym]*Math.exp(r)).toFixed(2));F.hist[t.sym].push(F.px[t.sym]);if(F.hist[t.sym].length>30)F.hist[t.sym].shift();
+    const h=F.hold[t.sym];if(h&&h.sh&&t.div)div+=h.sh*F.px[t.sym]*t.div});
+  int=F.save*BANK.save;F.save+=int;
+  F.cds.forEach(c=>{const g=c.amt*c.rate;c.amt+=g;int+=g;c.left--});
+  F.cds.filter(c=>c.left<=0).forEach(c=>{F.save+=c.amt;log.push(`🏦 A ${c.days}-day CD matured: ${fmt(c.amt)} moved to savings`)});F.cds=F.cds.filter(c=>c.left>0);
+  PROPS.forEach(r=>{F.pval[r.id]=Math.round(F.pval[r.id]*Math.exp(.0005+.004*gauss()));if(F.props[r.id]){rent+=rentOf(r);if(Math.random()<.04){const fix=Math.round(F.pval[r.id]*.004);S.money-=fix;log.push(`🔧 Repairs at your ${r.n}: -${fmt(fix)}`)}}});
+  S.money+=div+rent;F.inc.div+=div;F.inc.int+=int;F.inc.rent+=rent;
+  R.fin={div,int,rent,move:stockVal()-v0,log,port:portfolio()};
+}
+function buyStock(sym,n){const c=n*px(sym);if(n<=0||S.money<c)return;S.money-=c;const h=S.fin.hold[sym]||{sh:0,cost:0};h.cost=(h.cost*h.sh+c)/(h.sh+n);h.sh+=n;S.fin.hold[sym]=h;save();sfx.coin();toast(`Bought ${n} ${sym} for ${fmt(c)}`);manage()}
+function sellStock(sym,n){const h=S.fin.hold[sym];if(!h||n<=0||n>h.sh)return;const v=n*px(sym);S.money+=v;S.fin.inc.gain+=(px(sym)-h.cost)*n;h.sh-=n;if(!h.sh)delete S.fin.hold[sym];save();sfx.coin();toast(`Sold ${n} ${sym} for ${fmt(v)}`);manage()}
+let TQ=1;
+function spark(h,w=120,hh=34){if(!h||h.length<2)return '';const mn=Math.min(...h),mx=Math.max(...h),rg=mx-mn||1;const up=h[h.length-1]>=h[0];
+  return `<svg class="spk" viewBox="0 0 ${w} ${hh}" preserveAspectRatio="none"><polyline fill="none" stroke="${up?'#2E9B6F':'#B3261E'}" stroke-width="2" points="${h.map((v,i)=>`${(i/(h.length-1)*w).toFixed(1)},${(hh-2-(v-mn)/rg*(hh-4)).toFixed(1)}`).join(' ')}"/></svg>`}
+function chg(sym){const h=S.fin.hist[sym];if(h.length<2)return 0;return (h[h.length-1]/h[h.length-2]-1)*100}
+const pctTag=v=>`<span class="pct ${v>=0?'up':'dn'}">${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(1)}%</span>`;
+let IT='stocks',TS=null;
+function investBody(){
+  const F=S.fin;
+  let b=`<div class="finsum"><div><small>Investments</small><b>${fmt(portfolio())}</b></div><div><small>Cash</small><b>${fmt(S.money)}</b></div></div>
+  <div class="tabs sm">${[['stocks','📈 Stocks'],['bank','🏦 Bank'],['homes','🏠 Real estate']].map(([k,n])=>`<button class="${IT===k?'on':''}" onclick="IT='${k}';TS=null;manage()">${n}</button>`).join('')}</div>`;
+  if(IT==='stocks'&&TS){const t=STOCKS.find(x=>x.sym===TS),h=F.hold[TS],p=px(TS),maxB=Math.floor(S.money/p),own=h?h.sh:0;
+    const q=Math.max(1,TQ);
+    b+=`<button class="back" onclick="TS=null;manage()">← All stocks</button>
+    <div class="tview"><div class="th"><span class="te">${t.e}</span><div><b>${t.n}</b><small>${t.sym} · ${t.d}</small></div></div>
+    <div class="tp"><b>${fmt(p)}</b> ${pctTag(chg(TS))}</div>${spark(F.hist[TS],300,70)}
+    <p class="note">${t.div?`Pays a daily dividend of ${(t.div*100).toFixed(2)}%. `:''}Price changes each night.</p>
+    ${own?`<div class="stat"><span>You own</span><b>${own} shares</b></div><div class="stat"><span>Worth</span><b>${fmt(own*p)}</b></div><div class="stat"><span>Profit / loss</span><b class="${p>=h.cost?'upt':'dnt'}">${p>=h.cost?'+':'-'}${fmt(Math.abs((p-h.cost)*own))}</b></div>`:''}
+    <p style="font-weight:800;margin:12px 0 6px">How many shares?</p>
+    <div class="qty"><button onclick="TQ=Math.max(1,TQ-1);manage()">−</button><b>${q}</b><button onclick="TQ=TQ+1;manage()">+</button></div>
+    <div class="qchips">${[1,10,100,1000].map(n=>`<button onclick="TQ=${n};manage()">${n}</button>`).join('')}<button onclick="TQ=Math.max(1,${maxB});manage()">Max buy</button>${own?`<button onclick="TQ=${own};manage()">All mine</button>`:''}</div>
+    <p class="note" style="text-align:center">Total: <b>${fmt(q*p)}</b></p>
+    <div class="tbtn"><button class="buyb" ${q*p>S.money?'disabled':''} onclick="buyStock('${TS}',${q})">Buy ${q}</button><button class="sellb" ${q>own?'disabled':''} onclick="sellStock('${TS}',${q})">Sell ${q}</button></div></div>`;
+    return b}
+  if(IT==='stocks'){
+    b+=`<p class="note">Tap a stock to buy or sell. Prices move every night, so they can go up or down. Spread your money out to be safer.</p>`+
+    STOCKS.map(t=>{const h=F.hold[t.sym];return `<button class="srow" onclick="TS='${t.sym}';TQ=1;manage()"><span class="te">${t.e}</span><span class="sn"><b>${t.n}</b><small>${t.sym}${h?` · you own ${h.sh}`:''}</small></span>${spark(F.hist[t.sym].slice(-14),70,28)}<span class="sp"><b>${fmt(px(t.sym))}</b>${pctTag(chg(t.sym))}</span></button>`}).join('');
+    if(F.inc.div||F.inc.gain)b+=`<p class="note">Dividends earned: <b>${fmt(F.inc.div)}</b> · Realized gains: <b>${fmt(F.inc.gain)}</b></p>`;
+  }
+  if(IT==='bank'){
+    b+=`<div class="upg"><span class="fc">🐷</span><div><b>Savings account</b><br><small>${(BANK.save*100).toFixed(1)}% interest every day. Take money out any time.</small><br><small>Balance: <b>${fmt(F.save)}</b></small></div></div>
+    <div class="qchips">${[500,1000,5000,20000].map(v=>`<button ${S.money<v?'disabled':''} onclick="deposit(${v})">+${fmt(v)}</button>`).join('')}<button ${S.money<1?'disabled':''} onclick="deposit(Math.floor(S.money))">All cash</button></div>
+    <div class="qchips">${[500,1000,5000].map(v=>`<button ${F.save<v?'disabled':''} onclick="withdraw(${v})">−${fmt(v)}</button>`).join('')}<button ${F.save<1?'disabled':''} onclick="withdraw(F_ALL)">Take all out</button></div>
+    <p style="font-weight:800;margin:14px 0 4px">Certificates of deposit (CD)</p><p class="note">Lock money away for more interest. Taking it out early loses all the interest.</p>`+
+    BANK.cds.map((c,i)=>`<div class="upg"><span class="fc">🔒</span><div><b>${c.days}-day CD</b><br><small>${(c.rate*100).toFixed(2)}% every day, about +${Math.round((Math.pow(1+c.rate,c.days)-1)*100)}% total</small></div><div class="acts">${[1000,5000,20000].map(v=>`<button ${S.money<v?'disabled':''} onclick="openCD(${i},${v})">${fmt(v)}</button>`).join('')}</div></div>`).join('')+
+    (F.cds.length?`<p style="font-weight:800;margin:10px 0 4px">Your CDs</p>`+F.cds.map((c,i)=>`<div class="upg"><div><b>${fmt(c.amt)}</b><br><small>${c.left} days left, started with ${fmt(c.start)}</small></div><button class="fire" onclick="breakCD(${i})">Take out early</button></div>`).join(''):'')+
+    `<p class="note">Interest earned so far: <b>${fmt(F.inc.int)}</b></p>`;
+  }
+  if(IT==='homes'){
+    b+=`<p class="note">Buy property to collect rent every day. Property values go up and down slowly. Selling costs a 5% fee. Now and then a property needs repairs.</p>`+
+    PROPS.map(r=>{const own=F.props[r.id],v=F.pval[r.id];return `<div class="upg"><span class="fc">${r.e}</span><div><b>${r.n}</b><br><small>Rent ${fmt(rentOf(r))}/day${r.seasonal?' (more in summer, less in winter)':''}</small><br><small>Value ${fmt(v)}${own?` · bought for ${fmt(own.paid)}`:''}</small></div>${own?`<button class="fire" onclick="sellProp('${r.id}')">Sell ${fmt(v*.95)}</button>`:`<button ${S.money<v?'disabled':''} onclick="buyProp('${r.id}')">${fmt(v)}</button>`}</div>`}).join('')+
+    `<p class="note">Rent collected so far: <b>${fmt(F.inc.rent)}</b></p>`;
+  }
+  return b;
+}
+const F_ALL=1e12;
+function deposit(v){v=Math.min(v,Math.floor(S.money));if(v<=0)return;S.money-=v;S.fin.save+=v;save();sfx.coin();manage()}
+function withdraw(v){v=Math.min(v,S.fin.save);if(v<=0)return;S.fin.save-=v;S.money+=v;save();sfx.coin();manage()}
+function openCD(i,v){if(S.money<v)return;const c=BANK.cds[i];S.money-=v;S.fin.cds.push({amt:v,start:v,rate:c.rate,days:c.days,left:c.days});save();sfx.coin();toast(`Opened a ${c.days}-day CD with ${fmt(v)}`);manage()}
+function breakCD(i){const c=S.fin.cds[i];S.money+=c.start;S.fin.inc.int-=c.amt-c.start;S.fin.cds.splice(i,1);save();toast('CD closed early. Interest lost');manage()}
+function buyProp(id){const v=S.fin.pval[id];if(S.money<v)return;S.money-=v;S.fin.props[id]={paid:v};save();sfx.coin();toast('🏠 You bought the '+PROPS.find(r=>r.id===id).n+'!');manage()}
+function sellProp(id){const v=Math.round(S.fin.pval[id]*.95);S.money+=v;S.fin.inc.gain+=v-S.fin.props[id].paid;delete S.fin.props[id];save();sfx.coin();toast('Sold for '+fmt(v));manage()}
 const GATES={
+  invest:{day:8,profit:3000,rating:3.8,n:'Investing'},
   pickup:{day:4,profit:300,rating:3.8,n:'Online pickup'},
   uber:{day:8,profit:1500,rating:4.0,n:'Uber Eats'},
   door:{day:12,profit:4000,rating:4.0,n:'DoorDash'},
@@ -1783,7 +1915,7 @@ function confirmReset(){
   showModal(`<h2>Start over?</h2><p>Cash, days, staff, branches and upgrades all reset.</p><button class="big" onclick="doReset()">Start over</button><button class="big alt" onclick="${R?'pause2()':'intro()'}">Cancel</button>`);
 }
 function pause2(){R.paused=false;pause()}
-function doReset(){const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;save();R=null;intro()}
+function doReset(){const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;initFin();S.life=S.life||{profit:0,rev:0,served:0,sold:{},best:{d:0,p:0},addons:0};save();R=null;intro()}
 function intro(){
   hud();buildStreet();buildStation();renderTray();
   const cont=S.day>1;
@@ -1815,6 +1947,7 @@ $('pauseBtn').onclick=pause;
 
 $('trashBtn').onclick=()=>{if(R&&!R.paused&&R.tray.length){R.wasted+=R.tray.length;R.tray=[];renderTray()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
+initFin();
 intro();
 </script>
 </body>
