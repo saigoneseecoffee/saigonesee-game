@@ -604,6 +604,16 @@ body{background-color:#0E0E0E;background-image:
 .nmin:focus{outline:3px solid #F3D03E;outline-offset:1px}
 .toast{z-index:40!important}
 .nmin.need{border-color:#B3261E;background:#FFF1EE}
+.gate{background:#fff;border:1px solid #E7E0CC;border-radius:14px;padding:10px 12px;margin:10px 0}
+.gh{font-size:16px;margin-bottom:4px}
+.gbar{display:grid;grid-template-columns:24px 1fr;grid-template-rows:auto auto;column-gap:8px;align-items:center;margin:6px 0}
+.gbar span{grid-row:span 2;font-size:18px}
+.gbar i{display:block;height:9px;border-radius:6px;background:#E9E3D2;overflow:hidden}
+.gbar i b{display:block;height:100%;border-radius:6px}
+.gbar em{font-style:normal;font-size:12.5px;font-weight:700;color:#555;margin-top:2px}
+.addons{background:#111;color:#F3D03E;border-radius:14px;padding:10px 14px;margin:8px 0 10px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13.5px;font-weight:700}
+.addons b{grid-column:1/-1;color:#fff;font-size:15px}
+.addons div{color:#FDF3C4}
 </style>
 </head>
 <body>
@@ -648,6 +658,7 @@ const ING={
   yolk:{st:'bar',e:'🥚',n:'Egg yolk',u:'carton',q:10,p:4},
   sugarcane:{st:'top',e:'🎋',n:'Sugarcane',u:'bundle',q:10,p:9,per:1,req:'juicer'},
   softmix:{st:'top',e:'🍦',n:'Soft-serve mix',u:'bag',q:12,p:10,req:'softserve'},
+  cupL:{st:'bar',e:'🥤',n:'Large cup',u:'sleeve',q:25,p:3},
   espresso:{st:'bar',e:'☕',n:'Espresso shot',u:'bag of espresso beans',q:15,p:14,req:'espresso'},
   soda:{st:'bar',e:'🫧',n:'Soda',u:'case',q:12,p:5},
   // Foams & fruit
@@ -668,6 +679,7 @@ const ING={
   pate:{st:'kit',e:IC.pate,n:'Pâté',u:'tin',q:15,p:6},
   butter:{st:'kit',e:'🧈',n:'Butter',u:'tub',q:15,p:5},
   hoisin:{st:'kit',e:IC.hoisin,n:'Hoisin & spicy mayo',u:'bottle',q:20,p:4},
+  friedegg:{st:'kit',e:'🍳',n:'Fried egg',u:'carton',q:12,p:4},
   chili:{st:'kit',e:'🌶️',n:'Chili',u:'bag',q:25,p:3},
   pickles:{st:'kit',e:'🥕',n:'Pickled veggies',u:'jar',q:20,p:5},
   bmgreens:{st:'kit',e:'🥒',n:'Fresh toppings',u:'prep tray',q:15,p:5,per:1},
@@ -943,8 +955,8 @@ S.staff.forEach(x=>{if(!x.skills){x.skills=x.role==='barista'?{bar:x.speed}:x.ro
 if(S.cands&&S.cands.some(c=>!c.skills))S.cands=null;S.branches=S.branches||[];S.cands=S.cands||genCands();S.lastBr=S.lastBr||{};
 S.known=S.known||REC.filter(r=>r.d<=S.day).map(r=>r.id);S.rd=S.rd||[];S.camps=S.camps||[];S.comps=S.comps||[];
 S.buzz=S.buzz||0;S.regs=S.regs||[];S.newIds=S.newIds||[];UPG_IDS.forEach(k=>S.upg[k]=S.upg[k]||0);
-S.board=S.board||{};S.run=S.run||1;S.reserve=S.reserve??2000;
-if(S.inv&&S.inv.chili==null)S.inv.chili=25;
+S.board=S.board||{};if(!S.life)S.life={profit:S.day>1?Math.max((S.hist||[]).reduce((x,h)=>x+h.p,0),S.money-40,0):0,rev:0,served:0,sold:{},best:{d:0,p:0},addons:0};S.run=S.run||1;S.reserve=S.reserve??2000;
+if(S.inv&&S.inv.chili==null)S.inv.chili=25;if(S.inv&&S.inv.cupL==null)S.inv.cupL=25;if(S.inv&&S.inv.friedegg==null)S.inv.friedegg=12;
 if(S.inv&&S.inv.patemayo!=null){S.inv.pate=(S.inv.pate||0)+S.inv.patemayo;S.inv.butter=S.inv.butter||15;delete S.inv.patemayo}
 if(S.lastUsed&&S.lastUsed.patemayo!=null){S.lastUsed.pate=Math.ceil(S.lastUsed.patemayo*.6);S.lastUsed.butter=Math.ceil(S.lastUsed.patemayo*.4);delete S.lastUsed.patemayo}
 if(!S.v17){if(S.upg.tu===1)S.upg.tu=2;S.v17=1}
@@ -974,11 +986,11 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const hasReq=r=>!r.req||[].concat(r.req).every(q=>S.upg[q]>0);
 const unlocked=()=>REC.filter(r=>S.known.includes(r.id)&&hasReq(r));
-const needSet=()=>{const st=new Set(unlocked().flatMap(r=>r.ing));if(st.has('bmgreens'))st.add('chili');return st};
+const needSet=()=>{const st=new Set(unlocked().flatMap(r=>r.ing));if(st.has('bmgreens')){st.add('chili');st.add('friedegg')}if(unlocked().some(r=>r.k==='drink'))st.add('cupL');return st};
 const slotsN=()=>3+S.upg.quay;
 const qCap=()=>2+(S.upg.line||0);
-const price=r=>S.prices[r.id]??r.p;
-const pRatio=r=>price(r)/r.p;
+const price=r=>(S.prices[r.id]??r.p)+(r.addp||0);
+const pRatio=r=>(price(r)-(r.addp||0))/r.p;
 const avgRatio=()=>{const u=unlocked();return u.reduce((a,r)=>a+pRatio(r),0)/u.length};
 const avgPrice=()=>{const u=unlocked();return u.reduce((a,r)=>a+price(r),0)/u.length};
 function priceLabel(x){return x<.9?['Cheap','#2A8570']:x<=1.1?['Fair','#4A2C1D']:x<=1.3?['Pricey','#C77A12']:['Too pricey','#E0442F']}
@@ -1077,14 +1089,18 @@ function makeOrder(){
   for(let i=0;i<recs.length;i++){const r=recs[i];if(r.ing.includes('pate')&&r.ing.includes('butter')){const x=Math.random();
     if(x<.2)recs[i]={...r,n:r.n+' · No butter',ing:r.ing.filter(k=>k!=='butter')};
     else if(x<.4)recs[i]={...r,n:r.n+' · No pâté',ing:r.ing.filter(k=>k!=='pate')}}}
-  if(S.day>=2)for(let i=0;i<recs.length;i++){const r=recs[i];let ing=r.ing.slice();const mods=[];
+  if(S.day>=2)for(let i=0;i<recs.length;i++){const r=recs[i];let ing=r.ing.slice();const mods=[];let addp=0;
     if(r.k==='drink'){
       if(ing.includes('cond')){if(Math.random()<.22){ing.push('cond');mods.push('🍬 Extra sweet')}}
       else if(ing.includes('syrup')){const x=Math.random();if(x<.14){ing=ing.filter(k=>k!=='syrup');mods.push('🚫 No sugar')}else if(x<.28){ing.push('syrup');mods.push('🍬 Extra sweet')}}
       if(ing.includes('ice')&&ing.length>1){const x=Math.random();if(x<.14){ing=ing.filter(k=>k!=='ice');mods.push('🚫 No ice')}else if(x<.27){ing.push('ice');mods.push('🧊 Extra ice')}}
-      if(ing.includes('phin')&&Math.random()<.2){ing.push('phin');mods.push('💪 Strong')}
-    }else if(ing.includes('bmgreens')){const x=Math.random();if(x<.2){ing.push('chili');mods.push('🌶️ Spicy')}else if(x<.3){ing.push('chili','chili');mods.push('🌶️🌶️ Extra spicy')}}
-    if(mods.length)recs[i]={...r,ing,mods,base:r.ing};
+      if(ing.includes('phin')&&Math.random()<.2){ing.push('phin');mods.push('💪 Extra shot +$1');addp+=1}
+      if(S.day>=3&&Math.random()<.18){ing.push('cupL');mods.push('🥤 Size L +$1');addp+=1}
+      if(ing.includes('phin')&&!ing.includes('saltfoam')&&S.known.includes('saltcoffee')&&Math.random()<.08){ing.push('saltfoam');mods.push('🧂 + Salted cream +$1.5');addp+=1.5}
+    }else if(ing.includes('bmgreens')){const x=Math.random();if(x<.2){ing.push('chili');mods.push('🌶️ Spicy')}else if(x<.3){ing.push('chili','chili');mods.push('🌶️🌶️ Extra spicy')}
+      const prot=ing.find(k=>PROTEINS.includes(k));if(prot&&S.day>=4&&Math.random()<.14){ing.push(prot);mods.push('🍖 Extra meat +$2');addp+=2}
+      if(ing.includes('baguette')&&S.day>=3&&Math.random()<.12){ing.push('friedegg');mods.push('🍳 + Fried egg +$1.5');addp+=1.5}}
+    if(mods.length)recs[i]={...r,ing,mods,addp,base:r.ing};
   }
   recs.sort((a,b)=>a.k===b.k?0:a.k==='drink'?-1:1);
   const base=Math.max(S.day>LASTDAY?Math.max(10,14-(S.day-LASTDAY)*.2):14,32-S.day*1.2)+S.upg.ghe*3;
@@ -1208,7 +1224,7 @@ function regMiss(c){if(!c.reg||c.regHit)return;c.regHit=1;c.reg.loyal--;
 function rate(s){S.rating=Math.max(1,Math.min(5,S.rating*.85+s*.15))}
 function itemEarn(c,it,staff,q){
   const ratio=c.left/c.max,pr=pRatio(it.rec),pp=price(it.rec);
-  if(q==='miss')return pp;
+  if(q==='miss')return pp-(it.rec.addp||0);
   const tip=(it.rec.mods?1.3:1)*pp*(staff?(.05+.1*ratio):(.08+.27*ratio))*(1+S.upg.quat*.1+S.upg.decor*.05)*Math.max(.1,Math.min(1.3,2-pr))*(c.reg?1.5:1);
   if(c.del)return APPS[c.del].pick?pp+tip*.4:pp*(1-APPS[c.del].cut);
   let t=tip;if(R.bigTip){t+=20;R.bigTip=0;toast('💵 A customer left a $20 tip!')}
@@ -1216,7 +1232,7 @@ function itemEarn(c,it,staff,q){
 }
 function completeItem(c,it,staff,q){
   const earn=itemEarn(c,it,staff,q);if(q==='miss'){rate(2.3);R.missMod=(R.missMod||0)+1}else if(it.rec.mods&&!staff)R.gotMod=(R.gotMod||0)+1;it.done=true;it.by=null;it.el.classList.add('done');it.el.classList.remove('byc');it.byEl.textContent='✓';
-  S.money+=earn;R.earned+=earn;R.items++;floatAt(it.el,'+'+fmt(earn));sfx.coin();
+  S.money+=earn;R.earned+=earn;R.items++;S.life.sold[it.rec.id]=(S.life.sold[it.rec.id]||0)+1;if(it.rec.addp&&q!=='miss')S.life.addons++;floatAt(it.el,'+'+fmt(earn));sfx.coin();
   if(c.items.every(x=>x.done)){
     const ratio=c.left/c.max,pr=c.items.reduce((a,x)=>a+pRatio(x.rec),0)/c.items.length;
     R.served++;rate(3+(staff?1.5:2)*ratio-Math.max(-.5,Math.min(2,(pr-1)*2.5)));
@@ -1378,6 +1394,7 @@ function endDay(){
   const op=R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0);
   let div=0;if(S.ipo.sold&&op>0){div=op*S.ipo.sold*.5;S.money-=div}
   R.op=op;R.div=div;R.loanPay=loanPay;S.spend=0;
+  S.life.profit+=op;S.life.rev+=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);S.life.served+=R.served+R.br.reduce((a,b)=>a+(b.served||0),0);if(op>S.life.best.p)S.life.best={d:S.day,p:Math.round(op)};
   S.hist.push({d:S.day,p:Math.round(op)});if(S.hist.length>30)S.hist.shift();
   const h3=S.hist.slice(-3);if(S.ipo.sold&&h3.length===3&&h3[0].p>h3[1].p&&h3[1].p>h3[2].p){S.buzz=Math.max(-.3,S.buzz-.03);R.news.push('📉 Shareholders are unhappy about falling profits')}
   // weather and supplies for tomorrow
@@ -1443,7 +1460,7 @@ let MT='staff',ML='main';
 function manage(tab){
   if(tab)MT=tab;
   const sc=$('card').scrollTop,locs=['main',...S.branches];if(!locs.includes(ML))ML='main';
-  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board']];
+  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['stats','📊 Stats']];
   let body='';
   if(MT==='staff'){
     body=`<div class="tabs sm">${locs.map(l=>`<button class="${l===ML?'on':''}" onclick="ML='${l}';manage()">${locName(l)} ${crewAt(l).length}/${cap(l)}</button>`).join('')}</div>`;
@@ -1462,7 +1479,7 @@ function manage(tab){
     opened.map(b=>{const st=S.brStats[b.id],lv=S.brLvl[b.id]||0,xc=Math.round(b.cost*.6*(lv+1)),r=st&&st.reviews&&st.reviews[0];
       return `<div class="upg" style="flex-wrap:wrap"><span class="fc">🏪</span><div><b>${b.n}</b> <small>size ${lv+1}/7</small><br><small>${crewAt(b.id).length}/${cap(b.id)} staff, rent ${fmt(b.rent)}/day</small>${st?`<br><small>Last day: ${st.served}/${st.dem} customers${st.lost?`, <b style="color:var(--stool)">${st.lost} turned away</b>`:''}, can handle ~${st.cap}</small><br><small>★ ${st.rating.toFixed(1)}, profit ${fmt(st.net)} (ingredients ${fmt(st.ing)})</small>`:''}${r?`<br><small>“${r.txt}” ${'★'.repeat(r.st)}</small>`:''}</div><div class="arow"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<6?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div>`}).join('')+
     `<p style="margin-top:12px;font-weight:800">Open a new branch</p>`+
-    avail.map(b=>`<div class="upg"><span class="fc">📍</span><div><b>${b.n}</b><br><small>Traffic ×${b.demand}, rent ${fmt(b.rent)}/day</small></div><button ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}')">${fmt(b.cost)}</button></div>`).join('');
+    (!S.branches.length&&!gateOk('branch')?gateCard('branch','Grow Weymouth first. Your first branch unlocks when you reach these goals.'):avail.map(b=>`<div class="upg"><span class="fc">📍</span><div><b>${b.n}</b><br><small>Traffic ×${b.demand}, rent ${fmt(b.rent)}/day</small></div><button ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}')">${fmt(b.cost)}</button></div>`).join(''));
   }
   if(MT==='menu'){
     const ar=avgRatio();
@@ -1486,7 +1503,7 @@ function manage(tab){
       if(k.local)return `<div class="upg" style="flex-wrap:wrap"><div><b>${k.n}</b><br><small>${k.d}</small></div><div class="posb" style="flex-wrap:wrap;padding-left:0">${locs.map(l=>{const on=campOn(k.id,l);return `<button ${on||S.money<k.cost?'disabled':''} onclick="runCamp('${k.id}','${l}')">${locName(l)} ${on?on.left+'d':fmt(k.cost)}</button>`}).join('')}</div></div>`;
       const on=campOn(k.id);return `<div class="upg"><div><b>${k.n}</b><br><small>${k.d}</small></div><button ${on||S.money<k.cost?'disabled':''} onclick="runCamp('${k.id}')">${on?on.left+'d left':fmt(k.cost)}</button></div>`}).join('')+
     `<p style="margin-top:12px;font-weight:800">Delivery & online pickup</p><p class="note">Delivery orders (🛵 🚗 🥡) show up at Weymouth with a dashed bubble. Each app keeps 30% and there's no tip, but you get extra orders everywhere. 📱 Online pickup has no commission: customers order ahead, wait longer and still tip a little.</p>`+
-    Object.keys(APPS).map(a=>{const st=S.apps[a];return `<div class="upg"><div><b>${APPS[a].e} ${APPS[a].n}</b><br><small>${st?(st.on?'On':'Paused'):'One-time setup '+fmt(APPS[a].fee)}</small></div><button ${!st&&S.money<APPS[a].fee?'disabled':''} onclick="toggleApp('${a}')">${st?(st.on?'Pause':'Turn on'):'Set up'}</button></div>`}).join('')+
+    Object.keys(APPS).map(a=>{const st=S.apps[a];if(!st&&!gateOk(a))return gateCard(a,'Unlocks when your shop hits these goals.');return `<div class="upg"><div><b>${APPS[a].e} ${APPS[a].n}</b><br><small>${st?(st.on?'On':'Paused'):'One-time setup '+fmt(APPS[a].fee)}</small></div><button ${!st&&S.money<APPS[a].fee?'disabled':''} onclick="toggleApp('${a}')">${st?(st.on?'Pause':'Turn on'):'Set up'}</button></div>`}).join('')+
     `<p style="margin-top:12px;font-weight:800">Competition</p>`+
     (S.comps.length?S.comps.map(c=>`<div class="upg"><span class="fc">🏬</span><div><b>${c.name}</b> <small>near ${locName(c.loc)}</small><br><small>Takes ${Math.round(c.str*35)}% of your customers there. Prices around ${Math.round(c.px*100)}% of yours at menu price.</small></div></div>`).join('')+'<p class="note">Push them out with a better rating, prices below theirs and ads.</p>':'<p class="note">No competitors nearby right now.</p>')+
     `<p style="margin-top:12px;font-weight:800">Regulars (${S.regs.length})</p>`+
@@ -1509,14 +1526,23 @@ function manage(tab){
      `<div class="upg"><div><b>Sell 10% more</b><br><small>Raise ${fmt(v*.095)}. You can sell up to 49%.</small></div><button ${S.ipo.sold>=.49?'disabled':''} onclick="shares(1)">Sell</button></div><div class="upg"><div><b>Buy back 10%</b><br><small>Costs ${fmt(v*.105)}</small></div><button ${S.money<v*.105?'disabled':''} onclick="shares(-1)">Buy</button></div>`)+
     `<button class="big alt" onclick="board('manage')">🏆 Leaderboard</button>`;
   }
+  if(MT==='stats'){
+    const L=S.life,top=Object.entries(L.sold).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const row=(k,v)=>`<div class="stat"><span>${k}</span><b>${v}</b></div>`;
+    body=row('Days open',S.day-1)+row('Customers served (all shops)',L.served.toLocaleString())+row('Total sales',fmt(L.rev))+row('Total profit',fmt(L.profit))+
+      row('Best day',L.best.d?`Day ${L.best.d}: ${fmt(L.best.p)}`:'—')+row('Add-ons sold',L.addons)+row('Menu items researched',S.known.length+' / '+REC.length)+
+      row('Locations',1+S.branches.length)+row('Staff',S.staff.length)+row('Regulars',S.regs.length)+
+      `<p style="font-weight:800;margin:12px 0 4px">🏅 Best sellers</p>`+(top.length?top.map(([id,n],i)=>{const r=REC.find(x=>x.id===id);return r?`<div class="stat"><span>${i+1}. ${r.e} ${r.n}</span><b>${n}</b></div>`:''}).join(''):'<p class="note">Sell some items first.</p>')+
+      `<p style="font-weight:800;margin:12px 0 4px">🔓 Coming up</p>`+Object.keys(GATES).filter(g=>!gateOk(g)&&!(g==='branch'&&S.branches.length)&&!(APPS[g]&&S.apps[g])&&!(g==='board'&&Object.keys(S.board).length)).map(g=>gateCard(g)).join('')||'<p class="note">Everything is unlocked!</p>';
+  }
   if(MT==='board'){
     const sal=Object.keys(S.board).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].sal,0);
     body=`<p class="note">Directors run parts of the company for you each night after closing. They only spend money above your cash reserve.</p>
     <p style="font-weight:800;margin-bottom:4px">Keep a cash reserve of</p><div class="tabs sm">${RESERVES.map(v=>`<button class="${S.reserve===v?'on':''}" onclick="S.reserve=${v};save();manage()">${fmt(v)}</button>`).join('')}</div>
-    <p class="note">Board salaries: <b>${fmt(sal)}/day</b></p>`+
+    <p class="note">Board salaries: <b>${fmt(sal)}/day</b></p>`+(!gateOk('board')&&!Object.keys(S.board).length?gateCard('board','Build up the business first. Directors join once you hit these goals.'):'')+
     Object.entries(EXECS).map(([k,e])=>{const b=S.board[k];
       const head=`<div class="exec"><div class="exh"><span class="exf">${e.e}</span><div><b>${e.n}</b><br><small>${e.d}. ${fmt(e.sal)}/day</small></div>`;
-      if(!b)return head+`<button class="mbuy" ${S.money<e.fee?'disabled':''} onclick="hireExec('${k}')"><b>${fmt(e.fee)}</b><span>Hire</span></button></div><ul class="exl">${Object.values(e.opts).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;
+      if(!b)return head+`<button class="mbuy" ${S.money<e.fee||!gateOk('board')?'disabled':''} onclick="hireExec('${k}')"><b>${fmt(e.fee)}</b><span>Hire</span></button></div><ul class="exl">${Object.values(e.opts).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;
       if(!b.on)return head+`<button class="mbuy" ${S.money<e.fee/2?'disabled':''} onclick="rehireExec('${k}')"><b>${fmt(e.fee/2)}</b><span>Rehire</span></button></div></div>`;
       return head+`<button class="mbulk" onclick="fireExec('${k}')">Let go</button></div>${Object.entries(e.opts).map(([o,t])=>`<label class="exo"><input type="checkbox" ${b.opts[o]?'checked':''} onchange="toggleOpt('${k}','${o}')"><span>${t}</span></label>`).join('')}</div>`}).join('');
   }
@@ -1570,7 +1596,22 @@ function board(from){
   if(FIREBASE_CONFIG||/\.web\.app$|\.firebaseapp\.com$/.test(location.hostname))fbTop().then(l=>{const el=$('lbOnline');if(el)el.innerHTML=l?rows(l):'<p class="note">Could not load the online leaderboard.</p>'}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
   else if(LB_URL)(LBP||Promise.resolve()).then(()=>fetch(LB_URL+'?t='+Date.now())).then(r=>r.json()).then(l=>{const el=$('lbOnline');if(el)el.innerHTML=rows(l.slice(0,20))}).catch(()=>{const el=$('lbOnline');if(el)el.innerHTML='<p class="note">Could not load the online leaderboard.</p>'});
 }
-function toggleApp(a){const s0=S.apps[a];if(!s0){if(S.money<APPS[a].fee)return;S.money-=APPS[a].fee;S.apps[a]={on:true}}else s0.on=!s0.on;save();manage()}
+const GATES={
+  pickup:{day:4,profit:300,rating:3.8,n:'Online pickup'},
+  uber:{day:8,profit:1500,rating:4.0,n:'Uber Eats'},
+  door:{day:12,profit:4000,rating:4.0,n:'DoorDash'},
+  grub:{day:16,profit:8000,rating:4.1,n:'Grubhub'},
+  branch:{day:6,profit:800,rating:3.8,n:'Your first branch'},
+  board:{day:10,profit:3000,rating:4.0,n:'The board of directors'},
+};
+const gateOk=g=>{const G=GATES[g];return S.day>=G.day&&S.life.profit>=G.profit&&S.rating>=G.rating};
+function gateCard(g,why){const G=GATES[g],pct=(a,b)=>Math.max(0,Math.min(100,a/b*100));
+  const bar=(ic,cur,max,lab)=>`<div class="gbar"><span>${ic}</span><i><b style="width:${pct(cur,max)}%;background:${cur>=max?'#2E9B6F':'#F3D03E'}"></b></i><em>${lab}</em></div>`;
+  return `<div class="gate"><div class="gh">🔒 <b>${G.n}</b></div>${why?`<p class="note" style="margin:2px 0 6px">${why}</p>`:''}
+  ${bar('💵',Math.max(0,S.life.profit),G.profit,fmt(Math.max(0,S.life.profit))+' / '+fmt(G.profit)+' profit')}
+  ${bar('📅',S.day,G.day,'Day '+S.day+' / '+G.day)}
+  ${bar('⭐',S.rating,G.rating,S.rating.toFixed(1)+' / '+G.rating.toFixed(1)+' stars')}</div>`}
+function toggleApp(a){if(!S.apps[a]&&!gateOk(a))return;const s0=S.apps[a];if(!s0){if(S.money<APPS[a].fee)return;S.money-=APPS[a].fee;S.apps[a]={on:true}}else s0.on=!s0.on;save();manage()}
 function research(id){const r=REC.find(x=>x.id===id);if(S.money<rdCost(r)||S.rd.length>=1+S.upg.lab)return;
   S.money-=rdCost(r);S.rd.push({id,left:1});save();sfx.coin();toast('Researching '+r.n);manage()}
 function expandBr(id){const b=LOC[id],lv=S.brLvl[id]||0,c=Math.round(b.cost*.6*(lv+1));if(S.money<c||lv>=6)return;S.money-=c;S.brLvl[id]=lv+1;save();sfx.coin();toast(b.n+' expanded: more staff room and traffic');manage()}
@@ -1628,7 +1669,7 @@ function runBoard(){
   if(boardOn('cpo','rd')){const avail=REC.filter(r=>r.d<=S.day&&hasReq(r)&&!S.known.includes(r.id)&&!S.rd.some(x=>x.id===r.id)).sort((a,b)=>rdCost(a)-rdCost(b));
     while(S.rd.length<1+S.upg.lab&&avail.length&&spendable()>rdCost(avail[0])){const r=avail.shift();S.money-=rdCost(r);S.rd.push({id:r.id,left:1});log.push('👨‍🍳 Started researching '+r.n)}}
 }
-function hireExec(k){const e=EXECS[k];if(S.money<e.fee)return;S.money-=e.fee;S.board[k]={on:true,opts:Object.fromEntries(Object.keys(e.opts).map(o=>[o,1]))};save();sfx.coin();toast(e.e+' '+e.n+' joined the board');if(k==='hr')S.cands=S.cands.concat(genCands().slice(0,3));manage()}
+function hireExec(k){const e=EXECS[k];if(S.money<e.fee||!gateOk('board'))return;S.money-=e.fee;S.board[k]={on:true,opts:Object.fromEntries(Object.keys(e.opts).map(o=>[o,1]))};save();sfx.coin();toast(e.e+' '+e.n+' joined the board');if(k==='hr')S.cands=S.cands.concat(genCands().slice(0,3));manage()}
 function fireExec(k){S.board[k].on=false;save();toast(EXECS[k].n+' left the board');manage()}
 function rehireExec(k){const e=EXECS[k];if(S.money<e.fee/2)return;S.money-=e.fee/2;S.board[k].on=true;save();manage()}
 function toggleOpt(k,o){const b=S.board[k];b.opts[o]=b.opts[o]?0:1;save();manage()}
@@ -1638,7 +1679,7 @@ function fire(id){const x=S.staff.find(y=>y.id===id);S.staff=S.staff.filter(y=>y
 function moveStaff(id,l){const x=S.staff.find(y=>y.id===id);
   if(crewAt(l).length>=cap(l)){toast(locName(l)+' is fully staffed');manage();return}
   x.loc=l;x.mgr=false;save();toast('Moved '+x.name+' to '+locName(l));manage()}
-function openBr(id){const b=LOC[id];if(S.money<b.cost)return;S.money-=b.cost;S.branches.push(id);save();sfx.coin();
+function openBr(id){const b=LOC[id];if(S.money<b.cost||(!S.branches.length&&!gateOk('branch')))return;S.money-=b.cost;S.branches.push(id);save();sfx.coin();
   ML=id;toast('Opened '+b.n+'. Hire staff for it next');manage('staff')}
 function cost(u){return Math.round(u.base*Math.pow(1.6,S.upg[u.id]||0))}
 function renderUpg(){
@@ -1683,6 +1724,7 @@ function market(){
 /* modals */
 function showModal(html){$('card').innerHTML=html;$('modal').classList.add('show')}
 function closeModal(){$('modal').classList.remove('show')}
+function addonMenu(){return `<div class="addons"><b>Add-ons</b><div>🥤 Size L +$1</div><div>💪 Extra shot +$1</div><div>🧂 Salted cream top +$1.5</div><div>🍖 Extra meat +$2</div><div>🍳 Fried egg +$1.5</div><div>🌶️ Chili (free)</div></div>`}
 function recRow(r){return `<div class="rec"><span class="e">${r.e}</span><div><b>${r.n}</b>${r.vi?` <span class="vi">${r.vi}</span>`:''}${S.newIds.includes(r.id)?'<span class="new">new</span>':''}<br><span class="m">${r.ing.map(k=>ING[k].e).join(' ')}</span>${r.ing.includes('pate')&&r.ing.includes('butter')?'<br><small>Comes with pâté and butter. Some customers ask for no pâté or no butter.</small>':''}</div><b>${fmt(price(r))}</b></div>`}
 function pause(){
   if(!R||R.paused)return;R.paused=true;
@@ -1691,7 +1733,7 @@ function pause(){
 function resume(){closeModal();if(R){R.paused=false;last=performance.now()}}
 function book(fromPause){
   if(R&&!R.paused)R.paused=true;
-  showModal(`<h2>Recipes</h2><p>Pick every ingredient. Order doesn't matter.</p>${unlocked().map(recRow).join('')}<button class="big" onclick="${R?'resume()':'closeModal()'}">${R?'Back to work':'Close'}</button>`);
+  showModal(`<h2>Recipes</h2><p>Pick every ingredient. Order doesn't matter.</p>${addonMenu()}${unlocked().map(recRow).join('')}<button class="big" onclick="${R?'resume()':'closeModal()'}">${R?'Back to work':'Close'}</button>`);
 }
 function confirmReset(){
   showModal(`<h2>Start over?</h2><p>Cash, days, staff, branches and upgrades all reset.</p><button class="big" onclick="doReset()">Start over</button><button class="big alt" onclick="${R?'pause2()':'intro()'}">Cancel</button>`);
