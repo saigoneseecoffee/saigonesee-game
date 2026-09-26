@@ -599,6 +599,11 @@ body{background-color:#0E0E0E;background-image:
 .exl{margin:6px 0 0 48px;padding:0;font-size:13.5px;color:#555;line-height:1.5}
 .exo{display:flex;align-items:flex-start;gap:8px;padding:6px 0 2px 48px;font-size:14px;font-weight:600;line-height:1.35}
 .exo input{width:20px;height:20px;accent-color:#111;flex:0 0 20px;margin-top:1px}
+.nmlab{display:block;font-weight:800;margin:14px 2px 6px;font-size:15px}
+.nmin{width:100%;font:inherit;font-size:18px;font-weight:700;padding:12px 14px;border:2px solid #111;border-radius:12px;background:#fff;color:#111}
+.nmin:focus{outline:3px solid #F3D03E;outline-offset:1px}
+.toast{z-index:40!important}
+.nmin.need{border-color:#B3261E;background:#FFF1EE}
 </style>
 </head>
 <body>
@@ -938,7 +943,7 @@ S.staff.forEach(x=>{if(!x.skills){x.skills=x.role==='barista'?{bar:x.speed}:x.ro
 if(S.cands&&S.cands.some(c=>!c.skills))S.cands=null;S.branches=S.branches||[];S.cands=S.cands||genCands();S.lastBr=S.lastBr||{};
 S.known=S.known||REC.filter(r=>r.d<=S.day).map(r=>r.id);S.rd=S.rd||[];S.camps=S.camps||[];S.comps=S.comps||[];
 S.buzz=S.buzz||0;S.regs=S.regs||[];S.newIds=S.newIds||[];UPG_IDS.forEach(k=>S.upg[k]=S.upg[k]||0);
-S.board=S.board||{};S.reserve=S.reserve??2000;
+S.board=S.board||{};S.run=S.run||1;S.reserve=S.reserve??2000;
 if(S.inv&&S.inv.chili==null)S.inv.chili=25;
 if(S.inv&&S.inv.patemayo!=null){S.inv.pate=(S.inv.pate||0)+S.inv.patemayo;S.inv.butter=S.inv.butter||15;delete S.inv.patemayo}
 if(S.lastUsed&&S.lastUsed.patemayo!=null){S.lastUsed.pate=Math.ceil(S.lastUsed.patemayo*.6);S.lastUsed.butter=Math.ceil(S.lastUsed.patemayo*.4);delete S.lastUsed.patemayo}
@@ -1389,11 +1394,11 @@ function endDay(){
     R.news.push('📦 New catering request. See 🏦 Finance')}
   const d=S.day;
   if(S.rating<2){
-    const sum=summary();saveScore('closed');const pn=S.player;S=fresh();S.player=pn;save();
+    const sum=summary();saveScore('closed');const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;save();
     showModal(`<h2>The shop had to close</h2><p>Your rating fell below 2 stars after day ${d}. Serve customers faster and get their orders right.</p>${sum}<button class="big" onclick="market()">Start over</button>`);
     R=null;return;
   }
-  S.day++;S.best=Math.max(S.best||1,S.day);S.cands=genCands();runBoard();save();
+  S.day++;S.best=Math.max(S.best||1,S.day);S.cands=genCands();runBoard();save();setTimeout(()=>autoPost('day'),300);
   showModal(`<h2>Day ${d} closed</h2>${S.known.length<REC.length?`<p class="note">${S.known.length} of ${REC.length} menu items researched.</p>`:`<p class="note">Full menu. Best run: day ${S.best-1}.</p>`}${summary()}<button class="big" onclick="manage('staff')">Manage shop</button>`);
   R=null;hud();
 }
@@ -1532,15 +1537,24 @@ function ipo(){const v=valuation();if(v<25000||S.ipo.sold)return;S.money+=v*.2;S
 function shares(d){const v=valuation();if(d>0){if(S.ipo.sold>=.49)return;S.money+=v*.095;S.ipo.sold=Math.min(.49,S.ipo.sold+.1)}else{if(S.money<v*.105)return;S.money-=v*.105;S.ipo.sold=Math.max(0,Math.round((S.ipo.sold-.1)*100)/100)}save();manage()}
 function acceptCat(id){const o=S.catOffers.find(x=>x.id===id);if(!o||S.catJob)return;S.catJob=o;S.catOffers=S.catOffers.filter(x=>x!==o);save();toast('📦 Catering booked for today');manage()}
 let LBP=null;
+function takeName(){const el=$('pname0');const v=(el&&el.value||'').trim().slice(0,16);
+  if(!v){el.classList.add('need');el.focus();toast('Please type your name first');return false}
+  S.player=v;save();return true}
 function companyScore(){return valuation()+Math.max(0,S.money)}
 function saveScore(reason){
-  const e={name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
+  if(!S.pid){S.pid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);save()}
+  const e={pid:S.pid,name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
   let hof=[];try{hof=JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(x){}
-  hof.push(e);hof.sort((a,b)=>b.value-a.value);hof=hof.slice(0,10);try{localStorage.setItem('saigonesee-hof',JSON.stringify(hof))}catch(x){}
+  const k=hof.findIndex(x=>x.pid===e.pid&&x.run===S.run);
+  if(k>=0){if(e.value>=hof[k].value)hof[k]={...e,run:S.run};else hof[k].name=e.name}else hof.push({...e,run:S.run});
+  hof.sort((a,b)=>b.value-a.value);hof=hof.slice(0,10);try{localStorage.setItem('saigonesee-hof',JSON.stringify(hof))}catch(x){}
   if(LB_URL){try{LBP=fetch(LB_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(e)}).catch(()=>{})}catch(x){}}
-  fbSave(e);
+  fbSave(e);S.lastPost=e.value;S.lastPostAt=Date.now();save();
   return hof;
 }
+// Auto-save to the leaderboard every 90 seconds of play and after each day
+function autoPost(reason){if(!S.player)return;if(Date.now()-(S.lastPostAt||0)<60000&&reason!=='closed')return;if(Math.round(companyScore())===S.lastPost)return;saveScore(reason)}
+setInterval(()=>{if(R&&!R.paused&&!document.hidden)autoPost('auto')},90000);
 let BF='';
 function board(from){
   if(from!==undefined)BF=from;
@@ -1548,7 +1562,7 @@ function board(from){
   let hof=[];try{hof=JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(x){}
   const rows=l=>l.map((e,i)=>`<div class="stat"><span>${i+1}. ${String(e.name).replace(/[<>&]/g,'')} <small>day ${e.day}, ${e.branches} branches</small></span><b>${fmt(e.value)}</b></div>`).join('')||'<p class="note">No scores yet.</p>';
   const back=R?'resume()':BF==='intro'?'intro()':'manage()';
-  showModal(`<h2>🏆 Leaderboard</h2><p class="note">Score = company value + cash. Your company right now: <b>${fmt(companyScore())}</b>.</p>
+  showModal(`<h2>🏆 Leaderboard</h2><p class="note">Scores save automatically every couple of minutes while you play. Score = company value + cash. Your company right now: <b>${fmt(companyScore())}</b>.</p>
   <p><input id="pname" maxlength="16" placeholder="Your name" value="${(S.player||'').replace(/"/g,'')}" style="font:inherit;font-weight:700;padding:4px 8px;border:2px solid var(--coffee);border-radius:8px;width:60%"> <button class="fire" style="border:2px solid var(--coffee);border-radius:8px;font-weight:800;padding:4px 10px;background:var(--sun)" onclick="S.player=$('pname').value.trim()||'Player';save();saveScore('manual');board()">Save score</button></p>
   ${LB_URL||FIREBASE_CONFIG||/\.web\.app$|\.firebaseapp\.com$/.test(location.hostname)?'<p style="font-weight:800">🌎 Everyone</p><div id="lbOnline"><p class="note">Loading…</p></div>':''}
   <p style="font-weight:800">On this device</p>${rows(hof)}
@@ -1672,7 +1686,7 @@ function closeModal(){$('modal').classList.remove('show')}
 function recRow(r){return `<div class="rec"><span class="e">${r.e}</span><div><b>${r.n}</b>${r.vi?` <span class="vi">${r.vi}</span>`:''}${S.newIds.includes(r.id)?'<span class="new">new</span>':''}<br><span class="m">${r.ing.map(k=>ING[k].e).join(' ')}</span>${r.ing.includes('pate')&&r.ing.includes('butter')?'<br><small>Comes with pâté and butter. Some customers ask for no pâté or no butter.</small>':''}</div><b>${fmt(price(r))}</b></div>`}
 function pause(){
   if(!R||R.paused)return;R.paused=true;
-  showModal(`<h2>Paused</h2><p>Day ${S.day}, ${fmt(S.money)}</p><button class="big" onclick="resume()">Resume</button><button class="big alt" onclick="schedLive()">📅 Schedule</button><button class="big alt" onclick="book(true)">📖 Recipes</button><button class="big alt" onclick="board('pause')">🏆 Leaderboard</button><button class="big alt" onclick="confirmReset()">Start over</button>`);
+  showModal(`<h2>Paused</h2><p>${S.player?'👤 '+String(S.player).replace(/[<>&]/g,'')+'<br>':''}Day ${S.day}, ${fmt(S.money)}</p><button class="big" onclick="resume()">Resume</button><button class="big alt" onclick="schedLive()">📅 Schedule</button><button class="big alt" onclick="book(true)">📖 Recipes</button><button class="big alt" onclick="board('pause')">🏆 Leaderboard</button><button class="big alt" onclick="confirmReset()">Start over</button>`);
 }
 function resume(){closeModal();if(R){R.paused=false;last=performance.now()}}
 function book(fromPause){
@@ -1683,7 +1697,7 @@ function confirmReset(){
   showModal(`<h2>Start over?</h2><p>Cash, days, staff, branches and upgrades all reset.</p><button class="big" onclick="doReset()">Start over</button><button class="big alt" onclick="${R?'pause2()':'intro()'}">Cancel</button>`);
 }
 function pause2(){R.paused=false;pause()}
-function doReset(){S=fresh();save();R=null;intro()}
+function doReset(){const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;save();R=null;intro()}
 function intro(){
   hud();buildStreet();buildStation();renderTray();
   const cont=S.day>1;
@@ -1698,7 +1712,9 @@ function intro(){
   <p>Watch the weather and holidays, take catering orders, borrow from the bank or take your company public, and climb the 🏆 leaderboard.</p>
   <p>When the Kingston train pulls in, expect a rush.</p>
   </details>
-  <button class="big" onclick="${cont?'preDay()':'market()'}">${cont?'Continue day '+S.day:'Start'}</button>
+  <label class="nmlab" for="pname0">Your name</label>
+  <input id="pname0" class="nmin" maxlength="16" autocomplete="nickname" placeholder="Type your name" value="${(S.player||'').replace(/"/g,'')}">
+  <button class="big" onclick="if(!takeName())return;${cont?'preDay()':'market()'}">${cont?'Continue day '+S.day:'Start'}</button>
   <button class="big alt" onclick="board('intro')">🏆 Leaderboard</button>
   ${cont?'<button class="big alt" onclick="confirmReset()">Start over</button>':''}`);
 }
