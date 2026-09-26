@@ -686,6 +686,35 @@ body{background-color:#0E0E0E;background-image:
 .srcgrp summary{font-weight:800;padding:8px 0;cursor:pointer}
 .srcgrp .upg{padding:8px 0!important}
 .nbtn{margin-top:6px}.nbtn button{border:2px solid #111;background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:13px;font-weight:800}.nbtn button.on{background:#F3D03E}
+.upg .flyg,.upg .flyall{flex:1 1 100%!important}
+.upg .flyg button{min-width:0!important;min-height:0!important;background:#fff!important;border:2px solid #111!important;box-shadow:none!important;font-size:inherit!important}
+.upg .flyg button.run{background:#E3F4EA!important;border-color:#2E9B6F!important}
+.upg .flyall{background:#F3D03E!important;border:none!important}
+.upg .flyg button.run{opacity:1!important}
+.flyg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%;margin-top:8px}
+.flyg button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:2px solid #111;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;color:#111;text-align:left;min-width:0}
+.flyg button b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.flyg button span{font-size:12.5px;font-weight:700;color:#555}
+.flyg button.run{background:#E3F4EA;border-color:#2E9B6F}.flyg button.run span{color:#2E9B6F}
+.flyg button:disabled:not(.run){opacity:.45}
+.flyall{width:100%;margin-top:8px;border:none;background:#F3D03E;border-radius:12px;min-height:44px;font:inherit;font-weight:800;font-size:14.5px}
+.flyall:disabled{opacity:.45}
+.trg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;margin-bottom:10px}
+.trg div{display:flex;justify-content:space-between;gap:6px;background:#fff;border:1px solid #E7E0CC;border-radius:8px;padding:5px 8px;font-size:13.5px;min-width:0}
+.trg div span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brc{background:#fff;border:1px solid #E7E0CC;border-radius:12px;margin:6px 0}
+.brc summary{display:flex;align-items:center;gap:8px;padding:9px 10px;cursor:pointer;list-style:none}
+.brc summary::-webkit-details-marker{display:none}
+.brc .bf{font-size:14px}.brc .bn{flex:1;min-width:0;display:flex;flex-direction:column}.brc .bn b{font-size:15px}.brc .bn small{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brc .bp{font-weight:800;font-size:14px}
+.brc .bd{padding:0 12px 10px}
+.brsort{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700;margin:4px 0}
+.brsort button{border:2px solid #111;background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px}
+.brsort button.on{background:#F3D03E}
+.locpick{display:grid;grid-template-columns:44px 1fr 44px;gap:6px;margin:8px 0 4px}
+.locpick button{border:2px solid #111;background:#fff;border-radius:12px;font-size:16px;font-weight:800;min-height:44px}
+.locpick button:disabled{opacity:.35}
+.locpick select{font:inherit;font-size:16px;font-weight:800;border:2px solid #111;border-radius:12px;background:#F3D03E;color:#111;padding:0 10px;min-height:44px;width:100%}
 </style>
 </head>
 <body>
@@ -1590,7 +1619,7 @@ function endDay(){
   if(S.day>=5&&Math.random()<.2){const fr=['main',...S.branches].filter(l=>!S.comps.some(c=>c.loc===l));
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
   genReviews();S.buzz*=.8;
-  finDay();
+  finDay();labTeam();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
   {const L=S.lab,un=DISCO.filter(d=>!L.found.includes(d.id)&&!L.leads.includes(d.id));
    if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
   if(R.cat){R.news.push('📦 Catering for '+R.cat.client+' was not finished');S.rating=Math.max(1,S.rating-.15);R.cat=null;S.catJob=null}
@@ -1600,10 +1629,10 @@ function endDay(){
   // daily taxes
   initTax();const T=S.tax;
   const sales=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);R.mealsTax=sales*TAX.meals;T.paid.meals+=R.mealsTax;
-  R.payTax=(R.wages+(R.boardPay||0))*payRate();S.money-=R.payTax;T.paid.payroll+=R.payTax;
+  R.payTax=(R.wages+(R.boardPay||0)+(R.labPay||0))*payRate();S.money-=R.payTax;T.paid.payroll+=R.payTax;
   R.propTax=Object.keys(S.fin.props).reduce((a,k)=>a+S.fin.pval[k]*(COMMERCIAL.includes(k)?TAX.comProp:TAX.resProp)/TAX.year,0);S.money-=R.propTax;T.paid.property+=R.propTax;
   if(T.owed>0){const pay=Math.min(T.owed,Math.max(0,S.money));S.money-=pay;T.owed-=pay;T.paid.income+=pay;if(pay)R.news.push('🧾 Paid '+fmt(pay)+' of overdue income tax')}
-  const op=R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-R.payTax-R.propTax;
+  const op=R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-(R.labPay||0)-R.payTax-R.propTax;
   let div=0;if(S.ipo.sold&&op>0){div=op*S.ipo.sold*.5;S.money-=div}
   R.op=op;R.div=div;R.loanPay=loanPay;S.spend=0;
   S.life.profit+=op;S.life.rev+=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);S.life.served+=R.served+R.br.reduce((a,b)=>a+(b.served||0),0);if(op>S.life.best.p)S.life.best={d:S.day,p:Math.round(op)};
@@ -1678,6 +1707,7 @@ function summary(){
    ${R.fin.int?`<div class="stat"><span>Bank interest</span><span>+${fmt(R.fin.int)}</span></div>`:''}
    ${R.fin.rent?`<div class="stat"><span>Rent collected</span><span>+${fmt(R.fin.rent)}</span></div>`:''}
    ${R.fin.log.filter(l=>!l.startsWith('📰')||Object.keys(S.fin.hold).some(k=>l.includes(STOCKS.find(t=>t.sym===k).n))).map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}`:''}
+  ${R.labPay?`<div class="stat"><span>👩‍🔬 Research team (salaries + supplies)</span><span>-${fmt(R.labPay)}</span></div>`:''}
   ${R.payTax?`<div class="stat"><span>🧾 Payroll taxes <small>(${(payRate()*100).toFixed(2)}% of wages)</small></span><span>-${fmt(R.payTax)}</span></div>`:''}
   ${R.propTax?`<div class="stat"><span>🧾 Property tax</span><span>-${fmt(R.propTax)}</span></div>`:''}
   ${R.mealsTax?`<div class="stat"><span>🧾 Meals tax collected <small>(7%, sent to MA DOR)</small></span><span>${fmt(R.mealsTax)}</span></div>`:''}
@@ -1689,14 +1719,18 @@ function summary(){
 }
 function revHtml(v){return `<div class="rev"><b>${'★'.repeat(v.st)}${'☆'.repeat(5-v.st)}</b> <small>${v.who}, ${locName(v.loc)}</small><br>“${v.txt}”</div>`}
 /* management */
-let MT='staff',ML='main';
+let MT='staff',ML='main',BT='mine',BS='need';
 function manage(tab){
   if(tab)MT=tab;
   const sc=$('card').scrollTop,locs=['main',...S.branches];if(!locs.includes(ML))ML='main';
   const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['invest','📈 Invest'],['stats','📊 Stats']];
   let body='';
   if(MT==='staff'){
-    body=`<div class="tabs sm">${locs.map(l=>`<button class="${l===ML?'on':''}" onclick="ML='${l}';manage()">${locName(l)} ${crewAt(l).length}/${cap(l)}</button>`).join('')}</div>`;
+    const li=locs.indexOf(ML),mark=l=>{const n=crewAt(l).length,c=cap(l),st=S.brStats[l];return n<c?(n===0?'⚪':'🟡'):(l!=='main'&&st&&st.lost>st.dem*.1?'🔴':'🟢')};
+    body=`<div class="locpick"><button aria-label="Previous location" ${locs.length<2?'disabled':''} onclick="ML='${locs[(li-1+locs.length)%locs.length]}';manage()">◀</button>
+      <select aria-label="Location" onchange="ML=this.value;manage()">${locs.map(l=>`<option value="${l}" ${l===ML?'selected':''}>${mark(l)} ${locName(l)} · ${crewAt(l).length}/${cap(l)}</option>`).join('')}</select>
+      <button aria-label="Next location" ${locs.length<2?'disabled':''} onclick="ML='${locs[(li+1)%locs.length]}';manage()">▶</button></div>
+      ${locs.length>1?`<p class="note" style="margin:0 0 6px">${locs.filter(l=>crewAt(l).length<cap(l)).length?`🟡 ${locs.filter(l=>crewAt(l).length<cap(l)).length} location(s) have open spots.`:'🟢 Every location is fully staffed.'} Total staff: ${S.staff.length}</p>`:''}`;
     const crew=crewAt(ML);
     body+=schedTable(crew);
     body+=crew.length?crew.map(staffRow).join(''):`<p class="note">${locName(ML)} has no staff yet.${ML==='main'?' Staff here make orders for customers on their own.':' A branch needs at least 1 person to make sales.'}</p>`;
@@ -1706,14 +1740,26 @@ function manage(tab){
   }
   if(MT==='branch'){
     const opened=S.branches.map(id=>LOC[id]),avail=Object.values(LOC).filter(b=>!S.branches.includes(b.id));
-    const ms=S.brStats.main;
-    body=`<p class="note">Branches sell all day with their staff and order their own ingredients. Each report is from the last day. If a branch turns customers away, hire or move more staff there.</p>`+
-    (ms?`<div class="upg"><span class="fc">⭐</span><div><b>Weymouth</b> <small>main shop</small><br><small>${ms.served}/${ms.dem} customers, ★ ${S.rating.toFixed(1)}, ${crewAt('main').length}/${cap('main')} staff</small></div></div>`:'')+
-    opened.map(b=>{const st=S.brStats[b.id],lv=S.brLvl[b.id]||0,xc=Math.round(b.cost*.6*(lv+1)),r=st&&st.reviews&&st.reviews[0];
-      return `<div class="upg" style="flex-wrap:wrap"><span class="fc">🏪</span><div><b>${b.n}</b> <small>size ${lv+1}/7</small><br><small>${crewAt(b.id).length}/${cap(b.id)} staff, rent ${fmt(b.rent)}/day</small>${st?`<br><small>Last day: ${st.served}/${st.dem} customers${st.lost?`, <b style="color:var(--stool)">${st.lost} turned away</b>`:''}, can handle ~${st.cap}</small><br><small>★ ${st.rating.toFixed(1)}, profit ${fmt(st.net)} (ingredients ${fmt(st.ing)})</small>`:''}${r?`<br><small>“${r.txt}” ${'★'.repeat(r.st)}</small>`:''}</div><div class="arow"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<6?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div>`}).join('')+
-    `<p style="margin-top:12px;font-weight:800">Open a new branch</p>`+
-    (!S.branches.length&&!gateOk('branch')?gateCard('branch','Grow Weymouth first. Your first branch unlocks when you reach these goals.'):avail.map(b=>`<div class="upg"><span class="fc">📍</span><div><b>${b.n}</b><br><small>Traffic ×${b.demand}, rent ${fmt(b.rent)}/day</small></div><button ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}')">${fmt(b.cost)}</button></div>`).join(''));
+    if(!opened.length)BT='new';
+    const tot=opened.reduce((a,b)=>{const st=S.brStats[b.id]||{};a.net+=st.net||0;a.lost+=st.lost||0;a.staff+=crewAt(b.id).length;return a},{net:0,lost:0,staff:0});
+    body=`<div class="tabs sm"><button class="${BT==='mine'?'on':''}" onclick="BT='mine';manage()">🏪 My branches (${opened.length})</button><button class="${BT==='new'?'on':''}" onclick="BT='new';manage()">📍 Open new (${avail.length})</button></div>`;
+    if(BT==='mine'){
+      body+=`<div class="finsum"><div><small>Branch profit last day</small><b>${fmt(tot.net)}</b></div><div><small>Customers turned away</small><b>${tot.lost}</b></div></div>
+      <p class="note">Tap a branch to see details. 🔴 means it's turning customers away and needs more staff.</p>
+      <div class="brsort">Sort: ${[['need','Needs staff'],['profit','Profit'],['name','Name']].map(([k,n])=>`<button class="${BS===k?'on':''}" onclick="BS='${k}';manage()">${n}</button>`).join('')}</div>`;
+      const rows=opened.map(b=>({b,st:S.brStats[b.id]})).sort((x,y)=>BS==='profit'?((y.st?y.st.net:0)-(x.st?x.st.net:0)):BS==='name'?x.b.n.localeCompare(y.b.n):((y.st?y.st.lost:0)+(crewAt(y.b.id).length?0:999))-((x.st?x.st.lost:0)+(crewAt(x.b.id).length?0:999)));
+      body+=rows.map(({b,st})=>{const lv=S.brLvl[b.id]||0,xc=Math.round(b.cost*.6*(lv+1)),r=st&&st.reviews&&st.reviews[0],n=crewAt(b.id).length,flag=!n?'⚪':st&&st.lost>st.dem*.1?'🔴':'🟢';
+        return `<details class="brc"><summary><span class="bf">${flag}</span><span class="bn"><b>${b.n}</b><small>${n}/${cap(b.id)} staff${st?` · ${st.served}/${st.dem} cust · ★${st.rating.toFixed(1)}`:''}</small></span><span class="bp ${st&&st.net<0?'dnt':'upt'}">${st?fmt(st.net):'—'}</span></summary>
+        <div class="bd">${st?`<div class="stat"><span>Customers</span><span>${st.served} served${st.lost?`, <b class="dnt">${st.lost} turned away</b>`:''}</span></div><div class="stat"><span>Can handle</span><span>~${st.cap} customers</span></div><div class="stat"><span>Ingredients</span><span>${fmt(st.ing)}</span></div>`:''}
+        <div class="stat"><span>Rent</span><span>${fmt(b.rent)}/day</span></div><div class="stat"><span>Size</span><span>${lv+1}/7</span></div>
+        ${r?`<p class="note">“${r.txt}” ${'★'.repeat(r.st)}</p>`:''}
+        <div class="arow" style="padding-left:0"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<6?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div></details>`}).join('')||'<p class="note">No branches yet.</p>';
+    } else {
+      body+=(!S.branches.length&&!gateOk('branch')?gateCard('branch','Grow Weymouth first. Your first branch unlocks when you reach these goals.'):
+        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+avail.sort((a,b)=>a.cost-b.cost).map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join(''));
+    }
   }
+
   if(MT==='menu'){
     const ar=avgRatio();
     body=`<p class="note">Set your own prices. Higher prices earn more per order but bring fewer customers, smaller tips and lower ratings. Some customers walk out if it's too pricey.</p><p>Average vs. menu: <b>${Math.round(ar*100)}%</b></p>`+
@@ -1732,9 +1778,12 @@ function manage(tab){
   }
   if(MT==='mkt'){
     const bz=S.buzz,bl=bz>.2?'Hot 🔥':bz>.05?'Good':bz>-.05?'Normal':'Bad',locs=['main',...S.branches];
-    body=`<p>Buzz: <b>${bl}</b></p><p style="font-weight:800;margin-bottom:2px">Traffic today</p><p class="note">${locs.map(l=>`${locName(l)}: <b>${Math.round(demand(l)*100)}%</b>${compHit(l)?' ⚠️':''}`).join('<br>')}</p>`+
+    body=`<p>Buzz: <b>${bl}</b></p><p style="font-weight:800;margin-bottom:4px">Traffic today</p><div class="trg">${locs.map(l=>`<div><span>${locName(l)}${compHit(l)?' ⚠️':''}</span><b>${Math.round(demand(l)*100)}%</b></div>`).join('')}</div>`+
     CAMP.map(k=>{
-      if(k.local)return `<div class="upg" style="flex-wrap:wrap"><div><b>${k.n}</b><br><small>${k.d}</small></div><div class="posb" style="flex-wrap:wrap;padding-left:0">${locs.map(l=>{const on=campOn(k.id,l);return `<button ${on||S.money<k.cost?'disabled':''} onclick="runCamp('${k.id}','${l}')">${locName(l)} ${on?on.left+'d':fmt(k.cost)}</button>`}).join('')}</div></div>`;
+      if(k.local){const off=locs.filter(l=>!campOn(k.id,l)),allCost=off.length*k.cost;
+        return `<div class="upg" style="flex-wrap:wrap"><div><b>${k.n}</b><br><small>${k.d}</small></div>
+        <div class="flyg">${locs.map(l=>{const on=campOn(k.id,l);return `<button class="${on?'run':''}" ${on||S.money<k.cost?'disabled':''} onclick="runCamp('${k.id}','${l}')"><b>${locName(l)}</b><span>${on?'✓ '+on.left+' days left':fmt(k.cost)}</span></button>`}).join('')}</div>
+        ${off.length>1?`<button class="flyall" ${S.money<allCost?'disabled':''} onclick="flyersAll()">📄 Flyers at all ${off.length} locations · ${fmt(allCost)}</button>`:''}</div>`}
       const on=campOn(k.id);return `<div class="upg"><div><b>${k.n}</b><br><small>${k.d}</small></div><button ${on||S.money<k.cost?'disabled':''} onclick="runCamp('${k.id}')">${on?on.left+'d left':fmt(k.cost)}</button></div>`}).join('')+
     `<p style="margin-top:12px;font-weight:800">Delivery & online pickup</p><p class="note">Delivery orders (🛵 🚗 🥡) show up at Weymouth with a dashed bubble. Each app keeps 30% and there's no tip, but you get extra orders everywhere. 📱 Online pickup has no commission: customers order ahead, wait longer and still tip a little.</p>`+
     Object.keys(APPS).map(a=>{const st=S.apps[a];if(!st&&!gateOk(a))return gateCard(a,'Unlocks when your shop hits these goals.');return `<div class="upg"><div><b>${APPS[a].e} ${APPS[a].n}</b><br><small>${st?(st.on?'On':'Paused'):'One-time setup '+fmt(APPS[a].fee)}</small></div><button ${!st&&S.money<APPS[a].fee?'disabled':''} onclick="toggleApp('${a}')">${st?(st.on?'Pause':'Turn on'):'Set up'}</button></div>`}).join('')+
@@ -1974,6 +2023,7 @@ function labBody(){
   const L=S.lab,sel=L.sel;
   const pool=[...new Set([...needSet()])].filter(k=>ING[k]).sort((a,b)=>ING_ORDER.indexOf(a)-ING_ORDER.indexOf(b));
   let b=`<p class="note">Mix ingredients to invent new drinks and dishes. Pick a base (tea, coffee, milk, soda, baguette, noodles, rice paper, bao) plus 1–4 flavors. Source 200+ ingredients from around the world below. Good combos join your menu, and they might work at the real shop too 😎</p>`;
+  b+=teamBody();
   if(L.leads.length)b+=`<p style="font-weight:800;margin:10px 0 4px">💡 Ideas from the team</p>`+L.leads.map(id=>{const d=DISCO.find(x=>x.id===id);const need=d.ing.filter(k=>ING[k].src&&!L.src.includes(k));
     return `<div class="lead"><b>${d.e} ${d.n}</b> <small>${d.vi}</small><br><small>Hint: try ${d.ing.slice(0,2).map(k=>ING[k].e+' '+ING[k].n).join(' + ')} and ${d.ing.length-2} more.${need.length?` Needs ${need.map(k=>ING[k].n).join(', ')} (source it below).`:''}</small></div>`}).join('');
   if(L.last)b+=`<div class="labres ${L.last.ok?'ok':L.last.close?'close':'bad'}">${L.last.msg}</div>`;
@@ -1996,6 +2046,39 @@ function labBody(){
 function labFilter(inp,sel,openGroups){const q=inp.value.trim().toLowerCase();document.querySelectorAll(sel).forEach(el=>el.style.display=!q||el.dataset.n.includes(q)?'':'none');
   if(openGroups)document.querySelectorAll('.srcgrp').forEach(g=>{if(q)g.open=[...g.querySelectorAll('.srcrow')].some(r=>r.style.display!=='none')})}
 function toggleMenu(id){const L=S.lab,i=L.off.indexOf(id);if(i>=0)L.off.splice(i,1);else L.off.push(id);save();manage()}
+const RSPEC={drink:'🥤 Drinks',food:'🥖 Food',both:'⭐ Both'};
+const labCap=()=>2+S.upg.lab;
+function genResearchers(){const out=[];for(let i=0;i<3;i++){const skill=1+Math.floor(Math.random()*5),spec=pick(['drink','food','both','drink','food']);
+  out.push({id:Math.floor(Math.random()*1e9),name:pick(NAMES),face:pick(['🧑‍🔬','👩‍🔬','👨‍🔬','🧑‍🍳','👩‍🍳']),spec,skill,wage:Math.round(35+skill*18+(spec==='both'?15:0)+Math.random()*10)})}return out}
+function hireRes(i){const L=S.lab,c=L.rcands[i];if(!c||L.team.length>=labCap())return;L.team.push(c);L.rcands.splice(i,1);save();sfx.coin();toast(c.face+' '+c.name+' joined the research team');manage()}
+function fireRes(id){S.lab.team=S.lab.team.filter(x=>x.id!==id);save();manage()}
+function teamBody(){const L=S.lab;const sal=L.team.reduce((a,x)=>a+x.wage,0);
+  return `<p style="font-weight:800;margin:10px 0 4px">👩‍🔬 Research team <small>(${L.team.length}/${labCap()})</small></p>
+  <p class="note">Researchers experiment every night on their own, using ingredients you've sourced. Higher skill finds better recipes. They also chase the team's ideas. Salaries: <b>${fmt(sal)}/day</b> + ${fmt(10)} of test supplies per experiment.</p>
+  ${L.team.map(x=>`<div class="upg"><span class="fc">${x.face}</span><div><b>${x.name}</b> <small>${RSPEC[x.spec]} · ${'★'.repeat(x.skill)}${'☆'.repeat(5-x.skill)}</small><br><small>${fmt(x.wage)}/day · ${x.found||0} inventions</small></div><button class="fire" onclick="fireRes(${x.id})">Let go</button></div>`).join('')}
+  ${L.team.length<labCap()?`<p style="font-weight:700;margin:8px 0 2px">Applicants</p>`+L.rcands.map((c,i)=>`<div class="upg"><span class="fc">${c.face}</span><div><b>${c.name}</b> <small>${RSPEC[c.spec]} · ${'★'.repeat(c.skill)}${'☆'.repeat(5-c.skill)}</small><br><small>${fmt(c.wage)}/day</small></div><button onclick="hireRes(${i})">Hire</button></div>`).join(''):`<p class="note">Team is full. Upgrade the 🔬 Test kitchen for more room.</p>`}`}
+// Nightly: each researcher runs a few experiments
+function labTeam(){
+  const L=S.lab;if(!L.team.length)return;let pay=0;const found=[];
+  const avail=k=>ING[k]&&(!ING[k].src||L.src.includes(k))&&ING[k].tags;
+  const pool=Object.keys(ING).filter(k=>avail(k)&&(needSet().has(k)||L.src.includes(k)));
+  const dBases=['tea','phin','milk','soda','espresso','coldbrew','matcha',...pool.filter(k=>ING[k].world&&(ING[k].tags||[]).some(t=>t==='tea'||t==='coffee'))].filter(k=>pool.includes(k));
+  const fBases=['baguette','bun','ricepaper','bao','croissant','sticky'].filter(k=>pool.includes(k));
+  const flavPool=pool.filter(k=>!DRINK_BASES[k]&&!FOOD_BASES[k]&&!FILLERS.includes(k));
+  L.team.forEach(x=>{pay+=x.wage;const tries=1+Math.floor(x.skill/2);
+    for(let t=0;t<tries;t++){if(S.money<10)break;S.money-=10;pay+=10;
+      // chase a lead first
+      const lead=L.leads.map(id=>DISCO.find(d=>d.id===id)).find(d=>d&&d.ing.every(avail)&&(x.spec==='both'||x.spec===d.k));
+      if(lead&&Math.random()<.2+.12*x.skill){L.found.push(lead.id);L.leads=L.leads.filter(i=>i!==lead.id);REC.push({...lead,d:1,inv:1});S.known.push(lead.id);S.newIds=[...(S.newIds||[]),lead.id];x.found=(x.found||0)+1;found.push(`${x.face} ${x.name} cracked the idea: ${lead.e} ${lead.n}!`);continue}
+      // otherwise try a few random combos and keep the best
+      const kind=x.spec==='both'?(Math.random()<.5?'drink':'food'):x.spec,bases=kind==='drink'?dBases:fBases;if(!bases.length||flavPool.length<2)continue;
+      let best=null;for(let s2=0;s2<x.skill*3;s2++){const b=pick(bases),n=1+Math.floor(Math.random()*3),fl=[];while(fl.length<n){const f=pick(flavPool);if(!fl.includes(f))fl.push(f)}
+        const sel=[b,...fl];if(kind==='drink'&&pool.includes('ice'))sel.push('ice');if(REC.some(r=>same(r.ing,sel)))continue;const ev=evalCombo(sel);if(!ev.fail&&(!best||ev.stars>best.ev.stars))best={sel,ev}}
+      if(best&&best.ev.stars>=3.5){const d=makeCustom(best.sel,best.ev);if(!REC.some(r=>r.id===d.id)){L.custom.push(d);REC.push({...d,d:1,inv:1});S.known.push(d.id);S.newIds=[...(S.newIds||[]),d.id];x.found=(x.found||0)+1;found.push(`${x.face} ${x.name} invented ${d.e} ${d.n} (${d.stars}★)`)}}
+    }});
+  S.money-=L.team.reduce((a,x)=>a+x.wage,0);R.labPay=pay;found.forEach(f=>R.news.push('🧪 '+f));
+  if(!found.length)R.news.push('🧪 The research team ran experiments but found nothing new tonight');
+}
 function labPick(k){const L=S.lab;const i=L.sel.indexOf(k);if(i>=0)L.sel.splice(i,1);else{if(L.sel.length>=6)return;L.sel.push(k)}L.last=null;save();manage()}
 function sourceIng(k){const fee=srcFee(k);if(S.money<fee||S.lab.src.includes(k))return;S.money-=fee;S.lab.src.push(k);S.inv[k]=(S.inv[k]||0)+ING[k].q;save();sfx.coin();toast('🌏 Found a supplier for '+ING[k].n+'. First batch is free!');manage()}
 function labTest(){
@@ -2029,6 +2112,7 @@ function copyNotebook(){const t=[...S.lab.found.map(id=>DISCO.find(x=>x.id===id)
   try{navigator.clipboard.writeText('Saigonesee new item ideas\n\n'+t).then(()=>toast('📋 Copied! Paste it into Notes or a message'))}catch(e){toast('Could not copy on this device')}}
 function research(id){const r=REC.find(x=>x.id===id);if(S.money<rdCost(r)||S.rd.length>=1+S.upg.lab)return;
   S.money-=rdCost(r);S.rd.push({id,left:1});save();sfx.coin();toast('Researching '+r.n);manage()}
+function flyersAll(){const k=CAMP.find(z=>z.id==='flyer');['main',...S.branches].filter(l=>!campOn('flyer',l)).forEach(l=>{if(S.money>=k.cost){S.money-=k.cost;S.camps.push({id:'flyer',left:k.days,loc:l})}});save();sfx.coin();toast('📄 Flyers are out everywhere');manage()}
 function expandBr(id){const b=LOC[id],lv=S.brLvl[id]||0,c=Math.round(b.cost*.6*(lv+1));if(S.money<c||lv>=6)return;S.money-=c;S.brLvl[id]=lv+1;save();sfx.coin();toast(b.n+' expanded: more staff room and traffic');manage()}
 function runCamp(id,l){const k=CAMP.find(z=>z.id===id);if(S.money<k.cost||campOn(id,k.local?l:null))return;
   S.money-=k.cost;S.camps.push({id,left:k.days,loc:k.local?l:null});if(k.buzz)S.buzz=Math.min(.5,S.buzz+k.buzz);save();sfx.coin();toast(k.n+' is running');manage()}
@@ -2201,7 +2285,7 @@ $('trashBtn').onclick=()=>{if(R&&!R.paused&&R.tray.length){R.wasted+=R.tray.leng
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
 function initLab(){
   S.lab=S.lab||{found:[],src:[],leads:[],tries:0,last:null,sel:[]};
-  S.lab.custom=S.lab.custom||[];S.lab.off=S.lab.off||[];
+  S.lab.custom=S.lab.custom||[];S.lab.off=S.lab.off||[];S.lab.team=S.lab.team||[];S.lab.rcands=S.lab.rcands||genResearchers();
   S.lab.found.forEach(id=>{const d=DISCO.find(x=>x.id===id);if(d&&!REC.some(r=>r.id===id))REC.push({...d,d:1,inv:1})});
   S.lab.custom.forEach(d=>{if(!REC.some(r=>r.id===d.id))REC.push({...d,d:1,inv:1})});
   if(!S.lab.leads.length&&!S.lab.found.length)S.lab.leads=['avosmoothie'];
