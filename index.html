@@ -975,6 +975,13 @@ const UPG=[
   {id:'quay',n:'🛎️ Bigger counter',d:'Room for 1 more customer at the counter (up to 8)',base:140,max:5},
   {id:'line',n:'🚶 Waiting line',d:'1 more spot in the waiting line (starts with 2)',base:60,max:5},
   {id:'station',n:'🧑‍🍳 Extra work station',d:'Room for 1 more staff member at Weymouth (up to 16)',base:180,max:13},
+  {id:'plants',n:'🪴 Plants & greenery',d:'Customers wait 3% longer per level',base:150,max:3},
+  {id:'wifi',n:'📶 Free Wi-Fi',d:'+4% customers at Weymouth per level',base:180,max:2},
+  {id:'restroom',n:'🚻 Nicer restroom',d:'Customers wait 4% longer per level',base:250,max:2},
+  {id:'kids',n:'🧸 Kids corner',d:'+8% customers at Weymouth on weekends',base:300,max:1},
+  {id:'menus',n:'🖨️ Menus in 3 languages',d:'+3% customers at Weymouth',base:120,max:1},
+  {id:'uniform',n:'👕 Staff uniforms',d:'Morale drops 10% slower and tips +2%',base:220,max:1},
+  {id:'window',n:'🪟 Pickup window',d:'Delivery and pickup orders wait 15% longer',base:400,max:1},
   {g:'Company'},
   {id:'kiosk',n:'📲 Online ordering',d:'+7% customers everywhere per level',base:400,max:3},
   {id:'loyalty',n:'💳 Loyalty app',d:'More regulars, up to 5 more per level',base:350,max:3},
@@ -987,6 +994,13 @@ const UPG=[
   {id:'van',n:'🚐 Catering van',d:'Catering orders pay 25% more and you get more requests',base:800,max:1},
   {id:'supplier',n:'📦 Supplier contract',d:'Weymouth restocks itself every morning to match the last day',base:600,max:1},
   {id:'hr',n:'🤝 HR manager',d:'Staff morale drops 50% slower',base:1000,max:1},
+  {id:'insurance',n:'🛡️ Business insurance',d:'Losses from accidents and theft are cut in half',base:600,max:1},
+  {id:'punch',n:'🎟️ Rewards punch card',d:'Customers become regulars 25% more often',base:300,max:1},
+  {id:'franchise',n:'🤝 Franchise program',d:'Branches earn 5% more revenue per level',base:2000,max:3},
+  {id:'fleet',n:'🚚 Own delivery trucks',d:'Branches spend 3% less on ingredients',base:1800,max:1},
+  {id:'academy',n:'🏫 Saigonesee Academy',d:'New hires start at level 2',base:1500,max:1},
+  {id:'books',n:'🧮 Accounting software',d:'3% less income tax',base:500,max:1},
+  {id:'pragency',n:'📰 PR agency',d:'Buzz fades more slowly',base:900,max:1},
   {id:'farm',n:'🌱 Robusta farm in Vietnam',d:'Cheaper phin coffee and free servings every morning, per level',base:2500,max:3},
   {g:'Bar equipment',eq:1},
   {id:'espresso',eq:1,n:'☕ Espresso machine',d:'Unlocks espresso drinks: Espresso, Americano, Latte, Mocha, Hot Biscoff Latte. Level 2 makes them 20% faster',base:450,max:2},
@@ -998,6 +1012,11 @@ const UPG=[
   {id:'softserve',eq:1,n:'🍦 Soft-serve machine',d:'Unlocks Coconut Soft Serve, Coffee Soft Serve and Affogato (with the espresso machine)',base:650,max:1},
   {id:'autophin',eq:1,n:'🤖 Auto phin brewer',d:'Phin coffee drinks 20% faster',base:500,max:1},
   {id:'sealer',eq:1,n:'🥤 Cup sealer',d:'Delivery and pickup orders done 20% faster',base:220,max:1},
+  {id:'grinder',eq:1,n:'⚙️ Burr grinder',d:'Coffee drinks earn 5% more tips',base:300,max:1},
+  {id:'steamer2',eq:1,n:'🥛 Milk steamer',d:'Drinks with milk 10% faster',base:280,max:1},
+  {id:'dispenser',eq:1,n:'🍯 Syrup & milk dispenser',d:'Drinks with syrup or condensed milk 10% faster',base:260,max:1},
+  {id:'filter',eq:1,n:'💧 Water filtration',d:'Better-tasting drinks: tips +3%',base:350,max:1},
+  {id:'icecream',eq:1,n:'🧊 Blast chiller',d:'Iced drinks 8% faster',base:420,max:1},
   {g:'Kitchen equipment',eq:1},
   {id:'grill',eq:1,n:'🔥 Bigger grill',d:'Kitchen orders 10% faster per level',base:350,max:3},
   {id:'fryer',eq:1,n:'🍳 Deep fryer',d:'Unlocks Egg Rolls and Egg Roll Vermicelli Bowl',base:500,max:1},
@@ -1005,6 +1024,10 @@ const UPG=[
   {id:'steamer',eq:1,n:'♨️ Steamer',d:'Bao buns and spring rolls 20% faster',base:250,max:1},
   {id:'kds',eq:1,n:'🖥️ Kitchen display screen',d:'All staff 8% faster everywhere',base:900,max:1},
   {id:'dish',eq:1,n:'🍽️ Dishwasher',d:'Staff morale drops 25% slower',base:450,max:1},
+  {id:'toaster',eq:1,n:'🍞 Conveyor toaster',d:'Banh mi 12% faster',base:450,max:1},
+  {id:'ricecooker',eq:1,n:'🍚 Commercial rice cooker',d:'Vermicelli and rice dishes 10% faster',base:220,max:1},
+  {id:'slicer',eq:1,n:'🔪 Meat slicer',d:'Anything with meat 10% faster',base:380,max:1},
+  {id:'prepst',eq:1,n:'🥗 Prep station',d:'All kitchen orders 5% faster',base:600,max:2},
   {g:'Storage & power',eq:1},
   {id:'tu',eq:1,n:'❄️ Walk-in fridge',d:'Level 1: baguettes and milk keep overnight. Level 2: greens, foams and fruit too',base:90,max:2},
   {id:'freezer',eq:1,n:'🧊 Freezer',d:'Proteins bought in bulk cost 10% less',base:400,max:1},
@@ -1012,6 +1035,11 @@ const UPG=[
   {id:'generator',eq:1,n:'🔋 Backup generator',d:'Power outages no longer stop work',base:600,max:1},
   {id:'solar',eq:1,n:'☀️ Solar panels',d:'Cuts the daily electric bill for all your machines by 50%',base:1500,max:1},
   {id:'cams',eq:1,n:'📹 Security cameras',d:'Stops cash register theft',base:350,max:1},
+  {id:'vacuum',eq:1,n:'🫙 Vacuum sealer',d:'Only half of the fresh stock spoils overnight',base:350,max:1},
+  {id:'shelving',eq:1,n:'📦 Storage shelving',d:'Bulk ×5 purchases save 20% instead of 15%',base:300,max:1},
+  {id:'tap',eq:1,n:'💳 Tap-to-pay terminals',d:'Faster checkout: customers wait 5% longer',base:250,max:1},
+  {id:'hvac',eq:1,n:'🌡️ HVAC system',d:'Heat waves and freezing days hurt traffic half as much',base:900,max:1},
+  {id:'firesup',eq:1,n:'🧯 Fire suppression',d:'Machine breakdowns last half as long',base:500,max:1},
   {id:'clean',eq:1,n:'🧽 Cleaning crew',d:'Better odds of passing health inspections',base:200,max:2},
 ];
 const UPG_IDS=UPG.filter(u=>u.id).map(u=>u.id);
@@ -1049,7 +1077,7 @@ const HOLI={14:['🎆 4th of July',1.3],29:['🎃 Halloween',1.2],35:['🎄 Chri
 const season=d=>SEASONS[Math.floor((d-1)/10)%4];
 const holiday=d=>HOLI[(d-1)%40+1]||null;
 function rollWx(d){const t=WXP[season(d)[0]],tot=Object.values(t).reduce((a,b)=>a+b,0);let x=Math.random()*tot;for(const k in t){x-=t[k];if(x<=0)return k}return 'cloudy'}
-const wxMul=()=>{const w=WX[S.wx.t],h=holiday(S.day);return w.m*(w.patio?1+.1*S.upg.patio:1)*(h?h[1]:1)};
+const wxMul=()=>{const w=WX[S.wx.t],h=holiday(S.day);const wm=S.upg&&S.upg.hvac&&(S.wx.t==='heat'||S.wx.t==='cold')?(w.m+1)/2:w.m;return wm*(w.patio?1+.1*S.upg.patio:1)*(h?h[1]:1)};
 const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `${se[1]} ${se[0]}, ${w.e} ${w.n}${h?`, <b>${h[0]}</b>`:''}`};
 // Online leaderboard: paste your Google Apps Script web app URL here (see leaderboard-apps-script.gs). Leave empty for on-device only.
 // ================= TAXES (simplified Massachusetts small business) =================
@@ -1179,8 +1207,8 @@ const spMul=x=>(1-.06*(lvl(x)-1))*(x.mo<25?1.25:x.mo>80?.9:1);
 const campOn=(id,l)=>S.camps.find(c=>c.id===id&&(!l||c.loc===l));
 const boost=l=>S.camps.reduce((a,c)=>{const k=CAMP.find(z=>z.id===c.id);return a+(k.local?(c.loc===l?k.main:0):k.all)},0);
 const compHit=l=>{const c=S.comps.find(z=>z.loc===l);return c?c.str*.35:0};
-const demand=l=>(1+boost(l))*(1+S.buzz)*(1-compHit(l))*(1+.07*S.upg.kiosk)*wxMul();
-const recMul=r=>{let m=S.upg.kds?.92:1;if(S.upg.teabrew&&r.ing.includes('tea'))m*=.75;if(S.upg.juicer&&r.ing.some(k=>['orange','slmix'].includes(k)))m*=.7;if(S.upg.autophin&&r.ing.includes('phin'))m*=.8;if(r.req==='espresso'&&S.upg.espresso>1)m*=.8;if(S.upg.icemaker>1&&r.ing.includes('ice'))m*=.9;if(S.upg.blender&&r.ing.some(k=>['coconut','mango','straw'].includes(k)))m*=.75;if(S.upg.steamer&&r.ing.some(k=>['bao','ricepaper'].includes(k)))m*=.8;return m};
+const demand=l=>(1+boost(l))*(1+S.buzz)*(1-compHit(l))*(1+.07*S.upg.kiosk)*wxMul()*(l==='main'?(1+.04*S.upg.wifi)*(1+.03*S.upg.menus)*(S.upg.kids&&S.day%7===0?1.08:1):1);
+const recMul=r=>{let m=S.upg.kds?.92:1;const I=r.ing;if(S.upg.steamer2&&I.includes('milk'))m*=.9;if(S.upg.dispenser&&(I.includes('syrup')||I.includes('cond')))m*=.9;if(S.upg.icecream&&I.includes('ice'))m*=.92;if(S.upg.toaster&&I.includes('baguette'))m*=.88;if(S.upg.ricecooker&&(I.includes('bun')||I.includes('sticky')))m*=.9;if(S.upg.slicer&&I.some(k=>PROTEINS.includes(k)))m*=.9;if(r.k==='food')m*=1-.05*S.upg.prepst;if(S.upg.teabrew&&r.ing.includes('tea'))m*=.75;if(S.upg.juicer&&r.ing.some(k=>['orange','slmix'].includes(k)))m*=.7;if(S.upg.autophin&&r.ing.includes('phin'))m*=.8;if(r.req==='espresso'&&S.upg.espresso>1)m*=.8;if(S.upg.icemaker>1&&r.ing.includes('ice'))m*=.9;if(S.upg.blender&&r.ing.some(k=>['coconut','mango','straw'].includes(k)))m*=.75;if(S.upg.steamer&&r.ing.some(k=>['bao','ricepaper'].includes(k)))m*=.8;return m};
 const stMul=st=>(1-.1*(st==='bar'?S.upg.machine:S.upg.grill))*(R&&R.slow&&R.slow.st===st&&R.t<R.slow.until?1.6:1);
 const brRate=l=>S.brRate[l]??S.rating;
 const ingPrice=k=>{let v=ING[k].p;if(k==='phin')v*=[1,.5,.35,.2][S.upg.farm];if(PROTEINS.includes(k))v*=[1,.8,.7,.6][S.upg.ckit];if(S.spike===k)v*=1.5;if(k==='baguette'&&S.upg.oven)v*=.5;if(k==='ice'&&S.upg.icemaker)v=0;return Math.round(v*100)/100};
@@ -1313,11 +1341,11 @@ function makeOrder(){
   }
   recs.sort((a,b)=>a.k===b.k?0:a.k==='drink'?-1:1);
   const base=Math.max(S.day>LASTDAY?Math.max(10,14-(S.day-LASTDAY)*.2):14,32-S.day*1.2)+S.upg.ghe*3;
-  const max=base*(S.upg.pager?1.1:1)*(reg?1.3:1)*(1+.45*(recs.length-1))*(1+.05*S.upg.decor);
+  const max=base*(S.upg.pager?1.1:1)*(1+.03*S.upg.plants+.04*S.upg.restroom+.05*S.upg.tap)*(reg?1.3:1)*(1+.45*(recs.length-1))*(1+.05*S.upg.decor);
   const inUse=busy.map(x=>x.name);let name=reg?reg.name:custName();for(let t=0;t<8&&!reg&&inUse.includes(name);t++)name=custName();
   const face=reg?reg.face:FACES[Math.floor(Math.random()*FACES.length)];
   const on=Object.keys(APPS).filter(a=>S.apps[a]&&S.apps[a].on);
-  if(on.length&&!reg&&Math.random()<.1*on.length){const a=pick(on),pk=APPS[a].pick,m2=max*(pk?1.5:1);return {del:a,recs,name:(pk?'📱 Pickup: '+name:APPS[a].n+' #'+(100+Math.floor(Math.random()*900))),face:pk?face:APPS[a].e,max:m2,left:m2,qmax:m2*1.6}}
+  if(on.length&&!reg&&Math.random()<.1*on.length){const a=pick(on),pk=APPS[a].pick,m2=max*(pk?1.5:1)*(S.upg.window?1.15:1);return {del:a,recs,name:(pk?'📱 Pickup: '+name:APPS[a].n+' #'+(100+Math.floor(Math.random()*900))),face:pk?face:APPS[a].e,max:m2,left:m2,qmax:m2*1.6}}
   if(R.infNext){R.infNext=0;return {inf:1,recs,name:'📸 @southshorefoodie',face:'🤳',max:max*.8,left:max*.8,qmax:max}}
   return {reg,recs,name,face,max,left:max,qmax:max*1.6};
 }
@@ -1400,7 +1428,7 @@ function funEvent(){
   if(!cs.length)pool=FUN.filter(f=>!f.cust);
   const f=pick(pool);let who='A customer';
   if(f.cust){const c=pick(cs);who=c.name;removeCust(c,'😜')}
-  const amt=Math.round(f.a()*(1+Math.min(S.day,60)*.02));
+  let amt=Math.round(f.a()*(1+Math.min(S.day,60)*.02));if(amt<0&&S.upg.insurance)amt=Math.round(amt/2);
   S.money+=amt;if(amt>0)R.earned+=amt;
   R.news.push(`${f.e} ${f.t(who)} ${amt>0?'+':'-'}${fmt(Math.abs(amt))}`);
   funPop(f.e,f.t(who),amt);amt>0?sfx.coin():sfx.bad();hud();
@@ -1415,12 +1443,12 @@ function eventsTick(){
   if(e.k==='inspect'){const pass=Math.random()<.55+.15*S.upg.clean-(R.wasted>5?.1:0);
     if(pass){S.buzz=Math.min(.5,S.buzz+.03);R.news.push('✅ Passed a health inspection');toast('✅ Health inspector: all clear!')}
     else{S.money-=100;S.rating=Math.max(1,S.rating-.2);R.news.push('❌ Failed a health inspection, $100 fine');toast('❌ Failed health inspection. $100 fine')}}
-  if(e.k==='break'){const st=pick(['bar','kit']);R.slow={st,until:R.t+20};toast(st==='bar'?'⚙️ The batch brewer broke down! Bar staff are slower for a while':'🔥 The grill is acting up! Kitchen staff are slower for a while')}
+  if(e.k==='break'){const st=pick(['bar','kit']);R.slow={st,until:R.t+(S.upg.firesup?10:20)};toast(st==='bar'?'⚙️ The batch brewer broke down! Bar staff are slower for a while':'🔥 The grill is acting up! Kitchen staff are slower for a while')}
   if(e.k==='inf'){R.infNext=1;toast('📸 A food influencer is on the way!')}
   if(e.k==='out'){R.out=R.t+10;$('street').classList.add('dark');toast('⚡ Power outage! Nobody can make orders for a bit');setTimeout(()=>$('street').classList.remove('dark'),10000*(1))}
   if(e.k==='tip'){R.bigTip=1}
   if(e.k==='fun')funEvent();
-  if(e.k==='theft'){const l=Math.round(50+Math.random()*100);S.money-=l;R.news.push('🚨 $'+l+' went missing from the register');toast('🚨 Someone took $'+l+' from the register! Cameras would help')}
+  if(e.k==='theft'){const l=Math.round((50+Math.random()*100)*(S.upg.insurance?.5:1));S.money-=l;R.news.push('🚨 $'+l+' went missing from the register');toast('🚨 Someone took $'+l+' from the register! Cameras would help')}
 }
 // Shrink a ticket step by step until every item fits; scroll inside as a last resort
 function fitTicket(c){
@@ -1446,7 +1474,7 @@ function removeCust(c,mood){
 }
 function afterServe(c,ratio){
   if(c.reg){c.reg.loyal=Math.min(5,c.reg.loyal+1);return}
-  if(ratio>.5&&S.regs.length<14+5*S.upg.loyalty&&Math.random()<.12*(1+.5*S.upg.loyalty)&&!S.regs.some(g=>g.name===c.name)){
+  if(ratio>.5&&S.regs.length<14+5*S.upg.loyalty&&Math.random()<.12*(1+.5*S.upg.loyalty)*(S.upg.punch?1.25:1)&&!S.regs.some(g=>g.name===c.name)){
     S.regs.push({name:c.name,face:c.face,usual:c.items[0].rec.id,loyal:3});toast('⭐ '+c.name+' is now a regular!')}
 }
 function regMiss(c){if(!c.reg||c.regHit)return;c.regHit=1;c.reg.loyal--;
@@ -1455,7 +1483,7 @@ function rate(s){S.rating=Math.max(1,Math.min(5,S.rating*.85+s*.15))}
 function itemEarn(c,it,staff,q){
   const ratio=c.left/c.max,pr=pRatio(it.rec),pp=price(it.rec);
   if(q==='miss')return pp-(it.rec.addp||0);
-  const tip=(it.rec.mods?1.3:1)*pp*(staff?(.05+.1*ratio):(.08+.27*ratio))*(1+S.upg.quat*.1+S.upg.decor*.05)*Math.max(.1,Math.min(1.3,2-pr))*(c.reg?1.5:1);
+  const tip=(1+.02*S.upg.uniform+.03*S.upg.filter+(S.upg.grinder&&(it.rec.ing.includes('phin')||it.rec.ing.includes('espresso'))?.05:0))*(it.rec.mods?1.3:1)*pp*(staff?(.05+.1*ratio):(.08+.27*ratio))*(1+S.upg.quat*.1+S.upg.decor*.05)*Math.max(.1,Math.min(1.3,2-pr))*(c.reg?1.5:1);
   if(c.del)return APPS[c.del].pick?pp+tip*.4:pp*(1-APPS[c.del].cut);
   let t=tip;if(R.bigTip){t+=20;R.bigTip=0;toast('💵 A customer left a $20 tip!')}
   return pp+t;
@@ -1541,7 +1569,7 @@ function branchDay(b){
   const dem=Math.round((1+.12*appsOn)*base*b.demand*(1+.15*lv)*demand(b.id)*(brRate(b.id)/5)*Math.pow(avgRatio(),-1.5)*(.85+Math.random()*.3));
   const capO=crew.reduce((a,x)=>a+(DAYLEN/(bestSp(x)*spMul(x)))*.9*(x.pos==='flex'?1.15:1),0)*(crew.some(x=>x.mgr)?1.2:1)*(1+.05*(S.upg.machine+S.upg.grill))*(1+.1*S.upg.hq);
   const capC=Math.floor(capO/1.6),served=Math.min(dem,capC),lost=dem-served;
-  const ic=.3-.05*S.upg.ckit-.02*S.upg.farm,rev=served*1.6*avgPrice()*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic,net=rev-ing-b.rent;
+  const ic=.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet,rev=served*1.6*avgPrice()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic,net=rev-ing-b.rent;
   const good=dem?served/dem:0;
   if(crew.length)S.brRate[b.id]=Math.max(1,Math.min(5,brRate(b.id)*.8+(1+4*good-Math.max(0,(avgRatio()-1)*2.5))*.2));
   const reviews=crew.length?makeReviews(good,1+(Math.random()<.4?1:0),b.id):[];
@@ -1591,12 +1619,12 @@ function endDay(){
   R.crew.forEach(w=>{if(w.it&&!w.it.done)w.it.rec.ing.forEach(k=>{S.inv[k]++;R.used[k]--});w.c=null;w.it=null});
   S.lastUsed=R.used;
   R.spoiled=[];
-  Object.keys(ING).forEach(k=>{const keep=(S.upg.tu>=1&&['baguette','milk'].includes(k))||(S.upg.tu>=2)||(S.upg.oven&&k==='baguette')||(S.upg.teabrew&&k==='tea');if(ING[k].per&&!keep&&S.inv[k]>0){R.spoiled.push(ING[k].e+'×'+S.inv[k]);S.inv[k]=0}});
+  Object.keys(ING).forEach(k=>{const keep=(S.upg.tu>=1&&['baguette','milk'].includes(k))||(S.upg.tu>=2)||(S.upg.oven&&k==='baguette')||(S.upg.teabrew&&k==='tea');if(ING[k].per&&!keep&&S.inv[k]>0){const lost=S.upg.vacuum?Math.ceil(S.inv[k]/2):S.inv[k];R.spoiled.push(ING[k].e+'×'+lost);S.inv[k]-=lost}});
   R.br=[];
   S.branches.forEach(id=>{const r=branchDay(LOC[id]);S.money+=r.net;r.id=id;r.n=LOC[id].n;R.br.push(r);S.brStats[id]=r});
   const eqLv=UPG.filter(u=>u.eq&&u.id!=='solar').reduce((a,u)=>a+(S.upg[u.id]||0),0);R.elec=Math.round(eqLv*3*(S.upg.solar?.5:1));S.money-=R.elec;
   R.wages=0;R.quit=[];
-  const busy=R.served/Math.max(1,R.crew.length)>12,mDecay=(S.upg.dish?.75:1)*(S.upg.hr?.5:1);
+  const busy=R.served/Math.max(1,R.crew.length)>12,mDecay=(S.upg.dish?.75:1)*(S.upg.hr?.5:1)*(S.upg.uniform?.9:1);
   S.staff.slice().forEach(x=>{if(S.money>=x.wage){S.money-=x.wage;R.wages+=x.wage;x.days++;
       if(x.days%Math.max(2,5-S.upg.train)===0&&lvl(x)<=5+S.upg.train&&x.days/Math.max(2,5-S.upg.train)<5+S.upg.train){x.mo=Math.min(100,x.mo+10);R.news.push('⬆️ '+x.face+' '+x.name+' reached level '+lvl(x))}
       const mg=x.loc!=='main'&&crewAt(x.loc).some(y=>y.mgr);
@@ -1618,7 +1646,7 @@ function endDay(){
   S.comps=S.comps.filter(c=>c.str>.05);
   if(S.day>=5&&Math.random()<.2){const fr=['main',...S.branches].filter(l=>!S.comps.some(c=>c.loc===l));
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
-  genReviews();S.buzz*=.8;
+  genReviews();S.buzz*=S.upg.pragency?.88:.8;
   finDay();labTeam();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
   {const L=S.lab,un=DISCO.filter(d=>!L.found.includes(d.id)&&!L.leads.includes(d.id));
    if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
@@ -1640,7 +1668,7 @@ function endDay(){
   if(S.day%TAX.quarter===0){
     const taxable=T.qProfit+T.qInv,minQ=TAX.maMin/4;
     let fed=Math.max(0,taxable)*TAX.fed,ma=Math.max(minQ,Math.max(0,taxable)*TAX.ma);
-    const plan=boardOn('cfo','tax')?.9:1;fed*=plan;ma=Math.max(minQ,ma*plan);
+    const plan=(boardOn('cfo','tax')?.9:1)*(S.upg.books?.97:1);fed*=plan;ma=Math.max(minQ,ma*plan);
     const due=fed+ma,pay=Math.min(due,Math.max(0,S.money));S.money-=pay;T.paid.income+=pay;
     if(pay<due){T.owed+=(due-pay)*1.05;R.news.push('⚠️ Not enough cash for quarterly taxes. '+fmt((due-pay)*1.05)+' is overdue (5% penalty)')}
     R.qTax={taxable,fed,ma,due,plan:plan<1};T.hist.unshift({d:S.day,taxable:Math.round(taxable),due:Math.round(due)});T.hist=T.hist.slice(0,8);
@@ -1720,6 +1748,9 @@ function summary(){
 function revHtml(v){return `<div class="rev"><b>${'★'.repeat(v.st)}${'☆'.repeat(5-v.st)}</b> <small>${v.who}, ${locName(v.loc)}</small><br>“${v.txt}”</div>`}
 /* management */
 let MT='staff',ML='main',BT='mine',BS='need';
+const OPEN=new Set();const QS={};
+document.addEventListener('toggle',e=>{const d=e.target;if(d.tagName!=='DETAILS'||!d.dataset.key)return;OPEN.touched=true;d.open?OPEN.add(d.dataset.key):OPEN.delete(d.dataset.key)},true);
+function reapplyFilters(){document.querySelectorAll('#card .lsearch[data-q]').forEach(inp=>{if(!inp.value)return;inp.dataset.q==='bench'?labFilter(inp,'.labgrid .lchip'):labFilter(inp,'.srcrow',1)})}
 function manage(tab){
   if(tab)MT=tab;
   const sc=$('card').scrollTop,locs=['main',...S.branches];if(!locs.includes(ML))ML='main';
@@ -1749,7 +1780,7 @@ function manage(tab){
       <div class="brsort">Sort: ${[['need','Needs staff'],['profit','Profit'],['name','Name']].map(([k,n])=>`<button class="${BS===k?'on':''}" onclick="BS='${k}';manage()">${n}</button>`).join('')}</div>`;
       const rows=opened.map(b=>({b,st:S.brStats[b.id]})).sort((x,y)=>BS==='profit'?((y.st?y.st.net:0)-(x.st?x.st.net:0)):BS==='name'?x.b.n.localeCompare(y.b.n):((y.st?y.st.lost:0)+(crewAt(y.b.id).length?0:999))-((x.st?x.st.lost:0)+(crewAt(x.b.id).length?0:999)));
       body+=rows.map(({b,st})=>{const lv=S.brLvl[b.id]||0,xc=Math.round(b.cost*.6*(lv+1)),r=st&&st.reviews&&st.reviews[0],n=crewAt(b.id).length,flag=!n?'⚪':st&&st.lost>st.dem*.1?'🔴':'🟢';
-        return `<details class="brc"><summary><span class="bf">${flag}</span><span class="bn"><b>${b.n}</b><small>${n}/${cap(b.id)} staff${st?` · ${st.served}/${st.dem} cust · ★${st.rating.toFixed(1)}`:''}</small></span><span class="bp ${st&&st.net<0?'dnt':'upt'}">${st?fmt(st.net):'—'}</span></summary>
+        return `<details class="brc" data-key="br:${b.id}"${OPEN.has('br:'+b.id)?' open':''}><summary><span class="bf">${flag}</span><span class="bn"><b>${b.n}</b><small>${n}/${cap(b.id)} staff${st?` · ${st.served}/${st.dem} cust · ★${st.rating.toFixed(1)}`:''}</small></span><span class="bp ${st&&st.net<0?'dnt':'upt'}">${st?fmt(st.net):'—'}</span></summary>
         <div class="bd">${st?`<div class="stat"><span>Customers</span><span>${st.served} served${st.lost?`, <b class="dnt">${st.lost} turned away</b>`:''}</span></div><div class="stat"><span>Can handle</span><span>~${st.cap} customers</span></div><div class="stat"><span>Ingredients</span><span>${fmt(st.ing)}</span></div>`:''}
         <div class="stat"><span>Rent</span><span>${fmt(b.rent)}/day</span></div><div class="stat"><span>Size</span><span>${lv+1}/7</span></div>
         ${r?`<p class="note">“${r.txt}” ${'★'.repeat(r.st)}</p>`:''}
@@ -1836,7 +1867,7 @@ function manage(tab){
   <div class="tabs">${tabs.map(([k,n])=>`<button class="${k===MT?'on':''}" onclick="manage('${k}')">${n}</button>`).join('')}</div>${body}
   <button class="big" onclick="preDay()">Go to market</button>`);
   if(MT==='upg'||MT==='eq')renderUpg();
-  $('card').scrollTop=sc;
+  reapplyFilters();$('card').scrollTop=sc;
 }
 const LOANS=[{amt:1000,rate:.01,days:15},{amt:5000,rate:.012,days:20},{amt:20000,rate:.015,days:30,req:3}];
 const avgProfit=()=>{const h=S.hist.slice(-7);return h.length?h.reduce((a,x)=>a+x.p,0)/h.length:0};
@@ -2029,14 +2060,14 @@ function labBody(){
   if(L.last)b+=`<div class="labres ${L.last.ok?'ok':L.last.close?'close':'bad'}">${L.last.msg}</div>`;
   b+=`<p style="font-weight:800;margin:12px 0 4px">🧪 Test bench <small>(${sel.length}/6 picked)</small></p>
   <div class="bench">${sel.length?sel.map((k,i)=>`<button class="bchip" onclick="labPick('${k}')">${ING[k].e} ${ING[k].n} ✕</button>`).join(''):'<span class="note">Tap ingredients below to add them.</span>'}</div>
-  <input class="lsearch" placeholder="🔍 Search your ingredients" oninput="labFilter(this,'.labgrid .lchip')">
+  <input class="lsearch" data-q="bench" placeholder="🔍 Search your ingredients" value="${(QS.bench||'').replace(/"/g,'')}" oninput="QS.bench=this.value;labFilter(this,'.labgrid .lchip')">
   <div class="labgrid">${pool.map(k=>`<button class="lchip${sel.includes(k)?' on':''}${hasIng(k)?'':' out'}" data-n="${ING[k].n.toLowerCase()} ${(ING[k].reg||'').toLowerCase()}" onclick="labPick('${k}')"><span>${ING[k].e}</span>${ING[k].n}</button>`).join('')}</div>
   <button class="big" ${sel.length<2||S.money<LAB_FEE||!sel.every(hasIng)?'disabled':''} onclick="labTest()">Test this recipe (${fmt(LAB_FEE)})</button>
   ${sel.length&&!sel.every(hasIng)?'<p class="note" style="color:#B3261E">Some picked ingredients are out of stock. Buy them at the market first.</p>':''}`;
   const srcList=Object.keys(ING).filter(k=>ING[k].src),regs=[...new Set(srcList.map(contOf))];
   b+=`<p style="font-weight:800;margin:14px 0 4px">🌏 Source ingredients from around the world <small>(${L.src.length}/${srcList.length})</small></p><p class="note">Find a supplier once, then buy it at the market like anything else. The first batch is free.</p>
-  <input class="lsearch" placeholder="🔍 Search: yuzu, Japan, chocolate…" oninput="labFilter(this,'.srcrow',1)">`+
-  regs.map(rg=>{const ks=srcList.filter(k=>contOf(k)===rg);return `<details class="srcgrp"${rg.includes('Lab')?' open':''}><summary>${rg} <small>(${ks.filter(k=>L.src.includes(k)).length}/${ks.length})</small></summary>`+
+  <input class="lsearch" data-q="src" placeholder="🔍 Search: yuzu, Japan, chocolate…" value="${(QS.src||'').replace(/"/g,'')}" oninput="QS.src=this.value;labFilter(this,'.srcrow',1)">`+
+  regs.map(rg=>{const ks=srcList.filter(k=>contOf(k)===rg);return `<details class="srcgrp" data-key="src:${rg}"${OPEN.has('src:'+rg)||(!OPEN.touched&&rg.includes('Lab'))?' open':''}><summary>${rg} <small>(${ks.filter(k=>L.src.includes(k)).length}/${ks.length})</small></summary>`+
     ks.map(k=>`<div class="upg srcrow" data-n="${ING[k].n.toLowerCase()} ${rg.toLowerCase()} ${(ING[k].tags||[]).join(' ')}"><span class="fc">${ING[k].e}</span><div><b>${ING[k].n}</b><br><small>${ING[k].reg?ING[k].reg+' · ':''}${(ING[k].tags||[]).join(' · ')}</small></div>${L.src.includes(k)?'<small style="font-weight:800;color:#2E9B6F">✓</small>':`<button ${S.money<srcFee(k)?'disabled':''} onclick="sourceIng('${k}')">${fmt(srcFee(k))}</button>`}</div>`).join('')+`</details>`}).join('');
   const book=[...L.found.map(id=>DISCO.find(x=>x.id===id)),...L.custom];
   b+=`<p style="font-weight:800;margin:14px 0 4px">📓 Recipe notebook (${book.length})</p><p class="note">Classic ideas found: ${L.found.length}/${DISCO.length} · Your own creations: ${L.custom.length} · On the menu: ${book.filter(d=>!L.off.includes(d.id)).length}. No limit, and you can take items off the menu any time.</p>${book.length>4?'<input class="lsearch" placeholder="🔍 Search the notebook" oninput="labFilter(this,\'.note-card\')">':''}`+
@@ -2163,7 +2194,7 @@ function runBoard(){
       if(S.cands.length<3)S.cands=S.cands.concat(genCands());          // post a job ad for more applicants
       S.cands.sort((a,b)=>((want&&!a.skills[want]?1:0)-(want&&!b.skills[want]?1:0))||(bestSp(a)*a.wage-bestSp(b)*b.wage));
       const c=S.cands[0];if(spendable()<c.wage*3+30){noCash++;break}
-      S.cands.shift();S.money-=30;S.staff.push({...c,loc:n.l,days:0,mo:70});hired++;
+      S.cands.shift();S.money-=30;S.staff.push({...c,loc:n.l,days:S.upg.academy?5:0,mo:70});hired++;
       log.push('👩‍💼 Hired '+c.face+' '+c.name+' for '+locName(n.l)+' ('+fmt(c.wage)+'/day)')}});
     if(hired)log.push('👩‍💼 Job ads and onboarding: -'+fmt(hired*30));
     if(noCash)log.push('👩‍💼 Wanted to hire more but spare cash is below your reserve. Lower the reserve or grow profit.');
@@ -2186,7 +2217,7 @@ function fireExec(k){S.board[k].on=false;save();toast(EXECS[k].n+' left the boar
 function rehireExec(k){const e=EXECS[k];if(S.money<e.fee/2)return;S.money-=e.fee/2;S.board[k].on=true;save();manage()}
 function toggleOpt(k,o){const b=S.board[k];b.opts[o]=b.opts[o]?0:1;save();manage()}
 function hire(i){const c=S.cands[i];if(!c||crewAt(ML).length>=cap(ML))return;
-  S.staff.push({...c,loc:ML,days:0,mo:70});S.cands.splice(i,1);save();sfx.coin();toast('Hired '+c.name+' for '+locName(ML));manage()}
+  S.staff.push({...c,loc:ML,days:S.upg.academy?5:0,mo:70});S.cands.splice(i,1);save();sfx.coin();toast('Hired '+c.name+' for '+locName(ML));manage()}
 function fire(id){const x=S.staff.find(y=>y.id===id);S.staff=S.staff.filter(y=>y.id!==id);save();toast(x.name+' was let go');manage()}
 function moveStaff(id,l){const x=S.staff.find(y=>y.id===id);
   if(crewAt(l).length>=cap(l)){toast(locName(l)+' is fully staffed');manage();return}
@@ -2209,7 +2240,7 @@ function preDay(){
   if(S.known.length>=REC.length&&!S.allDone){S.allDone=1;save();showModal(`<h2>Full menu unlocked!</h2><p>All ${REC.length} items on the Saigonesee menu are researched.</p><p>From here the game goes on forever. Once you're past day 15, each day gets a little busier and customers get a little less patient. Every 7th day is a weekend with three train rushes. How far can you go?</p><button class="big" onclick="market()">Go to market</button>`);return}
   market();
 }
-function needFor(k){const u=S.lastUsed[k]||0;return Math.ceil((u||4)*1.25)}
+function needFor(k){const u=S.lastUsed[k]||0;return Math.ceil((u||4)*1.4)}
 function restock(){S.spike=S.spikeNext;
   let spent=0,miss=0;
   ING_ORDER.filter(k=>needSet().has(k)).forEach(k=>{
@@ -2224,12 +2255,12 @@ function market(){
     return `<div class="mrow"><span class="mic">${g.e}</span><div class="minfo"><b>${g.n}</b><small class="${low?'lowtxt':''}">📦 ${have} left · need about ${nd}</small><small>1 ${g.u} = ${g.q} servings${g.per&&!S.upg.tu?' · <span class="tag">spoils overnight</span>':''}</small></div><div class="mbtns"><button class="mbuy" data-k="${k}" data-n="1" ${S.money<ingPrice(k)?'disabled':''}><b>${fmt(ingPrice(k))}</b><span>Buy</span></button><button class="mbulk" data-k="${k}" data-n="5" ${S.money<ingPrice(k)*4.25?'disabled':''}>×5 · ${fmt(ingPrice(k)*4.25)}</button></div></div>`}).join('');
   const miss=unlocked().filter(r=>r.ing.some(k=>!(S.inv[k]>0))).map(r=>r.n);
   showModal(`<h2>Market</h2><p>Cash on hand: <b>${fmt(S.money)}</b><br>Today: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${ING[S.spikeNext].n} costs 50% more today</div>`:''}${S.upg.supplier?'<p class="note">📦 Your supplier contract restocks Weymouth automatically when you open.</p>':''}<p class="note">This is for Weymouth. Branches order their own ingredients, and the cost shows in their daily report. Buy ×5 in bulk to save 15%.</p>
-  ${est?`<button class="big alt" onclick="restock()">🛒 Restock to last day's usage (${fmt(est)})</button>`:'<p class="note">✓ Stocked for a day like the last one.</p>'}
+  ${est?`<button class="big alt" onclick="restock()">🛒 Restock: last day's usage +40% (${fmt(est)})</button>`:'<p class="note">✓ Stocked for a day like the last one.</p>'}
   ${rows}
   ${miss.length?`<div class="warn">Not enough ingredients for: ${miss.join(', ')}</div>`:''}
   <button class="big" onclick="startDay()">Open day ${S.day}</button>
   <button class="big alt" onclick="manage()">Manage shop</button>`);
-  document.querySelectorAll('#card button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,g=ING[k],n=+b.dataset.n,c=n===5?ingPrice(k)*(S.upg.freezer&&PROTEINS.includes(k)?3.75:4.25):ingPrice(k);
+  document.querySelectorAll('#card button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,g=ING[k],n=+b.dataset.n,c=n===5?ingPrice(k)*(S.upg.freezer&&PROTEINS.includes(k)?3.75:S.upg.shelving?4:4.25):ingPrice(k);
     if(S.money<c)return;S.money-=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+g.q*n;save();sfx.coin();
     const sc=$('card').scrollTop;market();$('card').scrollTop=sc});
 }
