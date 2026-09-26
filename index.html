@@ -724,6 +724,39 @@ body{background-color:#0E0E0E;background-image:
 .stf[open] .chev{transform:rotate(180deg)}
 .stf .sd{padding:0 0 10px 48px}
 .stf .sd .posb{padding-left:0!important;margin-top:6px}
+.fview{background:linear-gradient(#BFE3F5 0,#E6F4FA 38px,#9BCB6B 38px,#86B85A 100%);border-radius:14px;padding:6px 8px 8px;margin:8px 0;border:2px solid #111}
+.fview.empty{background:linear-gradient(#BFE3F5,#9BCB6B);text-align:center;padding:18px 10px}.fview.empty p{font-weight:800}
+.fview .sky{font-weight:800;font-size:13px;color:#1b3a4b;height:30px;display:flex;align-items:center}
+.freg{margin-top:4px}.frl{font-size:12px;font-weight:800;color:#fff;text-shadow:0 1px 2px #0008;margin:2px 2px 4px}
+.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.ftile{background:rgba(255,255,255,.35);border-radius:10px;padding:2px 3px 4px;text-align:center;min-width:0}
+.ftile .tree svg{width:100%;height:56px;display:block}
+.ftile .tree{transform-origin:50% 90%;animation:sway 4s ease-in-out infinite}
+.ftile.st0 .tree,.ftile.st1 .tree{animation:none}
+.ftile .tb{height:5px;background:#0002;border-radius:4px;overflow:hidden;margin:1px 2px}.ftile .tb b{display:block;height:100%;background:#F3D03E}
+.ftile.st5 .tb b{background:#D32F2F}
+.ftile small{display:block;font-size:10px;font-weight:800;color:#1f3a14;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ftile.st5{box-shadow:0 0 0 2px #D32F2F inset}
+@keyframes sway{50%{transform:rotate(1.5deg)}}
+.fact{background:#1E1E1E;border-radius:14px;padding:10px;margin:8px 0;color:#eee;display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center}
+.fact small{display:block;font-size:11px;font-weight:700;color:#ccc;text-align:center}
+.roaster svg{width:64px;height:64px}.drum.spin{animation:spin 3s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.beltwrap{min-width:0}
+.belt{position:relative;height:62px;background:#444;border-radius:8px;overflow:hidden;border-bottom:4px solid #222}
+.belt.run{background:repeating-linear-gradient(90deg,#4a4a4a 0 14px,#3c3c3c 14px 28px);background-size:28px 100%;animation:beltmove .6s linear infinite}
+@keyframes beltmove{to{background-position:28px 0}}
+.bag{position:absolute;bottom:2px;left:-40px;width:36px;height:46px;animation:bagmove 7.7s linear infinite}
+.bag svg{width:100%;height:100%}
+@keyframes bagmove{from{transform:translateX(0)}to{transform:translateX(calc(100vw))}}
+.belt .idle{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#bbb;text-align:center;padding:0 6px}
+.rollers{height:8px;background:radial-gradient(circle,#777 0 3px,transparent 3.5px) 0 0/14px 8px;margin:2px 0 3px}
+.fstat{grid-column:1/-1;font-size:12.5px;color:#ddd;text-align:center}
+@media (prefers-reduced-motion:reduce){.ftile .tree,.drum.spin,.belt.run,.bag{animation:none}}
+.mgrp summary{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mgn{font-weight:800}.mlow{font-size:12.5px;font-weight:800;color:#B3261E}.mok{font-size:12.5px;font-weight:800;color:#2E9B6F}
+.mgrp .flyall{margin:4px 0 6px}
+.mtop .big{margin-top:8px}
 </style>
 </head>
 <body>
@@ -976,45 +1009,56 @@ function makeCustom(sel,ev){
 const FACES=['🧑','👩','👨','🧓','👵','👴','👱‍♀️','🧔','👩‍🦱','🧑‍🦰','👷','🧑‍💼','👩‍🎓','🧑‍🎨'];
 const UPG=[
   {g:'Weymouth shop'},
-  {id:'ghe',n:'🪑 More stools',d:'Customers wait longer',base:30,max:10},
-  {id:'decor',n:'🎵 Music & decor',d:'Customers wait 5% longer and tip 5% more per level',base:120,max:5},
-  {id:'quat',n:'🌀 Electric fan',d:'Customers tip more',base:40,max:10},
-  {id:'bang',n:'💡 Neon sign',d:'More customers come in',base:55,max:10},
-  {id:'patio',n:'⛱️ Patio seating',d:'+10% customers on sunny and hot days per level',base:300,max:2},
+  {id:'ghe',n:'🪑 More stools',d:'Customers wait longer',base:30,max:20},
+  {id:'decor',n:'🎵 Music & decor',d:'Customers wait 5% longer and tip 5% more per level',base:120,max:10},
+  {id:'quat',n:'🌀 Electric fan',d:'Customers tip more',base:40,max:20},
+  {id:'bang',n:'💡 Neon sign',d:'More customers come in',base:55,max:20},
+  {id:'patio',n:'⛱️ Patio seating',d:'+10% customers on sunny and hot days per level',base:300,max:4},
   {id:'quay',n:'🛎️ Bigger counter',d:'Room for 1 more customer at the counter (up to 8)',base:140,max:5},
   {id:'line',n:'🚶 Waiting line',d:'1 more spot in the waiting line (starts with 2)',base:60,max:5},
   {id:'station',n:'🧑‍🍳 Extra work station',d:'Room for 1 more staff member at Weymouth (up to 16)',base:180,max:13},
-  {id:'plants',n:'🪴 Plants & greenery',d:'Customers wait 3% longer per level',base:150,max:3},
-  {id:'wifi',n:'📶 Free Wi-Fi',d:'+4% customers at Weymouth per level',base:180,max:2},
-  {id:'restroom',n:'🚻 Nicer restroom',d:'Customers wait 4% longer per level',base:250,max:2},
+  {id:'plants',n:'🪴 Plants & greenery',d:'Customers wait 3% longer per level',base:150,max:6},
+  {id:'wifi',n:'📶 Free Wi-Fi',d:'+4% customers at Weymouth per level',base:180,max:4},
+  {id:'restroom',n:'🚻 Nicer restroom',d:'Customers wait 4% longer per level',base:250,max:4},
   {id:'kids',n:'🧸 Kids corner',d:'+8% customers at Weymouth on weekends',base:300,max:1},
   {id:'menus',n:'🖨️ Menus in 3 languages',d:'+3% customers at Weymouth',base:120,max:1},
   {id:'uniform',n:'👕 Staff uniforms',d:'Morale drops 10% slower and tips +2%',base:220,max:1},
   {id:'window',n:'🪟 Pickup window',d:'Delivery and pickup orders wait 15% longer',base:400,max:1},
+  {id:'aroma',n:'☕ Coffee aroma diffuser',d:'+2% customers at Weymouth per level',base:250,max:5},
+  {id:'lighting',n:'💡 Warm lighting',d:'Customers wait 2% longer per level',base:200,max:5},
+  {id:'selfkiosk',n:'🖥️ Self-order kiosks',d:'Customers wait 8% longer per level',base:900,max:2},
+  {id:'drive',n:'🚗 Drive-thru lane',d:'+12% customers at Weymouth',base:5000,max:1},
+  {id:'music',n:'🎸 Weekend live music',d:'+10% customers on weekends',base:1500,max:1},
   {g:'Company'},
-  {id:'kiosk',n:'📲 Online ordering',d:'+7% customers everywhere per level',base:400,max:3},
-  {id:'loyalty',n:'💳 Loyalty app',d:'More regulars, up to 5 more per level',base:350,max:3},
-  {id:'train',n:'🎓 Barista training program',d:'Staff level up faster and can reach higher levels',base:500,max:3},
-  {id:'lab',n:'🔬 Test kitchen',d:'Research 1 more item at a time',base:150,max:3},
-  {id:'hq',n:'🏢 Regional office',d:'Branches handle 10% more customers per level',base:1200,max:3},
-  {id:'ckit',n:'🏭 Central kitchen',d:'Cheaper proteins and branch ingredients per level',base:1500,max:3},
-  {id:'tv',n:'📺 Digital menu board',d:'Customers accept 10% higher prices before walking out, per level',base:300,max:2},
+  {id:'kiosk',n:'📲 Online ordering',d:'+7% customers everywhere per level',base:400,max:6},
+  {id:'loyalty',n:'💳 Loyalty app',d:'More regulars, up to 5 more per level',base:350,max:5},
+  {id:'train',n:'🎓 Barista training program',d:'Staff level up faster and can reach higher levels',base:500,max:5},
+  {id:'lab',n:'🔬 Test kitchen',d:'Research 1 more item at a time',base:150,max:5},
+  {id:'hq',n:'🏢 Regional office',d:'Branches handle 10% more customers per level',base:1200,max:6},
+  {id:'ckit',n:'🏭 Central kitchen',d:'Cheaper proteins and branch ingredients per level',base:1500,max:5},
+  {id:'tv',n:'📺 Digital menu board',d:'Customers accept 10% higher prices before walking out, per level',base:300,max:4},
   {id:'pager',n:'📟 Order-ready pagers',d:'Customers and the line wait 10% longer',base:260,max:1},
   {id:'van',n:'🚐 Catering van',d:'Catering orders pay 25% more and you get more requests',base:800,max:1},
   {id:'supplier',n:'📦 Supplier contract',d:'Weymouth restocks itself every morning to match the last day',base:600,max:1},
   {id:'hr',n:'🤝 HR manager',d:'Staff morale drops 50% slower',base:1000,max:1},
   {id:'insurance',n:'🛡️ Business insurance',d:'Losses from accidents and theft are cut in half',base:600,max:1},
   {id:'punch',n:'🎟️ Rewards punch card',d:'Customers become regulars 25% more often',base:300,max:1},
-  {id:'franchise',n:'🤝 Franchise program',d:'Branches earn 5% more revenue per level',base:2000,max:3},
+  {id:'franchise',n:'🤝 Franchise program',d:'Branches earn 5% more revenue per level',base:2000,max:6},
   {id:'fleet',n:'🚚 Own delivery trucks',d:'Branches spend 3% less on ingredients',base:1800,max:1},
   {id:'academy',n:'🏫 Saigonesee Academy',d:'New hires start at level 2',base:1500,max:1},
   {id:'books',n:'🧮 Accounting software',d:'3% less income tax',base:500,max:1},
   {id:'pragency',n:'📰 PR agency',d:'Buzz fades more slowly',base:900,max:1},
-  {id:'farm',n:'🌱 Robusta farm in Vietnam',d:'Cheaper phin coffee and free servings every morning, per level',base:2500,max:3},
+  {id:'brand',n:'🏷️ Brand campaign',d:'Buzz never drops below +5% per level',base:2500,max:5},
+  {id:'cloud',n:'☁️ Pricing analytics',d:'Customers accept 5% higher prices per level',base:1200,max:3},
+  {id:'bulkdeal',n:'🤝 Supplier bulk deal',d:'All ingredients 5% cheaper per level',base:1500,max:4},
+  {id:'academy2',n:'🎓 Master barista course',d:'Staff can reach 1 more level per level',base:3000,max:3},
+  {id:'benefits',n:'🩺 Staff health benefits',d:'Morale drops 10% slower per level',base:2000,max:3},
+  {id:'profitshare',n:'💰 Profit sharing',d:'Every staff member gains +5 morale each night',base:8000,max:1},
+  {id:'farm',n:'🌱 Robusta farm in Vietnam',d:'Cheaper phin coffee and free servings every morning, per level',base:2500,max:5},
   {g:'Bar equipment',eq:1},
   {id:'espresso',eq:1,n:'☕ Espresso machine',d:'Unlocks espresso drinks: Espresso, Americano, Latte, Mocha, Hot Biscoff Latte. Level 2 makes them 20% faster',base:450,max:2},
   {id:'icemaker',eq:1,n:'🧊 Ice machine',d:'Unlimited free ice every day. Level 2 also speeds up iced drinks 10%',base:350,max:2},
-  {id:'machine',eq:1,n:'⚙️ Batch brewer',d:'Bar orders 10% faster per level',base:350,max:3},
+  {id:'machine',eq:1,n:'⚙️ Batch brewer',d:'Bar orders 10% faster per level',base:350,max:5},
   {id:'blender',eq:1,n:'🌀 Commercial blender',d:'Coconut, mango and strawberry drinks 25% faster',base:300,max:1},
   {id:'teabrew',eq:1,n:'🫖 Tea brewer',d:'Jasmine tea drinks 25% faster and tea keeps overnight',base:280,max:1},
   {id:'juicer',eq:1,n:'🍊 Juicer',d:'Unlocks Sugarcane Juice. Orange juice and lemonade 30% faster',base:420,max:1},
@@ -1026,8 +1070,11 @@ const UPG=[
   {id:'dispenser',eq:1,n:'🍯 Syrup & milk dispenser',d:'Drinks with syrup or condensed milk 10% faster',base:260,max:1},
   {id:'filter',eq:1,n:'💧 Water filtration',d:'Better-tasting drinks: tips +3%',base:350,max:1},
   {id:'icecream',eq:1,n:'🧊 Blast chiller',d:'Iced drinks 8% faster',base:420,max:1},
+  {id:'nitro',eq:1,n:'🍺 Nitro cold brew tap',d:'Cold brew drinks 20% faster and tips +5%',base:1200,max:1},
+  {id:'robotarm',eq:1,n:'🦾 Robot barista arm',d:'Bar orders 8% faster per level',base:6000,max:3},
+  {id:'roaster2',eq:1,n:'🔥 In-shop roaster',d:'Phin coffee 30% cheaper',base:4000,max:1},
   {g:'Kitchen equipment',eq:1},
-  {id:'grill',eq:1,n:'🔥 Bigger grill',d:'Kitchen orders 10% faster per level',base:350,max:3},
+  {id:'grill',eq:1,n:'🔥 Bigger grill',d:'Kitchen orders 10% faster per level',base:350,max:5},
   {id:'fryer',eq:1,n:'🍳 Deep fryer',d:'Unlocks Egg Rolls and Egg Roll Vermicelli Bowl',base:500,max:1},
   {id:'oven',eq:1,n:'🥖 Bread oven',d:'Bake baguettes in-house: half price and they keep overnight',base:700,max:1},
   {id:'steamer',eq:1,n:'♨️ Steamer',d:'Bao buns and spring rolls 20% faster',base:250,max:1},
@@ -1036,11 +1083,13 @@ const UPG=[
   {id:'toaster',eq:1,n:'🍞 Conveyor toaster',d:'Banh mi 12% faster',base:450,max:1},
   {id:'ricecooker',eq:1,n:'🍚 Commercial rice cooker',d:'Vermicelli and rice dishes 10% faster',base:220,max:1},
   {id:'slicer',eq:1,n:'🔪 Meat slicer',d:'Anything with meat 10% faster',base:380,max:1},
-  {id:'prepst',eq:1,n:'🥗 Prep station',d:'All kitchen orders 5% faster',base:600,max:2},
+  {id:'prepst',eq:1,n:'🥗 Prep station',d:'All kitchen orders 5% faster',base:600,max:4},
+  {id:'autofryer',eq:1,n:'🍳 Auto fryer',d:'Fried items 15% faster',base:1500,max:1},
+  {id:'robochef',eq:1,n:'🤖 Robot line cook',d:'Kitchen orders 8% faster per level',base:6000,max:3},
   {g:'Storage & power',eq:1},
   {id:'tu',eq:1,n:'❄️ Walk-in fridge',d:'Level 1: baguettes and milk keep overnight. Level 2: greens, foams and fruit too',base:90,max:2},
   {id:'freezer',eq:1,n:'🧊 Freezer',d:'Proteins bought in bulk cost 10% less',base:400,max:1},
-  {id:'maint',eq:1,n:'🔧 Maintenance contract',d:'Machines break down half as often per level',base:250,max:2},
+  {id:'maint',eq:1,n:'🔧 Maintenance contract',d:'Machines break down half as often per level',base:250,max:3},
   {id:'generator',eq:1,n:'🔋 Backup generator',d:'Power outages no longer stop work',base:600,max:1},
   {id:'solar',eq:1,n:'☀️ Solar panels',d:'Cuts the daily electric bill for all your machines by 50%',base:1500,max:1},
   {id:'cams',eq:1,n:'📹 Security cameras',d:'Stops cash register theft',base:350,max:1},
@@ -1049,7 +1098,16 @@ const UPG=[
   {id:'tap',eq:1,n:'💳 Tap-to-pay terminals',d:'Faster checkout: customers wait 5% longer',base:250,max:1},
   {id:'hvac',eq:1,n:'🌡️ HVAC system',d:'Heat waves and freezing days hurt traffic half as much',base:900,max:1},
   {id:'firesup',eq:1,n:'🧯 Fire suppression',d:'Machine breakdowns last half as long',base:500,max:1},
-  {id:'clean',eq:1,n:'🧽 Cleaning crew',d:'Better odds of passing health inspections',base:200,max:2},
+  {id:'smartfridge',eq:1,n:'📡 Smart fridge',d:'Nothing spoils overnight',base:5000,max:1},
+  {id:'battery',eq:1,n:'🔋 Battery storage',d:'Another 25% off the electric bill',base:3000,max:1},
+  {id:'evvans',eq:1,n:'🚐 Electric delivery vans',d:'Delivery apps take 5% less',base:4000,max:1},
+  {g:'Coffee farm & roastery',eq:1},
+  {id:'irrig',eq:1,n:'💧 Drip irrigation',d:'Farm harvests +10% per level',base:3000,max:5},
+  {id:'fert',eq:1,n:'🌿 Organic fertilizer',d:'Farm harvests +8% per level',base:2000,max:3},
+  {id:'dryyard',eq:1,n:'☀️ Drying yard & hulling mill',d:'5.5 kg cherries make 1 kg roasted instead of 6',base:6000,max:1},
+  {id:'agronomist',eq:1,n:'🧑‍🔬 Agronomist',d:'Droughts, frost and pests do half the damage',base:4000,max:1},
+  {id:'packfast',eq:1,n:'📦 High-speed bagger',d:'Packing costs half as much',base:5000,max:1},
+  {id:'clean',eq:1,n:'🧽 Cleaning crew',d:'Better odds of passing health inspections',base:200,max:4},
 ];
 const UPG_IDS=UPG.filter(u=>u.id).map(u=>u.id);
 const DAYLEN=100, KEY='saigonesee-game-v5';
@@ -1142,6 +1200,39 @@ const NAMES=['Linh','Tuấn','Mai','Khoa','Vy','Hùng','Trâm','Duy','Thảo','P
  'Conor','Siobhan','Patrick','Bridget','Tiago','Beatriz','Gabriel','Larissa','Nadia','Ivan','Elena','Marco','Giulia'];
 const SFACES=['👩‍🍳','🧑‍🍳','👨‍🍳','👩','🧑','👨','👱‍♀️','👩‍🦱','🧔'];
 const LOC={
+  worcester:{id:'worcester',n:'Worcester',cost:1300,rent:55,demand:1.6,st:'MA'},
+  springfield:{id:'springfield',n:'Springfield',cost:1100,rent:48,demand:1.5,st:'MA'},
+  lowell:{id:'lowell',n:'Lowell',cost:1000,rent:45,demand:1.45,st:'MA'},
+  salem:{id:'salem',n:'Salem',cost:1200,rent:52,demand:1.55,st:'MA'},
+  framingham:{id:'framingham',n:'Framingham',cost:1150,rent:50,demand:1.5,st:'MA'},
+  waltham:{id:'waltham',n:'Waltham',cost:1500,rent:62,demand:1.65,st:'MA'},
+  lexington:{id:'lexington',n:'Lexington',cost:1700,rent:70,demand:1.7,st:'MA'},
+  burlington:{id:'burlington',n:'Burlington',cost:1400,rent:58,demand:1.6,st:'MA'},
+  hyannis:{id:'hyannis',n:'Hyannis (Cape Cod)',cost:1300,rent:56,demand:1.55,st:'MA'},
+  provincetown:{id:'provincetown',n:'Provincetown',cost:1600,rent:66,demand:1.6,st:'MA'},
+  nantucket:{id:'nantucket',n:'Nantucket',cost:2600,rent:100,demand:1.9,st:'MA'},
+  marthas:{id:'marthas',n:'Martha\'s Vineyard',cost:2400,rent:95,demand:1.85,st:'MA'},
+  amherst:{id:'amherst',n:'Amherst',cost:900,rent:40,demand:1.35,st:'MA'},
+  newburyport:{id:'newburyport',n:'Newburyport',cost:1300,rent:55,demand:1.5,st:'MA'},
+  providence:{id:'providence',n:'Providence',cost:2000,rent:80,demand:1.85,st:'RI'},
+  newport:{id:'newport',n:'Newport',cost:2200,rent:88,demand:1.8,st:'RI'},
+  warwick:{id:'warwick',n:'Warwick',cost:1200,rent:50,demand:1.5,st:'RI'},
+  pawtucket:{id:'pawtucket',n:'Pawtucket',cost:1000,rent:44,demand:1.4,st:'RI'},
+  manchester:{id:'manchester',n:'Manchester',cost:1300,rent:54,demand:1.55,st:'NH'},
+  nashua:{id:'nashua',n:'Nashua',cost:1200,rent:50,demand:1.5,st:'NH'},
+  portsmouth:{id:'portsmouth',n:'Portsmouth',cost:1700,rent:70,demand:1.7,st:'NH'},
+  concord:{id:'concord',n:'Concord',cost:1000,rent:44,demand:1.4,st:'NH'},
+  portlandme:{id:'portlandme',n:'Portland',cost:1800,rent:72,demand:1.75,st:'ME'},
+  bangor:{id:'bangor',n:'Bangor',cost:900,rent:40,demand:1.3,st:'ME'},
+  barharbor:{id:'barharbor',n:'Bar Harbor',cost:1500,rent:64,demand:1.55,st:'ME'},
+  kennebunk:{id:'kennebunk',n:'Kennebunkport',cost:1400,rent:60,demand:1.5,st:'ME'},
+  hartford:{id:'hartford',n:'Hartford',cost:1800,rent:72,demand:1.75,st:'CT'},
+  newhaven:{id:'newhaven',n:'New Haven',cost:2100,rent:84,demand:1.85,st:'CT'},
+  stamford:{id:'stamford',n:'Stamford',cost:2600,rent:100,demand:1.95,st:'CT'},
+  mystic:{id:'mystic',n:'Mystic',cost:1300,rent:55,demand:1.5,st:'CT'},
+  burlingtonvt:{id:'burlingtonvt',n:'Burlington',cost:1400,rent:58,demand:1.6,st:'VT'},
+  montpelier:{id:'montpelier',n:'Montpelier',cost:900,rent:40,demand:1.3,st:'VT'},
+  stowe:{id:'stowe',n:'Stowe',cost:1500,rent:64,demand:1.55,st:'VT'},
   quincy:{id:'quincy',n:'Quincy',cost:400,rent:25,demand:1.2},
   holbrook:{id:'holbrook',n:'Holbrook',cost:380,rent:20,demand:1.0},
   abington:{id:'abington',n:'Abington',cost:420,rent:22,demand:1.05},
@@ -1209,18 +1300,18 @@ if(!S.v17){if(S.upg.tu===1)S.upg.tu=2;S.v17=1}
 S.wx=S.wx||{t:rollWx(S.day),n:rollWx(S.day+1)};S.loans=S.loans||[];S.hist=S.hist||[];S.ipo=S.ipo||{sold:0};S.spend=S.spend||0;S.apps=S.apps||{};S.catOffers=S.catOffers||[];S.hof=S.hof||[];
 S.brLvl=S.brLvl||{};S.brRate=S.brRate||{};S.brStats=S.brStats||{};S.lastUsed=S.lastUsed||{};S.branches=(S.branches||[]).filter(b=>LOC[b]);
 S.staff.forEach(x=>{if(x.mo==null)x.mo=70});
-const locName=l=>l==='main'?'Weymouth':LOC[l].n;
-const lvl=x=>Math.min(5+S.upg.train,1+Math.floor(x.days/Math.max(2,5-S.upg.train)));
+const locName=l=>l==='main'?'Weymouth':LOC[l].n+(LOC[l].st&&LOC[l].st!=='MA'?', '+LOC[l].st:'');
+const lvl=x=>Math.min(5+S.upg.train+S.upg.academy2,1+Math.floor(x.days/Math.max(2,5-S.upg.train)));
 const moFace=m=>m>80?'😄':m>50?'🙂':m>25?'😐':'😟';
 const spMul=x=>(1-.06*(lvl(x)-1))*(x.mo<25?1.25:x.mo>80?.9:1);
 const campOn=(id,l)=>S.camps.find(c=>c.id===id&&(!l||c.loc===l));
 const boost=l=>S.camps.reduce((a,c)=>{const k=CAMP.find(z=>z.id===c.id);return a+(k.local?(c.loc===l?k.main:0):k.all)},0);
 const compHit=l=>{const c=S.comps.find(z=>z.loc===l);return c?c.str*.35:0};
-const demand=l=>(1+boost(l))*(1+S.buzz)*(1-compHit(l))*(1+.07*S.upg.kiosk)*wxMul()*(l==='main'?(1+.04*S.upg.wifi)*(1+.03*S.upg.menus)*(S.upg.kids&&S.day%7===0?1.08:1):1);
-const recMul=r=>{let m=S.upg.kds?.92:1;const I=r.ing;if(S.upg.steamer2&&I.includes('milk'))m*=.9;if(S.upg.dispenser&&(I.includes('syrup')||I.includes('cond')))m*=.9;if(S.upg.icecream&&I.includes('ice'))m*=.92;if(S.upg.toaster&&I.includes('baguette'))m*=.88;if(S.upg.ricecooker&&(I.includes('bun')||I.includes('sticky')))m*=.9;if(S.upg.slicer&&I.some(k=>PROTEINS.includes(k)))m*=.9;if(r.k==='food')m*=1-.05*S.upg.prepst;if(S.upg.teabrew&&r.ing.includes('tea'))m*=.75;if(S.upg.juicer&&r.ing.some(k=>['orange','slmix'].includes(k)))m*=.7;if(S.upg.autophin&&r.ing.includes('phin'))m*=.8;if(r.req==='espresso'&&S.upg.espresso>1)m*=.8;if(S.upg.icemaker>1&&r.ing.includes('ice'))m*=.9;if(S.upg.blender&&r.ing.some(k=>['coconut','mango','straw'].includes(k)))m*=.75;if(S.upg.steamer&&r.ing.some(k=>['bao','ricepaper'].includes(k)))m*=.8;return m};
-const stMul=st=>(1-.1*(st==='bar'?S.upg.machine:S.upg.grill))*(R&&R.slow&&R.slow.st===st&&R.t<R.slow.until?1.6:1);
+const demand=l=>(1+boost(l))*(1+S.buzz)*(1-compHit(l))*(1+.07*S.upg.kiosk)*wxMul()*(l==='main'?(1+.04*S.upg.wifi)*(1+.03*S.upg.menus)*(S.upg.kids&&S.day%7===0?1.08:1)*(1+.02*S.upg.aroma)*(S.upg.drive?1.12:1)*(S.upg.music&&S.day%7===0?1.1:1):1);
+const recMul=r=>{let m=S.upg.kds?.92:1;const I=r.ing;if(S.upg.nitro&&I.includes('coldbrew'))m*=.8;if(S.upg.autofryer&&I.includes('eggroll'))m*=.85;if(S.upg.steamer2&&I.includes('milk'))m*=.9;if(S.upg.dispenser&&(I.includes('syrup')||I.includes('cond')))m*=.9;if(S.upg.icecream&&I.includes('ice'))m*=.92;if(S.upg.toaster&&I.includes('baguette'))m*=.88;if(S.upg.ricecooker&&(I.includes('bun')||I.includes('sticky')))m*=.9;if(S.upg.slicer&&I.some(k=>PROTEINS.includes(k)))m*=.9;if(r.k==='food')m*=1-.05*S.upg.prepst;if(S.upg.teabrew&&r.ing.includes('tea'))m*=.75;if(S.upg.juicer&&r.ing.some(k=>['orange','slmix'].includes(k)))m*=.7;if(S.upg.autophin&&r.ing.includes('phin'))m*=.8;if(r.req==='espresso'&&S.upg.espresso>1)m*=.8;if(S.upg.icemaker>1&&r.ing.includes('ice'))m*=.9;if(S.upg.blender&&r.ing.some(k=>['coconut','mango','straw'].includes(k)))m*=.75;if(S.upg.steamer&&r.ing.some(k=>['bao','ricepaper'].includes(k)))m*=.8;return m};
+const stMul=st=>Math.max(.3,1-.1*(st==='bar'?S.upg.machine:S.upg.grill)-.08*(st==='bar'?S.upg.robotarm:S.upg.robochef))*(R&&R.slow&&R.slow.st===st&&R.t<R.slow.until?1.6:1);
 const brRate=l=>S.brRate[l]??S.rating;
-const ingPrice=k=>{let v=ING[k].p;if(k==='phin')v*=[1,.5,.35,.2][S.upg.farm];if(PROTEINS.includes(k))v*=[1,.8,.7,.6][S.upg.ckit];if(S.spike===k)v*=1.5;if(k==='baguette'&&S.upg.oven)v*=.5;if(k==='ice'&&S.upg.icemaker)v=0;return Math.round(v*100)/100};
+const ingPrice=k=>{let v=ING[k].p;if(k==='phin')v*=S.upg.farm?Math.max(.1,.65-.15*S.upg.farm):1;if(PROTEINS.includes(k))v*=S.upg.ckit?Math.max(.4,.9-.1*S.upg.ckit):1;if(k==='phin'&&S.upg.roaster2)v*=.7;v*=1-.05*(S.upg.bulkdeal||0);if(S.spike===k)v*=1.5;if(k==='baguette'&&S.upg.oven)v*=.5;if(k==='ice'&&S.upg.icemaker)v=0;return Math.round(v*100)/100};
 const rdCost=r=>Math.round(r.p*10);
 const cap=l=>l==='main'?3+S.upg.station:Math.min(16,4+2*(S.brLvl[l]||0));
 const crewAt=l=>S.staff.filter(x=>x.loc===l);
@@ -1350,7 +1441,7 @@ function makeOrder(){
   }
   recs.sort((a,b)=>a.k===b.k?0:a.k==='drink'?-1:1);
   const base=Math.max(S.day>LASTDAY?Math.max(10,14-(S.day-LASTDAY)*.2):14,32-S.day*1.2)+S.upg.ghe*3;
-  const max=base*(S.upg.pager?1.1:1)*(1+.03*S.upg.plants+.04*S.upg.restroom+.05*S.upg.tap)*(reg?1.3:1)*(1+.45*(recs.length-1))*(1+.05*S.upg.decor);
+  const max=base*(S.upg.pager?1.1:1)*(1+.03*S.upg.plants+.04*S.upg.restroom+.05*S.upg.tap+.02*S.upg.lighting+.08*S.upg.selfkiosk)*(reg?1.3:1)*(1+.45*(recs.length-1))*(1+.05*S.upg.decor);
   const inUse=busy.map(x=>x.name);let name=reg?reg.name:custName();for(let t=0;t<8&&!reg&&inUse.includes(name);t++)name=custName();
   const face=reg?reg.face:FACES[Math.floor(Math.random()*FACES.length)];
   const on=Object.keys(APPS).filter(a=>S.apps[a]&&S.apps[a].on);
@@ -1379,7 +1470,7 @@ function place(o,slot){
   if(reg)el.classList.add('regular');if(o.del)el.classList.add('deliv');if(o.inf)el.classList.add('inf');
   el.onclick=()=>serve(c);
   R.cust[slot]=c;$('street').children[slot].appendChild(el);markMatches();requestAnimationFrame(()=>fitTicket(c));
-  const pr=recs.reduce((a,r)=>a+pRatio(r),0)/recs.length,balk=(reg||o.del||o.inf)?0:Math.min(.8,Math.max(0,(pr-1.2-.1*S.upg.tv)*1.5));
+  const pr=recs.reduce((a,r)=>a+pRatio(r),0)/recs.length,balk=(reg||o.del||o.inf)?0:Math.min(.8,Math.max(0,(pr-1.2-.1*S.upg.tv-.05*S.upg.cloud)*1.5));
   if(Math.random()<balk){c.balk=true;c.whoEl.textContent='💸 '+fmt(recs.reduce((a,r)=>a+price(r),0))+'?!';
     setTimeout(()=>{if(R&&R.cust[slot]===c){removeCust(c,'🙄');R.balked++;if(R.balked%3===1)toast('Customers are walking out over prices')}},900)}
 }
@@ -1492,8 +1583,8 @@ function rate(s){S.rating=Math.max(1,Math.min(5,S.rating*.85+s*.15))}
 function itemEarn(c,it,staff,q){
   const ratio=c.left/c.max,pr=pRatio(it.rec),pp=price(it.rec);
   if(q==='miss')return pp-(it.rec.addp||0);
-  const tip=(1+.02*S.upg.uniform+.03*S.upg.filter+(S.upg.grinder&&(it.rec.ing.includes('phin')||it.rec.ing.includes('espresso'))?.05:0))*(it.rec.mods?1.3:1)*pp*(staff?(.05+.1*ratio):(.08+.27*ratio))*(1+S.upg.quat*.1+S.upg.decor*.05)*Math.max(.1,Math.min(1.3,2-pr))*(c.reg?1.5:1);
-  if(c.del)return APPS[c.del].pick?pp+tip*.4:pp*(1-APPS[c.del].cut);
+  const tip=(1+(S.upg.nitro&&it.rec.ing.includes('coldbrew')?.05:0)+.02*S.upg.uniform+.03*S.upg.filter+(S.upg.grinder&&(it.rec.ing.includes('phin')||it.rec.ing.includes('espresso'))?.05:0))*(it.rec.mods?1.3:1)*pp*(staff?(.05+.1*ratio):(.08+.27*ratio))*(1+S.upg.quat*.1+S.upg.decor*.05)*Math.max(.1,Math.min(1.3,2-pr))*(c.reg?1.5:1);
+  if(c.del)return APPS[c.del].pick?pp+tip*.4:pp*(1-APPS[c.del].cut+.05*S.upg.evvans);
   let t=tip;if(R.bigTip){t+=20;R.bigTip=0;toast('💵 A customer left a $20 tip!')}
   return pp+t;
 }
@@ -1578,7 +1669,7 @@ function branchDay(b){
   const dem=Math.round((1+.12*appsOn)*base*b.demand*(1+.15*lv)*demand(b.id)*(brRate(b.id)/5)*Math.pow(avgRatio(),-1.5)*(.85+Math.random()*.3));
   const capO=crew.reduce((a,x)=>a+(DAYLEN/(bestSp(x)*spMul(x)))*.9*(x.pos==='flex'?1.15:1),0)*(crew.some(x=>x.mgr)?1.2:1)*(1+.05*(S.upg.machine+S.upg.grill))*(1+.1*S.upg.hq);
   const capC=Math.floor(capO/1.6),served=Math.min(dem,capC),lost=dem-served;
-  const ic=.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet-.06*(S.farm?S.farm.brCover:0),rev=served*1.6*avgPrice()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic,net=rev-ing-b.rent;
+  const ic=Math.max(.08,.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet-.06*(S.farm?S.farm.brCover:0)-.02*(S.upg.bulkdeal||0)),rev=served*1.6*avgPrice()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic,net=rev-ing-b.rent;
   const good=dem?served/dem:0;
   if(crew.length)S.brRate[b.id]=Math.max(1,Math.min(5,brRate(b.id)*.8+(1+4*good-Math.max(0,(avgRatio()-1)*2.5))*.2));
   const reviews=crew.length?makeReviews(good,1+(Math.random()<.4?1:0),b.id):[];
@@ -1628,16 +1719,16 @@ function endDay(){
   R.crew.forEach(w=>{if(w.it&&!w.it.done)w.it.rec.ing.forEach(k=>{S.inv[k]++;R.used[k]--});w.c=null;w.it=null});
   S.lastUsed=R.used;
   R.spoiled=[];
-  Object.keys(ING).forEach(k=>{const keep=(S.upg.tu>=1&&['baguette','milk'].includes(k))||(S.upg.tu>=2)||(S.upg.oven&&k==='baguette')||(S.upg.teabrew&&k==='tea');if(ING[k].per&&!keep&&S.inv[k]>0){const lost=S.upg.vacuum?Math.ceil(S.inv[k]/2):S.inv[k];R.spoiled.push(ING[k].e+'×'+lost);S.inv[k]-=lost}});
+  Object.keys(ING).forEach(k=>{const keep=S.upg.smartfridge||(S.upg.tu>=1&&['baguette','milk'].includes(k))||(S.upg.tu>=2)||(S.upg.oven&&k==='baguette')||(S.upg.teabrew&&k==='tea');if(ING[k].per&&!keep&&S.inv[k]>0){const lost=S.upg.vacuum?Math.ceil(S.inv[k]/2):S.inv[k];R.spoiled.push(ING[k].e+'×'+lost);S.inv[k]-=lost}});
   R.br=[];
   S.branches.forEach(id=>{const r=branchDay(LOC[id]);S.money+=r.net;r.id=id;r.n=LOC[id].n;R.br.push(r);S.brStats[id]=r});
-  const eqLv=UPG.filter(u=>u.eq&&u.id!=='solar').reduce((a,u)=>a+(S.upg[u.id]||0),0);R.elec=Math.round(eqLv*3*(S.upg.solar?.5:1));S.money-=R.elec;
+  const eqLv=UPG.filter(u=>u.eq&&u.id!=='solar').reduce((a,u)=>a+(S.upg[u.id]||0),0);R.elec=Math.round(eqLv*3*(S.upg.solar?.5:1)*(S.upg.battery?.75:1));S.money-=R.elec;
   R.wages=0;R.quit=[];
   const busy=R.served/Math.max(1,R.crew.length)>12,mDecay=(S.upg.dish?.75:1)*(S.upg.hr?.5:1)*(S.upg.uniform?.9:1);
   S.staff.slice().forEach(x=>{if(S.money>=x.wage){S.money-=x.wage;R.wages+=x.wage;x.days++;
       if(x.days%Math.max(2,5-S.upg.train)===0&&lvl(x)<=5+S.upg.train&&x.days/Math.max(2,5-S.upg.train)<5+S.upg.train){x.mo=Math.min(100,x.mo+10);R.news.push('⬆️ '+x.face+' '+x.name+' reached level '+lvl(x))}
       const mg=x.loc!=='main'&&crewAt(x.loc).some(y=>y.mgr);
-      x.mo-=((mg?1.5:3)+(x.pos==='flex'&&x.loc==='main'?1:0)+(x.loc==='main'&&busy?3:0))*mDecay;
+      x.mo+=S.upg.profitshare?5:0;x.mo-=(1-.1*S.upg.benefits)*((mg?1.5:3)+(x.pos==='flex'&&x.loc==='main'?1:0)+(x.loc==='main'&&busy?3:0))*mDecay;
       if(x.mo<=0){R.news.push('😞 '+x.name+' quit (low morale)');S.staff=S.staff.filter(y=>y!==x)}
       else if(x.mo<20)R.news.push('😟 '+x.name+' is unhappy. Consider a raise or bonus')}
     else{R.quit.push(x.name);S.staff=S.staff.filter(y=>y!==x)}});
@@ -1655,7 +1746,7 @@ function endDay(){
   S.comps=S.comps.filter(c=>c.str>.05);
   if(S.day>=5&&Math.random()<.2){const fr=['main',...S.branches].filter(l=>!S.comps.some(c=>c.loc===l));
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
-  genReviews();S.buzz*=S.upg.pragency?.88:.8;
+  genReviews();S.buzz*=S.upg.pragency?.88:.8;S.buzz=Math.min(.5,Math.max(S.buzz,.05*S.upg.brand));
   finDay();labTeam();farmDay();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
   {const L=S.lab,un=DISCO.filter(d=>!L.found.includes(d.id)&&!L.leads.includes(d.id));
    if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
@@ -1805,7 +1896,7 @@ function manage(tab){
         <div class="arow" style="padding-left:0"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<6?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div></details>`}).join('')||'<p class="note">No branches yet.</p>';
     } else {
       body+=(!S.branches.length&&!gateOk('branch')?gateCard('branch','Grow Weymouth first. Your first branch unlocks when you reach these goals.'):
-        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+avail.sort((a,b)=>a.cost-b.cost).map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join(''));
+        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+['MA','RI','NH','ME','CT','VT'].map(st0=>{const list=avail.filter(b=>(b.st||'MA')===st0).sort((a,b)=>a.cost-b.cost);if(!list.length)return '';const key='new:'+st0;const SN={MA:'Massachusetts',RI:'Rhode Island',NH:'New Hampshire',ME:'Maine',CT:'Connecticut',VT:'Vermont'};return `<details class="srcgrp" data-key="${key}"${OPEN.has(key)||(!OPEN.touched&&st0==='MA')?' open':''}><summary>${SN[st0]} <small>(${list.length})</small></summary>`+list.map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join('')+'</details>'}).join(''));
     }
   }
 
@@ -2065,11 +2156,12 @@ const VARS={
   arabica:{n:'Arabica Catimor',e:'☕',plant:700,grow:12,every:5,yield:220,cherry:.9,bag:14,kind:'espresso',d:'Smooth and bright. Great for espresso.'},
   moka:{n:'Moka (Typica)',e:'💎',plant:1100,grow:16,every:6,yield:150,cherry:1.2,bag:20,kind:'espresso',d:'Premium Đà Lạt heirloom Arabica.'},
 };
-const FACT=[{cap:0},{n:'Small roastery',cap:1000,cost:15000},{n:'Mid-size roastery',cap:2500,cost:30000},{n:'Large roasting plant',cap:6000,cost:60000}];
+const FACT=[{cap:0},{n:'Small roastery',cap:1000,cost:15000},{n:'Mid-size roastery',cap:2500,cost:30000},{n:'Large roasting plant',cap:6000,cost:60000},{n:'Industrial roasting plant',cap:12000,cost:120000},{n:'Export roasting plant',cap:25000,cost:250000},{n:'Global roasting hub',cap:50000,cost:500000}];
 const CHANNELS={
   shelf:{n:'🏪 Bags on your café shelves',fee:0,d:'Customers grab a bag on the way out'},
   grocery:{n:'🛒 Local grocery stores',fee:2000,base:30,d:'About 30 bags a day across the South Shore'},
   online:{n:'🌐 Online store',fee:1500,base:20,ship:2,d:'About 20 bags a day, $2 shipping each'},
+  export:{n:'🚢 Export to Asia',fee:10000,base:200,cut:.7,d:'About 200 bags a day at 70% of your price'},
   wholesale:{n:'📦 Wholesale to other cafés',fee:3000,base:80,cut:.6,d:'About 80 bags a day at 60% of your price'},
 };
 const FARM_FACES=['👨‍🌾','👩‍🌾','🧑‍🌾'];
@@ -2091,12 +2183,12 @@ function farmDay(){
   const eff=farmEff(),ev=Math.random()<.05?pick(['drought','frost','pests']):null,evReg=ev?pick(Object.keys(REGIONS)):null;
   if(ev)log.push(`${ev==='drought'?'☀️ Drought':ev==='frost'?'❄️ Frost':'🐛 Pests'} hit ${REGIONS[evReg].n}. Harvests there are smaller today.`);
   if(F.farmers.length)F.plots.forEach(p=>{if(!p.v)return;const st=plotStatus(p);if(!st.ready)return;const V=VARS[p.v];
-    let kg=V.yield*(REGIONS[p.r].best.includes(p.v)?1.25:.8)*(.4+.6*eff)*(.85+Math.random()*.3)*(p.r===evReg?.5:1);kg=Math.round(kg);
+    let kg=(1+.1*S.upg.irrig+.08*S.upg.fert)*V.yield*(REGIONS[p.r].best.includes(p.v)?1.25:.8)*(.4+.6*eff)*(.85+Math.random()*.3)*(p.r===evReg?(S.upg.agronomist?.75:.5):1);kg=Math.round(kg);
     F.cherries[p.v]=(F.cherries[p.v]||0)+kg;p.last=S.day;harv+=kg});
   else if(F.plots.some(p=>p.v&&plotStatus(p).ready))log.push('👨‍🌾 Cherries are ripe but you have no farmers to pick them');
   // roastery: process cherries into roasted beans (6 kg cherries → 1 kg roasted)
   if(F.factory&&F.auto.roast){let capLeft=FACT[F.factory].cap;Object.keys(F.cherries).forEach(v=>{const use=Math.min(F.cherries[v],capLeft);if(use<=0)return;capLeft-=use;F.cherries[v]-=use;
-    const kg=use/6;F.roasted[v]=(F.roasted[v]||0)+kg;roast+=kg;cost+=use*.03+kg*.3});S.money-=0;}
+    const kg=use/(S.upg.dryyard?5.5:6);F.roasted[v]=(F.roasted[v]||0)+kg;roast+=kg;cost+=use*.03+kg*.3});S.money-=0;}
   // sell leftover cherries to a trader if chosen
   if(F.auto.sell)Object.keys(F.cherries).forEach(v=>{const kg=F.cherries[v];if(kg<=0)return;const $=kg*VARS[v].cherry*F.mkt;trader+=$;F.cherries[v]=0});
   // supply your cafés first (1 kg roasted = 50 servings)
@@ -2107,7 +2199,7 @@ function farmDay(){
     const brKg=R.br.reduce((a,b)=>a+(b.served||0),0)*.6/50;const gb=brKg?take('phin',brKg*50*.7)+take('espresso',brKg*50*.3):0;F.brCover=brKg?Math.min(1,gb/brKg):0;
   }
   // packaging line: roasted beans → 500 g bags
-  if(F.pack&&F.auto.pack)Object.keys(F.roasted).forEach(v=>{const n=Math.floor(F.roasted[v]*2);if(n<=0)return;F.roasted[v]-=n/2;F.bags[v]=(F.bags[v]||0)+n;packed+=n;cost+=n*.4});
+  if(F.pack&&F.auto.pack)Object.keys(F.roasted).forEach(v=>{const n=Math.floor(F.roasted[v]*2);if(n<=0)return;F.roasted[v]-=n/2;F.bags[v]=(F.bags[v]||0)+n;packed+=n;cost+=n*(S.upg.packfast?.2:.4)});
   // retail
   const inStock=Object.keys(F.bags).filter(v=>F.bags[v]>0);
   if(inStock.length)Object.keys(CHANNELS).forEach(c=>{if(!F.ch[c])return;const C=CHANNELS[c];
@@ -2118,7 +2210,7 @@ function farmDay(){
   S.money+=rev+trader-(cost-pay);
   F.stats.harv+=harv;F.stats.roast+=roast;F.stats.bags+=packed;F.stats.sold+=sold;F.stats.rev+=rev+trader;
   if(Math.random()<.5)F.fcands=genFarmers();
-  R.farm={pay,cost,harv,roast,packed,sent,sold,rev,trader,log};
+  R.farm={pay,cost,harv,roast,packed,sent,sold,rev,trader,log};F.last={roast,packed,harv};
 }
 function buyPlot(r){const c=REGIONS[r].plot;if(S.money<c)return;S.money-=c;S.farm.plots.push({id:S.farm.nid++,r,v:null});save();sfx.coin();toast('🌱 New plot in '+REGIONS[r].n);manage()}
 function plant(id,v){const p=S.farm.plots.find(x=>x.id===id),c=VARS[v].plant;if(!p||p.v||S.money<c)return;S.money-=c;p.v=v;p.planted=S.day;p.last=null;save();sfx.coin();manage()}
@@ -2129,16 +2221,53 @@ function fireFarmer(id){S.farm.farmers=S.farm.farmers.filter(f=>f.id!==id);save(
 function buyFactory(){const F=S.farm,n=FACT[F.factory+1];if(!n||S.money<n.cost)return;S.money-=n.cost;F.factory++;save();sfx.coin();toast('🏭 '+n.n+' is ready');manage()}
 function buyPack(){if(S.money<8000||S.farm.pack)return;S.money-=8000;S.farm.pack=true;save();sfx.coin();toast('📦 Packaging line installed');manage()}
 function sellCherries(){const F=S.farm;let $=0;Object.keys(F.cherries).forEach(v=>{$+=F.cherries[v]*VARS[v].cherry*F.mkt;F.cherries[v]=0});S.money+=$;F.stats.rev+=$;save();sfx.coin();toast('Sold cherries for '+fmt($));manage()}
-function roastNow(){const F=S.farm;if(!F.factory)return;let capLeft=FACT[F.factory].cap,kgT=0,c=0;Object.keys(F.cherries).forEach(v=>{const use=Math.min(F.cherries[v],capLeft);if(use<=0)return;capLeft-=use;F.cherries[v]-=use;const kg=use/6;F.roasted[v]=(F.roasted[v]||0)+kg;kgT+=kg;c+=use*.03+kg*.3});S.money-=c;save();toast(`🔥 Roasted ${kgT.toFixed(0)} kg for ${fmt(c)}`);manage()}
+function roastNow(){const F=S.farm;if(!F.factory)return;let capLeft=FACT[F.factory].cap,kgT=0,c=0;Object.keys(F.cherries).forEach(v=>{const use=Math.min(F.cherries[v],capLeft);if(use<=0)return;capLeft-=use;F.cherries[v]-=use;const kg=use/(S.upg.dryyard?5.5:6);F.roasted[v]=(F.roasted[v]||0)+kg;kgT+=kg;c+=use*.03+kg*.3});S.money-=c;save();toast(`🔥 Roasted ${kgT.toFixed(0)} kg for ${fmt(c)}`);manage()}
 function packNow(){const F=S.farm;if(!F.pack)return;let n=0;Object.keys(F.roasted).forEach(v=>{const b=Math.floor(F.roasted[v]*2);if(b>0){F.roasted[v]-=b/2;F.bags[v]=(F.bags[v]||0)+b;n+=b}});S.money-=n*.4;save();toast(`📦 Packed ${n} bags`);manage()}
 function toggleCh(c){const F=S.farm;if(!F.ch[c]&&!F.chOwned?.[c]&&CHANNELS[c].fee){if(S.money<CHANNELS[c].fee)return;S.money-=CHANNELS[c].fee;F.chOwned=F.chOwned||{};F.chOwned[c]=1}F.ch[c]=!F.ch[c];save();manage()}
 function setBag(v,d){const F=S.farm;F.price[v]=Math.max(3,Math.round((bagPrice(v)+d)*4)/4);save();manage()}
 let FT='land';
+// ---------- visuals: growing trees ----------
+function plotStage(p){const V=VARS[p.v];if(!V)return {st:0,pct:0,lab:'Empty'};const age=S.day-p.planted;
+  if(age<V.grow){const f=age/V.grow;return {st:f<.3?1:f<.7?2:3,pct:f,lab:f<.3?'Seedling':f<.7?'Growing':'Flowering'}}
+  const since=p.last==null?V.every:S.day-p.last;if(since>=V.every)return {st:5,pct:1,lab:'Ripe! 🍒'};
+  const f=since/V.every;return {st:f<.5?3:4,pct:f,lab:f<.5?'Flowering':'Cherries forming'}}
+function treeSVG(st,v){
+  const leaf=v==='arabica'||v==='moka'?'#3E9B57':'#2F7D46',leaf2=v==='arabica'||v==='moka'?'#57B26E':'#3F9658';
+  const soil='<ellipse cx="30" cy="54" rx="22" ry="5" fill="#7A4A2A"/><ellipse cx="30" cy="53" rx="18" ry="3.5" fill="#94603A"/>';
+  if(st===0)return `<svg viewBox="0 0 60 60">${soil}<path d="M18 52h24" stroke="#5E3B21" stroke-width="1.5" stroke-dasharray="2 3"/></svg>`;
+  if(st===1)return `<svg viewBox="0 0 60 60">${soil}<path d="M30 52v-9" stroke="#4E7F2E" stroke-width="2"/><ellipse cx="26" cy="43" rx="4" ry="2.2" fill="${leaf2}" transform="rotate(-25 26 43)"/><ellipse cx="34" cy="42" rx="4" ry="2.2" fill="${leaf2}" transform="rotate(25 34 42)"/></svg>`;
+  const trunkH=st===2?16:24,top=52-trunkH;
+  const bush=st===2?`<circle cx="30" cy="${top}" r="9" fill="${leaf}"/><circle cx="24" cy="${top+4}" r="6" fill="${leaf2}"/><circle cx="36" cy="${top+4}" r="6" fill="${leaf2}"/>`:
+    `<circle cx="30" cy="${top-2}" r="13" fill="${leaf}"/><circle cx="20" cy="${top+6}" r="9" fill="${leaf2}"/><circle cx="40" cy="${top+6}" r="9" fill="${leaf2}"/><circle cx="30" cy="${top+8}" r="9" fill="${leaf}"/>`;
+  const dots=(col,n,r)=>Array.from({length:n},(_,i)=>{const a=i*2.4,rr=4+(i%4)*2.6;return `<circle cx="${(30+Math.cos(a)*rr*1.3).toFixed(1)}" cy="${(top+2+Math.sin(a)*rr).toFixed(1)}" r="${r}" fill="${col}"/>`}).join('');
+  const extra=st===3?dots('#FFFFFF',9,1.6):st===4?dots('#8BC34A',11,1.8):st===5?dots('#D32F2F',13,2.1):'';
+  return `<svg viewBox="0 0 60 60">${soil}<path d="M30 52V${top+4}" stroke="#6B4226" stroke-width="3"/>${bush}${extra}</svg>`;
+}
+function farmView(){
+  const F=S.farm;if(!F.plots.length)return `<div class="fview empty"><p>🌄 Your farm is empty. Buy a plot below to start.</p></div>`;
+  const regs=Object.keys(REGIONS).filter(r=>F.plots.some(p=>p.r===r));
+  return `<div class="fview"><div class="sky">☀️ Day ${S.day} · ${WX[S.wx.t].e}</div>`+regs.map(r=>`<div class="freg"><div class="frl">${REGIONS[r].e} ${REGIONS[r].n}</div><div class="fgrid">`+
+    F.plots.filter(p=>p.r===r).map(p=>{const g=plotStage(p);return `<div class="ftile st${g.st}" title="${g.lab}"><div class="tree">${treeSVG(g.st,p.v)}</div><div class="tb"><b style="width:${Math.round(g.pct*100)}%"></b></div><small>${p.v?VARS[p.v].e+' '+g.lab:'Empty'}</small></div>`}).join('')+`</div></div>`).join('')+`</div>`;
+}
+// ---------- visuals: roastery conveyor ----------
+function bagSVG(v){const V=VARS[v]||VARS.robusta;return `<svg viewBox="0 0 40 50"><path d="M7 10h26l3 36H4z" fill="#111" stroke="#F3D03E" stroke-width="1.5"/><path d="M7 10l3-6h20l3 6" fill="#222" stroke="#F3D03E" stroke-width="1.2"/><rect x="9" y="19" width="22" height="13" rx="2" fill="#F3D03E"/><text x="20" y="28" font-size="5.2" font-weight="800" text-anchor="middle" fill="#111" font-family="Baloo 2,sans-serif">SAIGON</text><text x="20" y="42" font-size="9" text-anchor="middle">${V.e}</text></svg>`}
+function factoryView(){
+  const F=S.farm;if(!F.factory)return '';
+  const pk=R_last_farm();const kinds=Object.keys(F.bags).filter(v=>F.bags[v]>0);const flow=kinds.length?kinds:Object.keys(F.roasted).filter(v=>F.roasted[v]>.1);
+  const running=F.pack&&flow.length,list=running?Array.from({length:7},(_,i)=>flow[i%flow.length]):[];
+  return `<div class="fact">
+    <div class="roaster"><svg viewBox="0 0 70 70" class="drum${F.auto.roast&&sumObj(F.cherries)+sumObj(F.roasted)>0?' spin':''}"><circle cx="35" cy="35" r="26" fill="#3A3A3A" stroke="#F3D03E" stroke-width="3"/><path d="M35 9v52M9 35h52M17 17l36 36M53 17L17 53" stroke="#6B6B6B" stroke-width="3"/><circle cx="35" cy="35" r="7" fill="#F3D03E"/></svg><small>🔥 Roaster</small></div>
+    <div class="beltwrap"><div class="belt${running?' run':''}">${list.map((v,i)=>`<div class="bag" style="animation-delay:${-(i*1.1).toFixed(1)}s">${bagSVG(v)}</div>`).join('')}${running?'':`<span class="idle">${F.pack?'Waiting for roasted beans…':'Install a packaging line to see bags here'}</span>`}</div>
+    <div class="rollers"></div><small>📦 Packaging line${F.pack?'':' (not installed)'}</small></div>
+    <div class="fstat">Last night: <b>${pk.roast.toFixed(1)} kg</b> roasted · <b>${pk.packed}</b> bags packed · <b>${sumObj(F.bags)}</b> bags in the warehouse</div></div>`;
+}
+function R_last_farm(){return (S.farm&&S.farm.last)||{roast:0,packed:0}}
 function farmBody(){
   initFarm();const F=S.farm,eff=farmEff(),kgSum=o=>sumObj(o);
   let b=`<div class="finsum"><div><small>Cherries waiting</small><b>${Math.round(kgSum(F.cherries))} kg</b></div><div><small>Roasted · Bags</small><b>${Math.round(kgSum(F.roasted))} kg · ${kgSum(F.bags)}</b></div></div>
   <div class="tabs sm">${[['land','🌱 Farm'],['fact','🏭 Roastery'],['sell','🛍️ Sales']].map(([k,n])=>`<button class="${FT===k?'on':''}" onclick="FT='${k}';manage()">${n}</button>`).join('')}</div>`;
   if(FT==='land'){
+    b+=farmView();
     b+=`<p class="note">Buy land in Vietnam's coffee regions, plant varieties, and hire farmers to pick the cherries. Each farmer covers about ${3}–5 plots. Farm efficiency now: <b>${Math.round(eff*100)}%</b>.</p>`;
     b+=`<p style="font-weight:800;margin:10px 0 4px">👨‍🌾 Farmers (${F.farmers.length})</p>`+F.farmers.map(f=>`<div class="upg"><span class="fc">${f.face}</span><div><b>${f.name}</b> <small>${'★'.repeat(f.skill)}${'☆'.repeat(3-f.skill)} · ${fmt(f.wage)}/day</small></div><button class="fire" onclick="fireFarmer(${f.id})">Let go</button></div>`).join('')+
       F.fcands.map((c,i)=>`<div class="upg"><span class="fc">${c.face}</span><div><b>${c.name}</b> <small>applicant · ${'★'.repeat(c.skill)}${'☆'.repeat(3-c.skill)} · ${fmt(c.wage)}/day</small></div><button onclick="hireFarmer(${i})">Hire</button></div>`).join('');
@@ -2151,6 +2280,7 @@ function farmBody(){
     b+=`<p class="note" style="margin-top:8px">🧾 Varieties: ${Object.values(VARS).map(V=>`${V.e} <b>${V.n}</b>: ready after ${V.grow} days, then every ${V.every}. ${V.d}`).join('<br>')}</p>`;
   }
   if(FT==='fact'){
+    b+=factoryView();
     const nx=FACT[F.factory+1];
     b+=F.factory?`<div class="upg"><span class="fc">🏭</span><div><b>${FACT[F.factory].n}</b><br><small>Roasts up to ${FACT[F.factory].cap.toLocaleString()} kg of cherries a day (6 kg cherries → 1 kg roasted). About $0.03/kg trucking + $0.30/kg roasting.</small></div></div>`:
       `<p class="note">Without a roastery you can only sell raw cherries to a local trader.</p>`;
@@ -2391,18 +2521,27 @@ function restock(){S.spike=S.spikeNext;
     while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c){miss++;break}S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q}});
   save();sfx.coin();toast(miss?'Ran out of cash before restocking everything':'Restocked for '+fmt(spent));market();
 }
+const MGROUPS=[['bar','☕ Bar'],['top','🍓 Toppings'],['kit','🥖 Kitchen'],['world','🌏 Sourced from the Lab']];
+const mgOf=k=>ING[k].world||(ING[k].src&&!['bar','top','kit'].includes(ING[k].st))?'world':ING[k].src?'world':ING[k].st;
+function restockGroup(g){const need=needSet();let spent=0;ING_ORDER.filter(k=>need.has(k)&&mgOf(k)===g).forEach(k=>{while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c)break;S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q}});save();sfx.coin();toast('Restocked for '+fmt(spent));const sc=$('card').scrollTop;market();$('card').scrollTop=sc}
 function market(){
   R=null;S.spike=S.spikeNext||null;hud();buildStation();
-  const need=needSet();
-  let est=0;ING_ORDER.filter(k=>need.has(k)).forEach(k=>{let h=S.inv[k]||0;while(h<restockTo(k)){h+=ING[k].q;est+=ingPrice(k)}});
-  const rows=ING_ORDER.filter(k=>need.has(k)).map(k=>{const g=ING[k],have=S.inv[k]||0,nd=needFor(k),low=have<nd;
-    return `<div class="mrow"><span class="mic">${g.e}</span><div class="minfo"><b>${g.n}</b><small class="${low?'lowtxt':''}">📦 ${have} left · need about ${nd} · restock to ${restockTo(k)}</small><small>1 ${g.u} = ${g.q} servings${g.per&&!S.upg.tu?' · <span class="tag">spoils overnight</span>':''}</small></div><div class="mbtns"><button class="mbuy" data-k="${k}" data-n="1" ${S.money<ingPrice(k)?'disabled':''}><b>${fmt(ingPrice(k))}</b><span>Buy</span></button><button class="mbulk" data-k="${k}" data-n="5" ${S.money<ingPrice(k)*4.25?'disabled':''}>×5 · ${fmt(ingPrice(k)*4.25)}</button></div></div>`}).join('');
+  const need=needSet(),keys=ING_ORDER.filter(k=>need.has(k));
+  const cost=k=>{let h=S.inv[k]||0,e=0;while(h<restockTo(k)){h+=ING[k].q;e+=ingPrice(k)}return e};
+  const est=keys.reduce((a,k)=>a+cost(k),0);
+  const row=k=>{const g=ING[k],have=S.inv[k]||0,nd=needFor(k),low=have<nd;
+    return `<div class="mrow"><span class="mic">${g.e}</span><div class="minfo"><b>${g.n}</b><small class="${low?'lowtxt':''}">📦 ${have} left · need ~${nd} · restock to ${restockTo(k)}</small><small>1 ${g.u} = ${g.q} servings${g.per&&!S.upg.tu&&!S.upg.smartfridge?' · <span class="tag">spoils overnight</span>':''}</small></div><div class="mbtns"><button class="mbuy" data-k="${k}" data-n="1" ${S.money<ingPrice(k)?'disabled':''}><b>${fmt(ingPrice(k))}</b><span>Buy</span></button><button class="mbulk" data-k="${k}" data-n="5" ${S.money<ingPrice(k)*4.25?'disabled':''}>×5 · ${fmt(ingPrice(k)*4.25)}</button></div></div>`};
+  const groups=MGROUPS.map(([g,n])=>{const ks=keys.filter(k=>mgOf(k)===g);if(!ks.length)return '';
+    const low=ks.filter(k=>(S.inv[k]||0)<needFor(k)).length,gc=ks.reduce((a,k)=>a+cost(k),0),key='mkt:'+g;
+    return `<details class="srcgrp mgrp" data-key="${key}"${OPEN.has(key)?' open':''}><summary><span class="mgn">${n} <small>(${ks.length})</small></span>${low?`<span class="mlow">⚠️ ${low} low</span>`:'<span class="mok">✓ OK</span>'}</summary>
+      ${gc?`<button class="flyall" onclick="restockGroup('${g}')">🛒 Restock ${n.replace(/^\S+\s/,'')} · ${fmt(gc)}</button>`:''}${ks.map(row).join('')}</details>`}).join('');
   const miss=unlocked().filter(r=>r.ing.some(k=>!(S.inv[k]>0))).map(r=>r.n);
-  showModal(`<h2>Market</h2><p>Cash on hand: <b>${fmt(S.money)}</b><br>Today: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${ING[S.spikeNext].n} costs 50% more today</div>`:''}${S.upg.supplier?'<p class="note">📦 Your supplier contract restocks Weymouth automatically when you open.</p>':''}<p class="note">This is for Weymouth. Branches order their own ingredients, and the cost shows in their daily report. Buy ×5 in bulk to save 15%.</p>
-  ${est?`<button class="big alt" onclick="restock()">🛒 Restock: need (+40% +20) and 30 extra (${fmt(est)})</button>`:'<p class="note">✓ Stocked for a day like the last one.</p>'}
-  ${rows}
-  ${miss.length?`<div class="warn">Not enough ingredients for: ${miss.join(', ')}</div>`:''}
-  <button class="big" onclick="startDay()">Open day ${S.day}</button>
+  showModal(`<h2>Market</h2><p>Cash on hand: <b>${fmt(S.money)}</b><br>Today: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${ING[S.spikeNext].n} costs 50% more today</div>`:''}
+  <div class="mtop">${est?`<button class="big alt" onclick="restock()">🛒 Restock everything · ${fmt(est)}</button>`:'<p class="note" style="text-align:center">✓ Everything is stocked for a day like the last one.</p>'}
+  <button class="big" onclick="startDay()">Open day ${S.day}</button></div>
+  ${miss.length?`<div class="warn">Not enough ingredients for: ${miss.slice(0,6).join(', ')}${miss.length>6?' and '+(miss.length-6)+' more':''}</div>`:''}
+  <p class="note">Restock tops up to last day's need (+40% +20) plus 30 extra. Tap a group to buy items one by one. ${S.upg.supplier?'📦 Your supplier contract also restocks when you open. ':''}Branches order their own ingredients.</p>
+  ${groups}
   <button class="big alt" onclick="manage()">Manage shop</button>`);
   document.querySelectorAll('#card button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,g=ING[k],n=+b.dataset.n,c=n===5?ingPrice(k)*(S.upg.freezer&&PROTEINS.includes(k)?3.75:S.upg.shelving?4:4.25):ingPrice(k);
     if(S.money<c)return;S.money-=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+g.q*n;save();sfx.coin();
