@@ -1566,7 +1566,10 @@ let LBP=null;
 function takeName(){const el=$('pname0');const v=(el&&el.value||'').trim().slice(0,16);
   if(!v){el.classList.add('need');el.focus();toast('Please type your name first');return false}
   S.player=v;save();return true}
-function companyScore(){return valuation()+Math.max(0,S.money)}
+// Money invested in upgrades and equipment still counts toward the score
+function upgValue(){return UPG.filter(u=>u.id).reduce((a,u)=>{let v=0;for(let i=0;i<(S.upg[u.id]||0);i++)v+=u.base*Math.pow(1.6,i);return a+v},0)}
+function staffValue(){return S.staff.reduce((a,x)=>a+30*lvl(x),0)}
+function companyScore(){return valuation()+Math.max(0,S.money)+upgValue()*.9+staffValue()+Object.keys(S.board||{}).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].fee*.5,0)}
 function saveScore(reason){
   if(!S.pid){S.pid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);save()}
   const e={pid:S.pid,name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
@@ -1588,7 +1591,7 @@ function board(from){
   let hof=[];try{hof=JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(x){}
   const rows=l=>l.map((e,i)=>`<div class="stat"><span>${i+1}. ${String(e.name).replace(/[<>&]/g,'')} <small>day ${e.day}, ${e.branches} branches</small></span><b>${fmt(e.value)}</b></div>`).join('')||'<p class="note">No scores yet.</p>';
   const back=R?'resume()':BF==='intro'?'intro()':'manage()';
-  showModal(`<h2>🏆 Leaderboard</h2><p class="note">Scores save automatically every couple of minutes while you play. Score = company value + cash. Your company right now: <b>${fmt(companyScore())}</b>.</p>
+  showModal(`<h2>🏆 Leaderboard</h2><p class="note">Scores save automatically every couple of minutes while you play. Score = company value + cash + everything you've invested in the shop. Your company right now: <b>${fmt(companyScore())}</b>.</p>
   <p><input id="pname" maxlength="16" placeholder="Your name" value="${(S.player||'').replace(/"/g,'')}" style="font:inherit;font-weight:700;padding:4px 8px;border:2px solid var(--coffee);border-radius:8px;width:60%"> <button class="fire" style="border:2px solid var(--coffee);border-radius:8px;font-weight:800;padding:4px 10px;background:var(--sun)" onclick="S.player=$('pname').value.trim()||'Player';save();saveScore('manual');board()">Save score</button></p>
   ${LB_URL||FIREBASE_CONFIG||/\.web\.app$|\.firebaseapp\.com$/.test(location.hostname)?'<p style="font-weight:800">🌎 Everyone</p><div id="lbOnline"><p class="note">Loading…</p></div>':''}
   <p style="font-weight:800">On this device</p>${rows(hof)}
