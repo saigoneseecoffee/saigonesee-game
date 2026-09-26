@@ -715,6 +715,15 @@ body{background-color:#0E0E0E;background-image:
 .locpick button{border:2px solid #111;background:#fff;border-radius:12px;font-size:16px;font-weight:800;min-height:44px}
 .locpick button:disabled{opacity:.35}
 .locpick select{font:inherit;font-size:16px;font-weight:800;border:2px solid #111;border-radius:12px;background:#F3D03E;color:#111;padding:0 10px;min-height:44px;width:100%}
+.stf{border-bottom:1px solid #E7E0CC}
+.stf summary{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;list-style:none}
+.stf summary::-webkit-details-marker{display:none}
+.stf .si{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.stf .si b{font-size:16px}.stf .si small{font-size:13px;color:#555;font-weight:600}
+.stf .chev{font-size:16px;color:#888;transition:transform .15s}
+.stf[open] .chev{transform:rotate(180deg)}
+.stf .sd{padding:0 0 10px 48px}
+.stf .sd .posb{padding-left:0!important;margin-top:6px}
 </style>
 </head>
 <body>
@@ -2158,8 +2167,9 @@ function posBtns(x){
 }
 function staffRow(x){
   const opts=['main',...S.branches].map(l=>`<option value="${l}" ${l===x.loc?'selected':''}>${locName(l)}</option>`).join('');
-  return `<div class="upg srow"><span class="fc">${x.face}</span><div><b>${x.name}${x.mgr?' 👑':''}</b> <small>Lv ${lvl(x)}</small><br><small>${skillText(x)}</small><br><small>${fmt(x.wage)}/day, morale ${moFace(x.mo)} ${Math.round(x.mo)}</small></div>
-  <div class="arow"><button onclick="raise(${x.id})">Raise +${fmt(Math.round(x.wage*.1))}</button><button ${S.money<25?'disabled':''} onclick="bonus(${x.id})">Bonus $25</button>${x.loc!=='main'&&!x.mgr?`<button onclick="promote(${x.id})">Make manager</button>`:''}${S.branches.length?`<select aria-label="Location" onchange="moveStaff(${x.id},this.value)">${opts}</select>`:''}<button onclick="fire(${x.id})">Let go</button></div>${x.loc==='main'?posBtns(x):''}</div>`;
+  const k='stf:'+x.id;
+  return `<details class="stf" data-key="${k}"${OPEN.has(k)?' open':''}><summary><span class="fc">${x.face}</span><span class="si"><b>${x.name}${x.mgr?' 👑':''}</b> <small>Lv ${lvl(x)}${x.loc==='main'?' · '+POS[x.pos].e+' '+POS[x.pos].n:''}</small><small>${skillText(x)}</small><small>${fmt(x.wage)}/day · morale ${moFace(x.mo)} ${Math.round(x.mo)}</small></span><span class="chev">▾</span></summary>
+  <div class="sd"><div class="arow" style="padding-left:0"><button onclick="raise(${x.id})">Raise +${fmt(Math.round(x.wage*.1))}</button><button ${S.money<25?'disabled':''} onclick="bonus(${x.id})">Bonus $25</button>${x.loc!=='main'&&!x.mgr?`<button onclick="promote(${x.id})">Make manager</button>`:''}${S.branches.length?`<select aria-label="Location" onchange="moveStaff(${x.id},this.value)">${opts}</select>`:''}<button onclick="fire(${x.id})">Let go</button></div>${x.loc==='main'?posBtns(x):''}</div></details>`;
 }
 function schedTable(crew){
   if(!crew.length||ML!=='main')return '';
@@ -2240,7 +2250,8 @@ function preDay(){
   if(S.known.length>=REC.length&&!S.allDone){S.allDone=1;save();showModal(`<h2>Full menu unlocked!</h2><p>All ${REC.length} items on the Saigonesee menu are researched.</p><p>From here the game goes on forever. Once you're past day 15, each day gets a little busier and customers get a little less patient. Every 7th day is a weekend with three train rushes. How far can you go?</p><button class="big" onclick="market()">Go to market</button>`);return}
   market();
 }
-function needFor(k){const u=S.lastUsed[k]||0;return Math.ceil((u||4)*1.4)}
+// Target stock: last day's usage + 40% + 20 extra. Items not used last day keep a small buffer of 5.
+function needFor(k){const u=S.lastUsed[k]||0;return u>0?Math.ceil(u*1.4)+20:5}
 function restock(){S.spike=S.spikeNext;
   let spent=0,miss=0;
   ING_ORDER.filter(k=>needSet().has(k)).forEach(k=>{
@@ -2255,7 +2266,7 @@ function market(){
     return `<div class="mrow"><span class="mic">${g.e}</span><div class="minfo"><b>${g.n}</b><small class="${low?'lowtxt':''}">📦 ${have} left · need about ${nd}</small><small>1 ${g.u} = ${g.q} servings${g.per&&!S.upg.tu?' · <span class="tag">spoils overnight</span>':''}</small></div><div class="mbtns"><button class="mbuy" data-k="${k}" data-n="1" ${S.money<ingPrice(k)?'disabled':''}><b>${fmt(ingPrice(k))}</b><span>Buy</span></button><button class="mbulk" data-k="${k}" data-n="5" ${S.money<ingPrice(k)*4.25?'disabled':''}>×5 · ${fmt(ingPrice(k)*4.25)}</button></div></div>`}).join('');
   const miss=unlocked().filter(r=>r.ing.some(k=>!(S.inv[k]>0))).map(r=>r.n);
   showModal(`<h2>Market</h2><p>Cash on hand: <b>${fmt(S.money)}</b><br>Today: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${ING[S.spikeNext].n} costs 50% more today</div>`:''}${S.upg.supplier?'<p class="note">📦 Your supplier contract restocks Weymouth automatically when you open.</p>':''}<p class="note">This is for Weymouth. Branches order their own ingredients, and the cost shows in their daily report. Buy ×5 in bulk to save 15%.</p>
-  ${est?`<button class="big alt" onclick="restock()">🛒 Restock: last day's usage +40% (${fmt(est)})</button>`:'<p class="note">✓ Stocked for a day like the last one.</p>'}
+  ${est?`<button class="big alt" onclick="restock()">🛒 Restock: last day's usage +40% +20 (${fmt(est)})</button>`:'<p class="note">✓ Stocked for a day like the last one.</p>'}
   ${rows}
   ${miss.length?`<div class="warn">Not enough ingredients for: ${miss.join(', ')}</div>`:''}
   <button class="big" onclick="startDay()">Open day ${S.day}</button>
