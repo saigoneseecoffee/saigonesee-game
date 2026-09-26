@@ -1383,7 +1383,7 @@ const pRatio=r=>(price(r)-(r.addp||0))/r.p;
 const avgRatio=()=>{const u=unlocked();return u.reduce((a,r)=>a+pRatio(r),0)/u.length};
 const avgPrice=()=>{const u=unlocked();return u.reduce((a,r)=>a+price(r),0)/u.length};
 function priceLabel(x){return x<.9?['Cheap','#2A8570']:x<=1.1?['Fair','#4A2C1D']:x<=1.3?['Pricey','#C77A12']:['Too pricey','#E0442F']}
-const fmt=v=>(v<0?'-':'')+'$'+(Math.round(Math.abs(v)*100)/100).toFixed(2).replace(/\.00$/,'');
+const fmt=v=>{const n=Math.round(Math.abs(v)*100)/100;return (v<0?'-':'')+'$'+(n%1?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):n.toLocaleString('en-US'))};
 const same=(a,b)=>a.length===b.length&&[...a].sort().join()===[...b].sort().join();
 const matchRec=tray=>{const r=REC.find(r=>S.known.includes(r.id)&&same(r.ing,tray));if(r)return r;const both=REC.filter(r=>S.known.includes(r.id)&&r.ing.includes('pate')&&r.ing.includes('butter'));
   const nb=both.find(r=>same(r.ing.filter(k=>k!=='butter'),tray));if(nb)return {...nb,n:nb.n+' · No butter'};
