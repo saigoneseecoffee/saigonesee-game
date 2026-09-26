@@ -669,6 +669,23 @@ body{background-color:#0E0E0E;background-image:
 .tbtn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
 .tbtn button{min-height:52px;border-radius:14px;font:inherit;font-size:18px;font-weight:800;border:none}
 .buyb{background:#2E9B6F;color:#fff}.sellb{background:#B3261E;color:#fff}.tbtn button:disabled{opacity:.35}
+.lead{background:#FFF8D6;border:1px solid #E9D48A;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:14px}
+.labres{border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14.5px;line-height:1.45}
+.labres.ok{background:#E3F4EA;border:2px solid #2E9B6F}.labres.close{background:#FFF4CC;border:2px solid #E0B91E}.labres.bad{background:#F6F1E4;border:2px solid #CFC6AD}
+.bench{min-height:44px;display:flex;flex-wrap:wrap;gap:6px;background:#fff;border:2px dashed #CFC6AD;border-radius:12px;padding:6px;margin-bottom:8px}
+.bchip{border:none;background:#111;color:#F3D03E;border-radius:999px;padding:5px 10px;font:inherit;font-size:13px;font-weight:700}
+.labgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:260px;overflow-y:auto;padding:2px}
+.lchip{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid #E3E3E3;background:#fff;border-radius:12px;padding:6px 4px;font:inherit;font-size:11.5px;font-weight:700;line-height:1.15;color:#111}
+.lchip span{font-size:22px}.lchip.on{border-color:#111;background:#FFF1B8}.lchip.out{opacity:.45}
+.note-card{background:#fff;border:1px solid #E7E0CC;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:14px;line-height:1.4}
+.note-card .idea{color:#2E6B57!important}
+.cst{font-size:11px;font-weight:800;border-radius:6px;padding:0 5px;margin-left:4px}.cst.ok{background:#2E9B6F;color:#fff}.cst.bad{background:#B3261E;color:#fff}
+#app .cater.urgent{box-shadow:inset 0 0 0 3px #B3261E}
+.lsearch{width:100%;font:inherit;font-size:15px;padding:9px 12px;border:2px solid #111;border-radius:12px;margin:4px 0 8px;background:#fff}
+.srcgrp{background:#fff;border:1px solid #E7E0CC;border-radius:12px;margin:6px 0;padding:2px 10px}
+.srcgrp summary{font-weight:800;padding:8px 0;cursor:pointer}
+.srcgrp .upg{padding:8px 0!important}
+.nbtn{margin-top:6px}.nbtn button{border:2px solid #111;background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:13px;font-weight:800}.nbtn button.on{background:#F3D03E}
 </style>
 </head>
 <body>
@@ -751,8 +768,33 @@ const ING={
   tofu:{st:'kit',e:IC.tofu,n:'Tofu',u:'tray',q:10,p:8},
   eggroll:{st:'kit',e:'🌯',n:'Egg rolls',u:'box',q:12,p:10,req:'fryer'},
   tiracup:{st:'kit',e:'🍰',n:'Tiramisu cup',u:'tray',q:8,p:16,per:1},
+  // Sourced through the Product Lab
+  avocado:{st:'top',e:'🥑',n:'Avocado',u:'box',q:10,p:12,per:1,src:1},
+  pandan:{st:'top',e:'🍃',n:'Pandan syrup',u:'bottle',q:15,p:7,src:1},
+  ube:{st:'top',e:'🍠',n:'Ube paste',u:'jar',q:12,p:10,src:1},
+  yogurt:{st:'top',e:'🥣',n:'Yogurt',u:'tub',q:10,p:6,per:1,src:1},
+  boba:{st:'top',e:'⚫',n:'Tapioca pearls',u:'bag',q:15,p:6,per:1,src:1},
+  brownsugar:{st:'top',e:'🟤',n:'Brown sugar syrup',u:'bottle',q:15,p:5,src:1},
+  cheesefoam:{st:'top',e:'🧀',n:'Cheese foam',u:'batch',q:10,p:9,per:1,src:1},
+  lemongrass:{st:'top',e:'🌾',n:'Lemongrass',u:'bunch',q:15,p:4,per:1,src:1},
+  peach:{st:'top',e:'🍑',n:'Peach slices',u:'can',q:12,p:7,src:1},
+  pineapple:{st:'top',e:'🍍',n:'Pineapple',u:'box',q:10,p:8,per:1,src:1},
+  pennywort:{st:'top',e:'🌱',n:'Pennywort (rau má)',u:'bunch',q:10,p:6,per:1,src:1},
+  mungbean:{st:'top',e:'🫛',n:'Mung bean paste',u:'tub',q:12,p:5,src:1},
+  sweetcorn:{st:'top',e:'🌽',n:'Sweet corn',u:'can',q:12,p:4,src:1},
+  fishcake:{st:'kit',e:'🍥',n:'Fish cake (chả cá)',u:'tray',q:10,p:15,src:1},
+  meatball:{st:'kit',e:'🧆',n:'Pork meatballs (xíu mại)',u:'tray',q:10,p:16,src:1},
+  roastpork:{st:'kit',e:'🍖',n:'Crispy roast pork',u:'tray',q:10,p:22,src:1},
 };
 const STARTER={chili:25,phin:10,cond:15,milk:10,ice:25,baguette:10,pate:15,butter:15,pickles:20,bmgreens:15,coldcuts:10,pork:10};
+const WORLD=[['calamansi','Calamansi','🍋','Philippines','top','citrus,sour,fresh',6],['ubehalaya','Ube halaya jam','🍠','Philippines','top','sweet,creamy,earthy',9],['jackfruit','Jackfruit','🍈','Vietnam','top','tropical,sweet,fruity',8],['durian','Durian','🌰','Malaysia','top','creamy,tropical,sweet,rich',14],['mangosteen','Mangosteen','🍇','Thailand','top','fruity,sweet,floral',12],['rambutan','Rambutan','🍒','Vietnam','top','fruity,sweet,fresh',9],['longan','Longan','🟤','Vietnam','top','sweet,floral,fruity',8],['lychee','Lychee','🍒','Vietnam','top','floral,sweet,fruity',8],['dragonfruit','Dragon fruit','🐉','Vietnam','top','fresh,fruity,mild',7],['soursop','Soursop (mãng cầu)','🍈','Vietnam','top','tropical,sour,creamy',9],['passionfruit','Passion fruit (chanh dây)','🟣','Vietnam','top','sour,tropical,fruity',7],['starfruit','Star fruit','⭐','Vietnam','top','sour,fresh,fruity',6],['kumquat','Kumquat (tắc)','🍊','Vietnam','top','citrus,sour,fresh',5],['tamarind','Tamarind (me)','🟫','Vietnam','kit','sour,sweet,fruity',5],['coconutjelly','Coconut jelly','🥥','Vietnam','top','sweet,fresh,tropical',6],['grassjelly','Grass jelly (sương sáo)','⬛','Vietnam','top','herbal,fresh,mild',5],['lotusseed','Lotus seeds (hạt sen)','⚪','Vietnam','top','nutty,mild,sweet',8],['blackbean','Black bean (đậu đen)','⚫','Vietnam','top','earthy,nutty,sweet',4],['redbean','Red bean paste','🫘','Vietnam','top','sweet,earthy,nutty',5],['sticky','Sticky rice (xôi)','🍚','Vietnam','kit','sweet,mild,chewy',4],['pandanleaf','Fresh pandan leaf','🍃','Vietnam','top','herbal,floral,sweet',4],['perilla','Perilla (tía tô)','🌿','Vietnam','kit','herbal,fresh,peppery',4],['vnmint','Vietnamese mint (rau răm)','🌿','Vietnam','kit','herbal,spicy,fresh',4],['sawtooth','Sawtooth herb (ngò gai)','🌿','Vietnam','kit','herbal,fresh,savory',4],['shrimppaste','Shrimp paste (mắm ruốc)','🦐','Vietnam','kit','umami,salty,funky',5],['pickledmustard','Pickled mustard greens','🥬','Vietnam','kit','sour,salty,crunchy',4],['friedshallot','Fried shallots','🧅','Vietnam','kit','crunchy,savory,sweet',4],['scallionoil','Scallion oil (mỡ hành)','🧅','Vietnam','kit','savory,fresh,rich',3],['chaolua','Vietnamese ham (giò thủ)','🥓','Vietnam','kit','savory,salty,chewy',14],['lapcheong','Chinese sausage (lạp xưởng)','🌭','Vietnam','kit','sweet,savory,smoky',12],['porkfloss','Pork floss (chà bông)','🧶','Vietnam','kit','savory,sweet,salty',10],['grilledegg','Salted egg yolk','🥚','Vietnam','kit','salty,creamy,rich',8],['galangal','Galangal','🫚','Thailand','kit','spicy,citrus,earthy',5],['kaffir','Makrut lime leaf','🌿','Thailand','kit','citrus,herbal,fresh',5],['thaibasil','Thai basil','🌿','Thailand','kit','herbal,sweet,peppery',4],['thaitea','Thai tea leaves','🫖','Thailand','top','tea,caramel,spicy',6],['butterflypea','Butterfly pea flower','💙','Thailand','top','floral,mild,color',7],['redcurry','Red curry paste','🌶️','Thailand','kit','spicy,savory,aromatic',6],['greencurry','Green curry paste','🌶️','Thailand','kit','spicy,herbal,savory',6],['satay','Satay peanut sauce','🥜','Indonesia','kit','nutty,sweet,savory',6],['sambal','Sambal oelek','🌶️','Indonesia','kit','spicy,sour,savory',4],['kecap','Kecap manis','🍯','Indonesia','kit','sweet,savory,caramel',4],['gulamelaka','Gula melaka palm sugar','🟤','Malaysia','top','caramel,sweet,smoky',6],['kaya','Kaya coconut jam','🍯','Singapore','top','sweet,creamy,caramel',7],['laksa','Laksa paste','🍜','Malaysia','kit','spicy,savory,creamy',7],['yuzu','Yuzu','🍋','Japan','top','citrus,floral,sour',12],['sakura','Sakura blossom','🌸','Japan','top','floral,salty,mild',10],['hojicha','Hojicha roasted tea','🍵','Japan','top','tea,smoky,nutty',9],['genmaicha','Genmaicha rice tea','🍵','Japan','top','tea,nutty,toasty',7],['kinako','Kinako soy flour','🟨','Japan','top','nutty,sweet,toasty',6],['mochi','Mochi','🍡','Japan','top','chewy,sweet,mild',7],['miso','White miso','🥣','Japan','kit','umami,salty,savory',6],['yuzukosho','Yuzu kosho','🌶️','Japan','kit','citrus,spicy,salty',9],['wasabi','Wasabi','🟢','Japan','kit','spicy,fresh,sharp',9],['nori','Nori seaweed','🟩','Japan','kit','umami,salty,savory',5],['furikake','Furikake','🍙','Japan','kit','umami,salty,crunchy',5],['katsu','Pork katsu','🍖','Japan','kit','savory,crunchy,rich',18],['teriyaki','Teriyaki sauce','🍶','Japan','kit','sweet,savory,umami',4],['japmayo','Kewpie mayo','🥫','Japan','kit','creamy,savory,tangy',5],['kimchi','Kimchi','🥬','Korea','kit','spicy,sour,funky',6],['gochujang','Gochujang','🌶️','Korea','kit','spicy,sweet,savory',5],['bulgogi','Bulgogi beef','🥩','Korea','kit','sweet,savory,umami',24],['yakult','Yakult cultured milk','🥛','Korea','top','sour,sweet,creamy',6],['banana','Banana milk base','🍌','Korea','top','sweet,creamy,fruity',6],['injeolmi','Injeolmi (roasted soy)','🟨','Korea','top','nutty,toasty,sweet',7],['yuja','Yuja citron tea jam','🍯','Korea','top','citrus,sweet,floral',8],['oolong','Oolong tea','🫖','Taiwan','top','tea,floral,toasty',8],['taro','Taro paste','🍠','Taiwan','top','creamy,sweet,earthy',8],['cheesecream','Sea salt cheese cream','🧀','Taiwan','top','salty,creamy,rich',9],['aiyu','Aiyu jelly','🟨','Taiwan','top','citrus,fresh,mild',6],['blacksesame','Black sesame paste','⚫','China','top','nutty,earthy,toasty',7],['osmanthus','Osmanthus flower','🌼','China','top','floral,sweet,fruity',9],['goji','Goji berries','🔴','China','top','sweet,fruity,earthy',8],['chrysanthemum','Chrysanthemum','🌼','China','top','floral,herbal,mild',6],['redate','Red dates (táo đỏ)','🔴','China','top','sweet,caramel,fruity',6],['charsiu','Char siu pork','🍖','China','kit','sweet,savory,smoky',20],['fivespice','Five-spice','🧂','China','kit','spicy,sweet,aromatic',4],['sichuan','Sichuan pepper','🌶️','China','kit','spicy,numbing,citrus',6],['chilicrisp','Chili crisp','🌶️','China','kit','spicy,crunchy,savory',6],['hoisinduck','Roast duck','🦆','China','kit','savory,rich,sweet',26],['xo','XO sauce','🦐','Hong Kong','kit','umami,spicy,savory',12],['hkmilktea','HK milk tea blend','🫖','Hong Kong','top','tea,creamy,bitter',7],['cardamom','Cardamom','🟢','India','top','aromatic,floral,spicy',8],['masala','Masala chai spice','🧂','India','top','spicy,sweet,aromatic',6],['saffron','Saffron','🟧','Iran','top','floral,earthy,luxury',25],['turmeric','Turmeric','🟡','India','top','earthy,spicy,bitter',4],['ginger','Fresh ginger','🫚','India','top','spicy,fresh,citrus',3],['jaggery','Jaggery','🟤','India','top','caramel,sweet,earthy',5],['alphonso','Alphonso mango pulp','🥭','India','top','tropical,sweet,creamy',9],['lassi','Lassi yogurt','🥛','India','top','sour,creamy,fresh',5],['rosewater','Rose water','🌹','India','top','floral,sweet,aromatic',6],['pistachio','Pistachio','🟢','Iran','top','nutty,sweet,rich',12],['tandoori','Tandoori chicken','🍗','India','kit','spicy,smoky,savory',20],['paneer','Paneer','🧀','India','kit','creamy,mild,savory',10],['mintchutney','Mint chutney','🌿','India','kit','herbal,fresh,spicy',5],['mangochutney','Mango chutney','🥭','India','kit','sweet,sour,spicy',5],['curryleaf','Curry leaves','🌿','Sri Lanka','kit','herbal,aromatic,savory',4],['cinnamon','Ceylon cinnamon','🟫','Sri Lanka','top','sweet,aromatic,spicy',5],['jaffna','Jaffna curry powder','🧂','Sri Lanka','kit','spicy,smoky,savory',5],['dates','Medjool dates','🟤','Middle East','top','caramel,sweet,rich',10],['tahini','Tahini','🥜','Middle East','top','nutty,rich,bitter',6],['halva','Halva','🟨','Middle East','top','nutty,sweet,rich',8],['zaatar','Za\'atar','🌿','Levant','kit','herbal,sour,savory',6],['sumac','Sumac','🔴','Levant','kit','sour,citrus,fruity',5],['harissa','Harissa','🌶️','Tunisia','kit','spicy,smoky,savory',5],['preservedlemon','Preserved lemon','🍋','Morocco','kit','citrus,salty,sour',7],['pomegranate','Pomegranate molasses','🍷','Middle East','top','sour,sweet,fruity',7],['orangeblossom','Orange blossom water','🌼','Morocco','top','floral,citrus,sweet',6],['turkishcoffee','Turkish coffee grind','☕','Turkey','top','coffee,bitter,spicy',8],['labneh','Labneh','🥛','Levant','kit','creamy,sour,salty',7],['falafel','Falafel','🧆','Levant','kit','savory,crunchy,herbal',10],['shawarma','Chicken shawarma','🍗','Levant','kit','savory,spicy,smoky',20],['hibiscus','Hibiscus (bissap)','🌺','Senegal','top','floral,sour,fruity',6],['baobab','Baobab powder','🟫','Africa','top','citrus,sour,earthy',9],['rooibos','Rooibos tea','🫖','South Africa','top','tea,caramel,earthy',7],['berbere','Berbere spice','🌶️','Ethiopia','kit','spicy,smoky,earthy',6],['yirgacheffe','Ethiopian Yirgacheffe coffee','☕','Ethiopia','top','coffee,floral,fruity',16],['suya','Suya spice','🥜','Nigeria','kit','spicy,nutty,smoky',6],['periperi','Peri-peri sauce','🌶️','Mozambique','kit','spicy,sour,savory',5],['lavender','Lavender','💜','France','top','floral,herbal,sweet',7],['brie','Brie','🧀','France','kit','creamy,rich,mild',14],['dijon','Dijon mustard','🟡','France','kit','spicy,sour,savory',4],['croissant','Croissant dough','🥐','France','kit','buttery,rich,flaky',10],['caramelbeurre','Salted butter caramel','🍮','France','top','caramel,salty,rich',8],['creme','Crème fraîche','🥛','France','top','creamy,sour,rich',8],['pesto','Basil pesto','🌿','Italy','kit','herbal,nutty,savory',8],['mascarpone','Mascarpone','🧀','Italy','top','creamy,sweet,rich',10],['burrata','Burrata','🧀','Italy','kit','creamy,mild,fresh',16],['prosciutto','Prosciutto','🥓','Italy','kit','salty,savory,rich',22],['amaretti','Amaretti crumbs','🍪','Italy','top','nutty,sweet,crunchy',8],['hazelnut','Hazelnut spread','🌰','Italy','top','nutty,chocolate,sweet',8],['limoncello','Lemon curd','🍋','Italy','top','citrus,sweet,creamy',7],['chorizo','Chorizo','🌭','Spain','kit','spicy,smoky,savory',16],['manchego','Manchego','🧀','Spain','kit','salty,nutty,rich',16],['paprika','Smoked paprika','🟥','Spain','kit','smoky,sweet,spicy',4],['churro','Churro bits','🥖','Spain','top','sweet,crunchy,cinnamon',6],['piri','Portuguese custard','🥧','Portugal','top','creamy,sweet,caramel',9],['stroopwafel','Stroopwafel','🧇','Netherlands','top','caramel,sweet,crunchy',7],['speculoos','Speculoos spice','🍪','Belgium','top','spicy,caramel,sweet',6],['belgianchoc','Belgian dark chocolate','🍫','Belgium','top','chocolate,bitter,rich',10],['elderflower','Elderflower syrup','🌼','UK','top','floral,fresh,sweet',7],['earlgrey','Earl Grey tea','🫖','UK','top','tea,citrus,floral',6],['clottedcream','Clotted cream','🥛','UK','top','creamy,rich,sweet',9],['marmite','Marmite','🟫','UK','kit','umami,salty,funky',5],['dill','Fresh dill','🌿','Scandinavia','kit','herbal,fresh,citrus',4],['lingonberry','Lingonberry jam','🔴','Sweden','top','sour,fruity,sweet',8],['cardamombun','Cardamom bun crumble','🥯','Sweden','top','spicy,sweet,buttery',7],['smokedsalmon','Smoked salmon','🐟','Norway','kit','smoky,salty,rich',24],['sauerkraut','Sauerkraut','🥬','Germany','kit','sour,crunchy,funky',4],['bratwurst','Bratwurst','🌭','Germany','kit','savory,smoky,salty',14],['poppyseed','Poppy seeds','⚫','Poland','top','nutty,crunchy,mild',5],['paprikahun','Hungarian paprika','🌶️','Hungary','kit','spicy,sweet,smoky',4],['feta','Feta','🧀','Greece','kit','salty,sour,creamy',10],['tzatziki','Tzatziki','🥒','Greece','kit','fresh,sour,creamy',6],['greekhoney','Thyme honey','🍯','Greece','top','sweet,floral,herbal',9],['maple','Maple syrup','🍁','Canada','top','sweet,caramel,woody',8],['bacon','Smoked bacon','🥓','USA','kit','smoky,salty,savory',14],['pulledpork','Pulled pork','🐖','USA','kit','smoky,sweet,savory',18],['bbq','BBQ sauce','🍯','USA','kit','sweet,smoky,sour',4],['ranch','Ranch dressing','🥛','USA','kit','creamy,herbal,tangy',4],['cranberry','Cranberry','🔴','USA','top','sour,fruity,fresh',6],['pumpkinspice','Pumpkin spice','🎃','USA','top','spicy,sweet,cozy',5],['peanutbutter','Peanut butter','🥜','USA','top','nutty,salty,rich',5],['marshmallow','Marshmallow fluff','☁️','USA','top','sweet,creamy,mild',5],['lobster','Maine lobster','🦞','USA','kit','sweet,rich,savory',40],['cranberrysauce','Cranberry sauce','🔴','USA','kit','sweet,sour,fruity',4],['buffalo','Buffalo hot sauce','🔥','USA','kit','spicy,sour,savory',4],['jalapenoj','Pickled jalapeño','🌶️','Mexico','kit','spicy,sour,crunchy',4],['chipotle','Chipotle in adobo','🌶️','Mexico','kit','smoky,spicy,savory',5],['carnitas','Carnitas','🐖','Mexico','kit','savory,rich,citrus',18],['elote','Elote corn','🌽','Mexico','kit','sweet,creamy,smoky',5],['cotija','Cotija cheese','🧀','Mexico','kit','salty,crumbly,savory',10],['horchata','Horchata base','🥛','Mexico','top','sweet,nutty,cinnamon',6],['mexchoc','Mexican chocolate','🍫','Mexico','top','chocolate,spicy,cinnamon',8],['cajeta','Cajeta goat caramel','🍮','Mexico','top','caramel,sweet,rich',8],['agave','Agave nectar','🌵','Mexico','top','sweet,mild,floral',6],['tajin','Tajín','🌶️','Mexico','top','citrus,spicy,salty',4],['guava','Guava paste','🟥','Cuba','top','tropical,sweet,fruity',6],['mojo','Mojo sauce','🍊','Cuba','kit','citrus,herbal,savory',5],['dulce','Dulce de leche','🍮','Argentina','top','caramel,sweet,creamy',8],['chimichurri','Chimichurri','🌿','Argentina','kit','herbal,sour,spicy',5],['yerba','Yerba mate','🧉','Argentina','top','tea,bitter,herbal',7],['acai','Açaí','🫐','Brazil','top','fruity,earthy,sour',10],['cupuacu','Cupuaçu','🍈','Brazil','top','tropical,creamy,chocolate',12],['brigadeiro','Brigadeiro','🍫','Brazil','top','chocolate,sweet,creamy',8],['passionbr','Maracujá syrup','🟣','Brazil','top','sour,tropical,sweet',6],['ajiamarillo','Ají amarillo','🌶️','Peru','kit','spicy,fruity,savory',6],['lucuma','Lúcuma','🟤','Peru','top','caramel,creamy,sweet',10],['purplecorn','Purple corn (chicha)','🌽','Peru','top','fruity,sweet,spiced',6],['jerk','Jerk seasoning','🌶️','Jamaica','kit','spicy,smoky,herbal',5],['bluemountain','Blue Mountain coffee','☕','Jamaica','top','coffee,mild,nutty',20],['sorrel','Sorrel drink','🌺','Jamaica','top','floral,sour,spicy',6],['plantain','Sweet plantain','🍌','Caribbean','kit','sweet,caramel,savory',5],['rumraisin','Rum raisin (alcohol-free)','🍇','Caribbean','top','sweet,fruity,caramel',7],['colombian','Colombian coffee','☕','Colombia','top','coffee,caramel,nutty',12],['panela','Panela','🟤','Colombia','top','caramel,sweet,earthy',5],['manuka','Mānuka honey','🍯','New Zealand','top','sweet,floral,herbal',16],['kiwifruit','Kiwi fruit','🥝','New Zealand','top','sour,fresh,fruity',6],['macadamia','Macadamia','🌰','Australia','top','nutty,creamy,rich',12],['lamington','Lamington crumbs','🍰','Australia','top','chocolate,sweet,coconut',8],['wattleseed','Wattleseed','🟫','Australia','top','coffee,nutty,chocolate',12],['fingerlime','Finger lime','🍋','Australia','top','citrus,sour,fresh',14],['vegemite','Vegemite','🟫','Australia','kit','umami,salty,funky',5],['pavlova','Meringue bits','☁️','Australia','top','sweet,crunchy,mild',6],['taroNZ','Pacific taro','🍠','Pacific','kit','earthy,mild,creamy',6],['coconutcream','Coconut cream (Pacific)','🥥','Pacific','top','creamy,tropical,sweet',5],['geisha','Panama Geisha coffee','☕','Panama','top','coffee,floral,citrus',28],['kenyaaa','Kenya AA coffee','☕','Kenya','top','coffee,sour,fruity',14],['sumatra','Sumatra coffee','☕','Indonesia','top','coffee,earthy,chocolate',12],['kopi','Kopi luwak (ethical)','☕','Indonesia','top','coffee,smooth,chocolate',30],['culi','Culi robusta peaberry','☕','Vietnam','top','coffee,bitter,chocolate',10],['weasel','Vietnamese weasel coffee','☕','Vietnam','top','coffee,chocolate,caramel',22],['darjeeling','Darjeeling tea','🫖','India','top','tea,floral,fruity',10],['assam','Assam black tea','🫖','India','top','tea,malty,bitter',6],['sencha','Sencha green tea','🍵','Japan','top','tea,fresh,herbal',8],['puerh','Pu\'er tea','🫖','China','top','tea,earthy,smoky',12],['jasminepearl','Jasmine pearl tea','🫖','China','top','tea,floral,sweet',10],['lotustea','Lotus tea (trà sen)','🪷','Vietnam','top','tea,floral,luxury',14],['artichoke','Artichoke tea (Đà Lạt)','🌿','Vietnam','top','tea,herbal,earthy',6],['chamomile','Chamomile','🌼','Egypt','top','floral,herbal,mild',5],['peppermint','Peppermint','🌿','USA','top','fresh,herbal,cool',4],['lemonverbena','Lemon verbena','🌿','Peru','top','citrus,herbal,fresh',6]];
+const BASE_TAGS={phin:'coffee,bitter,chocolate',cond:'sweet,creamy',milk:'creamy,mild',ice:'',syrup:'sweet',water:'',coldbrew:'coffee,chocolate,smooth',matcha:'tea,herbal,bitter',tea:'tea,floral',cacao:'chocolate,bitter,rich',yolk:'creamy,rich',sugarcane:'sweet,fresh',softmix:'creamy,sweet',cupL:'',espresso:'coffee,bitter,rich',soda:'fresh,fizzy',
+ saltfoam:'salty,creamy',mfoam:'tea,creamy',biscoff:'caramel,spicy,sweet',tfoam:'creamy,coffee,chocolate',coconut:'tropical,creamy,sweet',straw:'fruity,sweet,sour',mango:'tropical,sweet,fruity',lime:'citrus,sour,fresh',citron:'citrus,sweet,floral',slmix:'sour,sweet,citrus',orange:'citrus,sweet,fresh',
+ baguette:'crunchy,mild',bao:'mild,sweet',pate:'rich,savory',butter:'rich,creamy',hoisin:'sweet,savory',friedegg:'rich,savory',chili:'spicy',pickles:'sour,crunchy',bmgreens:'fresh,herbal,spicy',herbs:'fresh,herbal',bun:'mild',ricepaper:'mild,chewy',nuocmam:'umami,salty',soy:'umami,salty',
+ coldcuts:'savory,salty',pork:'savory,smoky,sweet',chicken:'savory,mild',beef:'savory,rich',shrimp:'sweet,savory',tofu:'mild,savory',eggroll:'crunchy,savory',tiracup:'creamy,coffee,sweet',
+ avocado:'creamy,mild',pandan:'herbal,floral,sweet',ube:'sweet,earthy,creamy',yogurt:'sour,creamy',boba:'chewy,sweet',brownsugar:'caramel,sweet',cheesefoam:'salty,creamy,rich',lemongrass:'citrus,herbal',peach:'fruity,sweet',pineapple:'tropical,sour,sweet',pennywort:'herbal,fresh,earthy',mungbean:'sweet,earthy',sweetcorn:'sweet,creamy',fishcake:'savory,umami',meatball:'savory,rich',roastpork:'savory,crunchy,rich'};
+Object.keys(BASE_TAGS).forEach(k=>{if(ING[k])ING[k].tags=BASE_TAGS[k]?BASE_TAGS[k].split(','):[]});
+WORLD.forEach(([id,n,e,reg,st,tags,p])=>{if(!ING[id])ING[id]={st,e,n,u:'pack',q:12,p,src:1,world:1,reg,tags:tags.split(',')}});
 const ING_ORDER=Object.keys(ING);
 // Recipes simplified from Saigonesee's recipe book.
 // Prices from the Uber Eats menu. est:1 = no public price found, estimated.
@@ -819,6 +861,80 @@ const REC=[
   {id:'baotofu',k:'food',n:'Tofu Bao Bun',vi:'Bánh Bao Đậu Hũ',e:'🥟',ing:['bao','tofu','hoisin','bmgreens'],p:7,d:15,est:1},
 ];
 const LASTDAY=15;
+// Product Lab: new items the team can invent. Each has a real-life idea for the shop.
+const DISCO=[
+  {id:'avosmoothie',k:'drink',n:'Avocado Smoothie',vi:'Sinh Tố Bơ',e:'🥑',ing:['avocado','cond','milk','ice'],p:8,idea:'Blend 1 ripe avocado, 2 tbsp condensed milk, ½ cup milk and a cup of ice. A Saigon classic.'},
+  {id:'avocoffee',k:'drink',n:'Avocado Coffee',vi:'Cà Phê Bơ',e:'🥑',ing:['avocado','phin','cond','milk'],p:8.5,idea:'Avocado smoothie base topped with a shot of phin coffee. Trendy in Hanoi cafés.'},
+  {id:'pandanlatte',k:'drink',n:'Pandan Coconut Latte',vi:'Latte Lá Dứa Dừa',e:'🍃',ing:['pandan','coconut','milk','ice'],p:7.5,idea:'Pandan syrup + coconut cream + milk over ice. Green, fragrant, very photogenic.'},
+  {id:'ubelatte',k:'drink',n:'Ube Latte',vi:'Latte Khoai Môn Tím',e:'🍠',ing:['ube','milk','cond','ice'],p:7.5,idea:'Ube paste whisked with condensed milk, poured over iced milk. Purple layers sell themselves.'},
+  {id:'ubesalt',k:'drink',n:'Salted Cream Ube',vi:'Khoai Môn Kem Muối',e:'🍠',ing:['ube','milk','saltfoam','ice'],p:8,idea:'Your salted cream foam on top of an iced ube milk.'},
+  {id:'yogurtcoffee',k:'drink',n:'Yogurt Coffee',vi:'Sữa Chua Cà Phê',e:'🥣',ing:['yogurt','phin','cond','ice'],p:7,idea:'Sweetened yogurt with condensed milk, ice, then a phin shot poured on top. Tangy and rich.'},
+  {id:'bsboba',k:'drink',n:'Brown Sugar Boba Milk',vi:'Sữa Tươi Trân Châu Đường Đen',e:'⚫',ing:['boba','brownsugar','milk','ice'],p:7.5,idea:'Warm boba cooked in brown sugar syrup, swirled on the cup wall, fresh milk and ice.'},
+  {id:'ubeboba',k:'drink',n:'Ube Boba Milk',vi:'Sữa Khoai Môn Trân Châu',e:'🍠',ing:['ube','boba','milk','ice'],p:8,idea:'Ube milk with tapioca pearls. Easy add-on if you already carry boba.'},
+  {id:'cheesetea',k:'drink',n:'Cheese Foam Jasmine Tea',vi:'Trà Lài Kem Phô Mai',e:'🧀',ing:['tea','cheesefoam','syrup','ice'],p:7,idea:'Lightly sweet jasmine tea topped with salty cream-cheese foam.'},
+  {id:'peachtea',k:'drink',n:'Peach Lemongrass Orange Tea',vi:'Trà Đào Cam Sả',e:'🍑',ing:['tea','peach','lemongrass','orange','ice'],p:7.5,idea:'The famous Trà Đào Cam Sả: tea, peach syrup and slices, bruised lemongrass, fresh orange.'},
+  {id:'peachsimple',k:'drink',n:'Peach Tea',vi:'Trà Đào',e:'🍑',ing:['tea','peach','syrup','ice'],p:6.5,idea:'Jasmine tea, peach syrup and canned peach slices. Kids love it.'},
+  {id:'pinecoco',k:'drink',n:'Pineapple Coconut Smoothie',vi:'Sinh Tố Thơm Dừa',e:'🍍',ing:['pineapple','coconut','ice'],p:7.5,idea:'Blend pineapple chunks with coconut cream and ice.'},
+  {id:'raumadx',k:'drink',n:'Pennywort Mung Bean',vi:'Rau Má Đậu Xanh',e:'🌱',ing:['pennywort','mungbean','coconut','ice'],p:6.5,idea:'Blended pennywort juice with mung bean paste and coconut milk. A Saigon street favorite.'},
+  {id:'cornmilk',k:'drink',n:'Sweet Corn Milk',vi:'Sữa Bắp',e:'🌽',ing:['sweetcorn','milk','syrup'],p:6,idea:'Blend sweet corn with milk and a little syrup, strain, serve warm or iced.'},
+  {id:'chedx',k:'food',n:'Mung Bean Coconut Dessert',vi:'Chè Đậu Xanh',e:'🫛',ing:['mungbean','coconut','syrup'],p:5.5,idea:'Mung bean sweet soup with coconut cream. Cheap to make, high margin.'},
+  {id:'bmchaca',k:'food',n:'Fish Cake Banh Mi',vi:'Bánh Mì Chả Cá',e:'🍥',ing:['baguette','fishcake','pickles','bmgreens','chili'],p:9,idea:'Pan-fried chả cá slices, pickles, cilantro, cucumber and chili sauce.'},
+  {id:'bmxiumai',k:'food',n:'Meatball Banh Mi',vi:'Bánh Mì Xíu Mại',e:'🧆',ing:['baguette','meatball','pickles','bmgreens'],p:9.5,idea:'Pork meatballs in tomato sauce, spooned into the baguette. Great for lunch rush.'},
+  {id:'bmheoquay',k:'food',n:'Roast Pork Banh Mi',vi:'Bánh Mì Heo Quay',e:'🍖',ing:['baguette','roastpork','pate','butter','pickles','bmgreens'],p:11,idea:'Crispy-skin roast pork with pâté and butter. A premium banh mi.'},
+  {id:'bmgasa',k:'food',n:'Lemongrass Chicken Banh Mi',vi:'Bánh Mì Gà Sả',e:'🌾',ing:['baguette','chicken','lemongrass','pickles','bmgreens'],p:10.5,idea:'Marinate chicken thigh in lemongrass, garlic and fish sauce, then grill.'},
+  {id:'buntofusa',k:'food',n:'Lemongrass Tofu Bowl',vi:'Bún Đậu Hũ Xả Ớt',e:'🌾',ing:['bun','tofu','lemongrass','herbs','pickles'],p:13,idea:'Tofu fried with lemongrass and chili over vermicelli. A strong vegan option.'},
+];
+const LAB_FEE=25,SOURCE_FEE=200;
+const CONT={'Vietnam':'🇻🇳 Vietnam','Philippines':'🌴 Southeast Asia','Malaysia':'🌴 Southeast Asia','Thailand':'🌴 Southeast Asia','Indonesia':'🌴 Southeast Asia','Singapore':'🌴 Southeast Asia',
+ 'Japan':'🏯 East Asia','Korea':'🏯 East Asia','Taiwan':'🏯 East Asia','China':'🏯 East Asia','Hong Kong':'🏯 East Asia',
+ 'India':'🕌 South Asia & Middle East','Iran':'🕌 South Asia & Middle East','Sri Lanka':'🕌 South Asia & Middle East','Middle East':'🕌 South Asia & Middle East','Levant':'🕌 South Asia & Middle East','Turkey':'🕌 South Asia & Middle East',
+ 'Tunisia':'🌍 Africa','Morocco':'🌍 Africa','Senegal':'🌍 Africa','Africa':'🌍 Africa','South Africa':'🌍 Africa','Ethiopia':'🌍 Africa','Nigeria':'🌍 Africa','Mozambique':'🌍 Africa','Kenya':'🌍 Africa','Egypt':'🌍 Africa',
+ 'Canada':'🌎 North America','USA':'🌎 North America','Mexico':'🌎 North America','Cuba':'🌎 Latin America','Argentina':'🌎 Latin America','Brazil':'🌎 Latin America','Peru':'🌎 Latin America','Jamaica':'🌎 Latin America','Caribbean':'🌎 Latin America','Colombia':'🌎 Latin America','Panama':'🌎 Latin America',
+ 'New Zealand':'🥝 Oceania','Australia':'🥝 Oceania','Pacific':'🥝 Oceania'};
+const contOf=k=>ING[k].reg?(CONT[ING[k].reg]||'🇪🇺 Europe'):'🧪 Lab specials';
+const srcFee=k=>ING[k].world?Math.min(600,Math.max(80,Math.round(ING[k].p*15/10)*10)):SOURCE_FEE;
+const DRINK_BASES={phin:'Coffee',espresso:'Latte',coldbrew:'Cold Brew',tea:'Tea',matcha:'Matcha',milk:'Milk',soda:'Soda',sugarcane:'Sugarcane Juice'};
+const FOOD_BASES={baguette:'Banh Mi',bun:'Vermicelli Bowl',ricepaper:'Spring Rolls',bao:'Bao',croissant:'Croissant',sticky:'Sticky Rice'};
+const FILLERS=['ice','water','cupL','syrup','milk','cond'];
+const GOOD=[['sweet','sour'],['sweet','salty'],['sweet','spicy'],['creamy','fruity'],['creamy','tropical'],['creamy','coffee'],['creamy','tea'],['chocolate','nutty'],['chocolate','coffee'],['caramel','salty'],['caramel','coffee'],['citrus','floral'],['citrus','tea'],['herbal','citrus'],['floral','tea'],['fruity','tea'],['tropical','sour'],['nutty','coffee'],['nutty','caramel'],['spicy','savory'],['savory','sour'],['savory','fresh'],['umami','sour'],['smoky','sweet'],['rich','sour'],['crunchy','creamy'],['herbal','savory'],['spicy','creamy'],['fresh','rich'],['floral','creamy'],['earthy','sweet'],['toasty','creamy'],['caramel','creamy'],['fruity','floral'],['spicy','citrus'],['umami','spicy'],['salty','rich']];
+const BAD=[['umami','fruity'],['funky','sweet'],['bitter','sour'],['fishy','sweet'],['umami','floral'],['smoky','floral']];
+const shortName=k=>ING[k].n.replace(/\s*\(.*?\)/g,'').replace(/\b(paste|syrup|jam|sauce|powder|leaves|leaf|blend|base|pulp|flower|blossom|crumbs|crumble|bits|drink|spread|nectar|water|grind|seeds|fresh|tea jam|slices|dressing)\b/gi,'').replace(/\s+/g,' ').trim();
+function hashStr(t){let h=2166136261;for(const c of t){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function evalCombo(sel){
+  const db=sel.filter(k=>DRINK_BASES[k]||(ING[k].tags||[]).some(t=>t==='tea'||t==='coffee')&&ING[k].st==='top'),fb=sel.filter(k=>FOOD_BASES[k]);
+  if(!db.length&&!fb.length)return {fail:'It needs a base: tea, coffee, milk or soda for a drink, or a baguette, noodles, rice paper or bao for food.'};
+  if(db.length&&fb.length)return {fail:'Is it a drink or a sandwich? Tasters were confused. Pick one kind of base.'};
+  const kind=fb.length?'food':'drink',base=(fb.length?fb:db)[0];
+  const flav=sel.filter(k=>k!==base&&!FILLERS.includes(k)&&!DRINK_BASES[k]&&!FOOD_BASES[k]);
+  if(!flav.length)return {fail:'That\'s just a plain '+(DRINK_BASES[base]||FOOD_BASES[base]||shortName(base))+'. Add some flavors!'};
+  const tagsOf=k=>ING[k].tags||[];let good=0,bad=0;
+  for(let i=0;i<sel.length;i++)for(let j=i+1;j<sel.length;j++){const a=tagsOf(sel[i]),b=tagsOf(sel[j]);
+    GOOD.forEach(([x,y])=>{if((a.includes(x)&&b.includes(y))||(a.includes(y)&&b.includes(x)))good++});
+    BAD.forEach(([x,y])=>{if((a.includes(x)&&b.includes(y))||(a.includes(y)&&b.includes(x)))bad++})}
+  let sc=2.3+Math.min(good,7)*.33-bad*.7;const tips=[];
+  const all=sel.flatMap(tagsOf);
+  if(kind==='drink'&&all.some(t=>['savory','umami','funky','fishy'].includes(t))){sc-=2.4;tips.push('savory things in a drink')}
+  if(kind==='food'&&['baguette','bun','ricepaper','bao'].includes(base)&&!all.some(t=>['savory','umami','rich'].includes(t))){sc-=1;tips.push('it needs something savory')}
+  if(flav.length>4){sc-=(flav.length-4)*.6;tips.push('too many flavors fighting')}
+  if(flav.length===1)sc-=.2;
+  if(kind==='drink'&&!sel.includes('ice')&&!sel.includes('water')&&!sel.includes('milk'))sc-=.3;
+  sc+=((hashStr([...sel].sort().join())%100)/100-.5)*.8;
+  const stars=Math.max(1,Math.min(5,Math.round(sc*2)/2));
+  const top=Object.entries(all.reduce((m,t)=>(m[t]=(m[t]||0)+1,m),{})).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+  return {kind,base,flav,stars,top,tips};
+}
+function makeCustom(sel,ev){
+  const L=S.lab,fl=ev.flav.slice().sort((a,b)=>shortName(a).length-shortName(b).length).slice(0,2);
+  const baseLabel=DRINK_BASES[ev.base]||FOOD_BASES[ev.base]||shortName(ev.base);
+  let n=fl.map(shortName).join(' ')+' '+baseLabel;n=n.replace(/\b(\w)/g,c=>c.toUpperCase()).replace(/\s+/g,' ').trim();
+  if(REC.some(r=>r.n===n))n+=' No. '+(L.custom.length+1);
+  const cost=sel.reduce((a,k)=>a+ING[k].p/ING[k].q,0);
+  const p=Math.min(ev.kind==='drink'?10:15,Math.round(((ev.kind==='drink'?5.5:8)+cost*1.6+(ev.stars-3.5)*.6)*4)/4);
+  const regs=[...new Set(sel.map(k=>ING[k].reg).filter(Boolean))];
+  const idea=`${ev.stars}★ in taste tests. ${sel.map(k=>ING[k].n).join(' + ')}. Flavor: ${ev.top.join(', ')}.${regs.length?' Ingredients from '+regs.join(', ')+'.':''}`;
+  const d={id:'c'+hashStr(sel.slice().sort().join()).toString(36),k:ev.kind==='food'?'food':'drink',n,vi:'',e:ING[fl[0]].e,ing:sel.slice(),p,idea,stars:ev.stars,custom:1};
+  return d;
+}
 const FACES=['🧑','👩','👨','🧓','👵','👴','👱‍♀️','🧔','👩‍🦱','🧑‍🦰','👷','🧑‍💼','👩‍🎓','🧑‍🎨'];
 const UPG=[
   {g:'Weymouth shop'},
@@ -907,6 +1023,15 @@ function rollWx(d){const t=WXP[season(d)[0]],tot=Object.values(t).reduce((a,b)=>
 const wxMul=()=>{const w=WX[S.wx.t],h=holiday(S.day);return w.m*(w.patio?1+.1*S.upg.patio:1)*(h?h[1]:1)};
 const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `${se[1]} ${se[0]}, ${w.e} ${w.n}${h?`, <b>${h[0]}</b>`:''}`};
 // Online leaderboard: paste your Google Apps Script web app URL here (see leaderboard-apps-script.gs). Leave empty for on-device only.
+// ================= TAXES (simplified Massachusetts small business) =================
+// Meals tax: 6.25% MA sales tax on meals + 0.75% Weymouth local option = 7%, collected from customers and sent to MA DOR.
+// Employer payroll taxes: Social Security 6.2% + Medicare 1.45% + FUTA 0.6% + MA unemployment, PFML and workforce training ≈ 2.4%.
+// Income: federal corporate 21% + MA corporate excise 8% on quarterly profit (MA minimum excise $456 a year).
+// Property tax on real estate you own: about 1.1% a year for homes, 2.2% for commercial buildings. One game year = 40 days.
+const TAX={meals:.07,ss:.062,medi:.0145,futa:.006,maPay:.024,fed:.21,ma:.08,maMin:456,resProp:.011,comProp:.022,year:40,quarter:10};
+const payRate=()=>TAX.ss+TAX.medi+TAX.futa+TAX.maPay;
+const COMMERCIAL=['retail','tower'];
+function initTax(){S.tax=S.tax||{qProfit:0,qInv:0,owed:0,paid:{income:0,payroll:0,property:0,meals:0},hist:[]}}
 const LB_URL='https://script.google.com/macros/s/AKfycbwqn0F_h2hLybTh73bg3_E2C_k_HGa3XmYTGmq3MbbFe5wb6s2GiaKT3fw45h50PDaIpQ/exec';
 // Firebase leaderboard: paste the firebaseConfig object from Firebase Console > Project settings > Your apps.
 // Leave as null to keep the leaderboard on this device only.
@@ -981,9 +1106,9 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const custName=()=>pick(CNAMES);
 const revName=()=>{const n=pick(CNAMES);return /\s|\./.test(n)?n:n+' '+String.fromCharCode(65+Math.floor(Math.random()*26))+'.'};
 const EXECS={
-  hr:{e:'👩‍💼',n:'HR Director',d:'Runs hiring and staff care',fee:500,sal:60,opts:{hire:'Hire staff to fill open spots everywhere',care:'Give a bonus when someone is unhappy',sched:'Set staff positions at Weymouth'}},
+  hr:{e:'👩‍💼',n:'HR Director',d:'Runs hiring and staff care',fee:500,sal:60,opts:{hire:'Hire staff wherever they are needed, busiest spots first',care:'Give a bonus when someone is unhappy',sched:'Set staff positions at Weymouth'}},
   coo:{e:'👨‍💼',n:'Operations Director',d:'Runs inventory and branches',fee:800,sal:90,opts:{stock:'Restock Weymouth every morning',open:'Open a new branch when profit is up and there is spare cash',expand:'Expand branches that turn customers away'}},
-  cfo:{e:'🧑‍💼',n:'Finance Director',d:'Runs money and prices',fee:800,sal:80,opts:{loans:'Pay off loans early',prices:'Lower prices when customers walk out over them',buyback:'Buy back company shares'}},
+  cfo:{e:'🧑‍💼',n:'Finance Director',d:'Runs money and prices',fee:800,sal:80,opts:{loans:'Pay off loans early',prices:'Lower prices when customers walk out over them',buyback:'Buy back company shares',tax:'Plan deductions: 10% less income tax'}},
   cmo:{e:'👩‍🎤',n:'Marketing Director',d:'Runs ads and catering',fee:600,sal:70,opts:{ads:'Run ads when buzz drops or a competitor opens',cater:'Accept catering requests'}},
   cpo:{e:'👨‍🍳',n:'Product Director',d:'Runs research',fee:500,sal:60,opts:{rd:'Research new menu items'}},
 };
@@ -1040,8 +1165,8 @@ function load(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):nul
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const hasReq=r=>!r.req||[].concat(r.req).every(q=>S.upg[q]>0);
-const unlocked=()=>REC.filter(r=>S.known.includes(r.id)&&hasReq(r));
-const needSet=()=>{const st=new Set(unlocked().flatMap(r=>r.ing));if(st.has('bmgreens')){st.add('chili');st.add('friedegg')}if(unlocked().some(r=>r.k==='drink'))st.add('cupL');return st};
+const unlocked=()=>REC.filter(r=>S.known.includes(r.id)&&hasReq(r)&&!(S.lab&&S.lab.off&&S.lab.off.includes(r.id)));
+const needSet=()=>{const st=new Set(unlocked().flatMap(r=>r.ing));(S.lab&&S.lab.src||[]).forEach(k=>st.add(k));if(st.has('bmgreens')){st.add('chili');st.add('friedegg')}if(unlocked().some(r=>r.k==='drink'))st.add('cupL');return st};
 const slotsN=()=>3+S.upg.quay;
 const qCap=()=>2+(S.upg.line||0);
 const price=r=>(S.prices[r.id]??r.p)+(r.addp||0);
@@ -1192,10 +1317,24 @@ function place(o,slot){
   if(Math.random()<balk){c.balk=true;c.whoEl.textContent='💸 '+fmt(recs.reduce((a,r)=>a+price(r),0))+'?!';
     setTimeout(()=>{if(R&&R.cust[slot]===c){removeCust(c,'🙄');R.balked++;if(R.balked%3===1)toast('Customers are walking out over prices')}},900)}
 }
+function tryCater(w){
+  const x=R.cat.items.find(i=>i.got+(i.wip||0)<i.qty&&canDo(w,REC.find(z=>z.id===i.rid))&&hasStock(REC.find(z=>z.id===i.rid).ing));
+  if(!x)return false;
+  const r=REC.find(z=>z.id===x.rid);r.ing.forEach(k=>{S.inv[k]--;R.used[k]=(R.used[k]||0)+1});x.wip=(x.wip||0)+1;
+  const it={rec:r,get got(){return x.got},set got(v){x.got=v;x.wip--}};w.c={cater:1};w.it=it;w.sp=w.s.skills[stOf(r)]*spMul(w.s)*stMul(stOf(r))*recMul(r);w.t=w.sp;
+  w.lab.textContent=w.s.name+' 📦';w.lab0=null;stock();return true;
+}
+// Behind schedule if the remaining items can't be finished in time at the crew's pace (with a safety margin)
+function catUrgent(){
+  const j=R.cat;if(!j)return false;const rem=j.items.reduce((a,i)=>a+Math.max(0,i.qty-i.got-(i.wip||0)),0);if(!rem)return false;
+  const tl=j.due-R.t,n=Math.max(1,R.crew.length),avg=R.crew.length?R.crew.reduce((a,w)=>a+bestSp(w.s)*spMul(w.s),0)/n:6;
+  return tl<rem*avg/n*1.8+6;
+}
 function renderCater(){
   const b=$('cater'),j=R&&R.cat;b.classList.toggle('has',!!j);if(!j)return;
   const due=7*60+Math.floor(j.due/DAYLEN*480);
-  b.innerHTML=`<b>📦 ${j.client}</b> <small>due ${Math.floor(due/60)}:${String(due%60).padStart(2,'0')}, pays ${fmt(j.pay)}</small><br>`+j.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return `<span class="ci${x.got>=x.qty?' ok':''}">${r.e} ${r.n} ${x.got}/${x.qty}</span>`}).join(' ');
+  const urg=catUrgent();b.classList.toggle('urgent',urg);
+  b.innerHTML=`<b>📦 ${j.client}</b> <small>due ${Math.floor(due/60)}:${String(due%60).padStart(2,'0')}, pays ${fmt(j.pay)}</small> ${urg?'<span class="cst bad">⚠️ Behind: staff focusing</span>':'<span class="cst ok">✓ On track</span>'}<br>`+j.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return `<span class="ci${x.got>=x.qty?' ok':''}">${r.e} ${r.n} ${x.got}/${x.qty}</span>`}).join(' ');
 }
 function caterTap(){
   if(!R||R.paused||!R.cat)return;if(R.out>R.t){toast('⚡ Power is out');return}
@@ -1343,11 +1482,12 @@ function crewTick(dt){
       if(w.t<=0){const c=w.c,it=w.it;w.c=null;w.it=null;w.cool=.3;w.bar.style.width='0';if(c.cater){it.got++;caterCheck()}else completeItem(c,it,true)}
     }else{
       w.cool-=dt;if(w.cool>0)return;
+      // Catering first when it's behind schedule; one in three staff always helps with catering
+      const idx=R.crew.indexOf(w);
+      if(R.cat&&(catUrgent()||idx%3===0)&&tryCater(w))return;
       let best=null;
       R.cust.filter(x=>x&&!x.balk).sort((a,b)=>a.left-b.left).some(c=>{const it=c.items.find(i=>!i.done&&!i.by&&canDo(w,i.rec)&&hasStock(i.rec.ing));if(it){best=[c,it];return true}});
-      if(!best&&R.cat){const x=R.cat.items.find(i=>i.got+(i.wip||0)<i.qty&&canDo(w,REC.find(z=>z.id===i.rid))&&REC.find(z=>z.id===i.rid).ing.every(k=>S.inv[k]>0));
-        if(x){const r=REC.find(z=>z.id===x.rid);r.ing.forEach(k=>{S.inv[k]--;R.used[k]=(R.used[k]||0)+1});x.wip=(x.wip||0)+1;
-          const it={rec:r,get got(){return x.got},set got(v){x.got=v;x.wip--}};w.c={cater:1};w.it=it;w.sp=w.s.skills[stOf(r)]*spMul(w.s)*stMul(stOf(r))*recMul(r);w.t=w.sp;stock();return}}
+      if(!best&&R.cat&&tryCater(w))return;
       if(!best){w.cool=.4;return}
       const [c,it]=best;
       it.rec.ing.forEach(k=>{S.inv[k]--;R.used[k]=(R.used[k]||0)+1});it.by=w;w.c=c;w.it=it;w.sp=w.s.skills[stOf(it.rec)]*spMul(w.s)*stMul(stOf(it.rec))*recMul(it.rec)*(c.del&&S.upg.sealer?.8:1);w.t=w.sp;
@@ -1407,6 +1547,7 @@ function loop(now){
       c.bar.style.width=(p*100)+'%';c.bar.classList.toggle('low',p<.3);
       if(c.left<=0){c.items.forEach(it=>it.by=null);removeCust(c,'😤');regMiss(c);if(c.inf){S.buzz=Math.max(-.3,S.buzz-.1);R.news.push('📸 The influencer posted about a long wait');toast('📸 The influencer walked out. Buzz is down')}R.lost++;rate(1);sfx.bad();hud()}});
     queueTick(dt);eventsTick();
+    if(R.cat&&Math.floor(R.t)!==R.catSec){R.catSec=Math.floor(R.t);renderCater()}
     if(R.cat&&R.t>R.cat.due){S.rating=Math.max(1,S.rating-.15);S.buzz=Math.max(-.3,S.buzz-.05);R.news.push('📦 Catering for '+R.cat.client+' was late and got cancelled');toast('📦 Catering order missed its deadline');R.cat=null;S.catJob=null;renderCater()}
     crewTick(dt);
     hud();
@@ -1450,14 +1591,32 @@ function endDay(){
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
   genReviews();S.buzz*=.8;
   finDay();
+  {const L=S.lab,un=DISCO.filter(d=>!L.found.includes(d.id)&&!L.leads.includes(d.id));
+   if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
   if(R.cat){R.news.push('📦 Catering for '+R.cat.client+' was not finished');S.rating=Math.max(1,S.rating-.15);R.cat=null;S.catJob=null}
   // finance
   let loanPay=0;S.loans.forEach(l=>{if(S.money>=l.pay){S.money-=l.pay;loanPay+=l.pay;l.left--}else{S.rating=Math.max(1,S.rating-.1);l.pay*=1.05;R.news.push('🏦 Missed a loan payment. Late fee added')}});
   S.loans.filter(l=>l.left<=0).forEach(l=>R.news.push('🏦 Paid off a '+fmt(l.amt)+' loan'));S.loans=S.loans.filter(l=>l.left>0);
-  const op=R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0);
+  // daily taxes
+  initTax();const T=S.tax;
+  const sales=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);R.mealsTax=sales*TAX.meals;T.paid.meals+=R.mealsTax;
+  R.payTax=(R.wages+(R.boardPay||0))*payRate();S.money-=R.payTax;T.paid.payroll+=R.payTax;
+  R.propTax=Object.keys(S.fin.props).reduce((a,k)=>a+S.fin.pval[k]*(COMMERCIAL.includes(k)?TAX.comProp:TAX.resProp)/TAX.year,0);S.money-=R.propTax;T.paid.property+=R.propTax;
+  if(T.owed>0){const pay=Math.min(T.owed,Math.max(0,S.money));S.money-=pay;T.owed-=pay;T.paid.income+=pay;if(pay)R.news.push('🧾 Paid '+fmt(pay)+' of overdue income tax')}
+  const op=R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-R.payTax-R.propTax;
   let div=0;if(S.ipo.sold&&op>0){div=op*S.ipo.sold*.5;S.money-=div}
   R.op=op;R.div=div;R.loanPay=loanPay;S.spend=0;
   S.life.profit+=op;S.life.rev+=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);S.life.served+=R.served+R.br.reduce((a,b)=>a+(b.served||0),0);if(op>S.life.best.p)S.life.best={d:S.day,p:Math.round(op)};
+  T.qProfit+=op;T.qInv+=R.fin?(R.fin.div+R.fin.int+R.fin.rent):0;
+  if(S.day%TAX.quarter===0){
+    const taxable=T.qProfit+T.qInv,minQ=TAX.maMin/4;
+    let fed=Math.max(0,taxable)*TAX.fed,ma=Math.max(minQ,Math.max(0,taxable)*TAX.ma);
+    const plan=boardOn('cfo','tax')?.9:1;fed*=plan;ma=Math.max(minQ,ma*plan);
+    const due=fed+ma,pay=Math.min(due,Math.max(0,S.money));S.money-=pay;T.paid.income+=pay;
+    if(pay<due){T.owed+=(due-pay)*1.05;R.news.push('⚠️ Not enough cash for quarterly taxes. '+fmt((due-pay)*1.05)+' is overdue (5% penalty)')}
+    R.qTax={taxable,fed,ma,due,plan:plan<1};T.hist.unshift({d:S.day,taxable:Math.round(taxable),due:Math.round(due)});T.hist=T.hist.slice(0,8);
+    T.qProfit=0;T.qInv=0;
+  }
   S.hist.push({d:S.day,p:Math.round(op)});if(S.hist.length>30)S.hist.shift();
   const h3=S.hist.slice(-3);if(S.ipo.sold&&h3.length===3&&h3[0].p>h3[1].p&&h3[1].p>h3[2].p){S.buzz=Math.max(-.3,S.buzz-.03);R.news.push('📉 Shareholders are unhappy about falling profits')}
   // weather and supplies for tomorrow
@@ -1470,7 +1629,7 @@ function endDay(){
     const rs=[];while(rs.length<n){const r=pick(unlocked());if(!rs.includes(r))rs.push(r)}
     const items=rs.map((r,i)=>({rid:r.id,qty:Math.max(3,Math.round(q/n))}));
     const pay=Math.round(items.reduce((a,x)=>a+price(REC.find(z=>z.id===x.rid))*x.qty,0)*1.15);
-    S.catOffers.push({id:Date.now()+Math.random(),client:pick(CAT_CLIENTS),items,pay,due:DAYLEN*(.35+Math.random()*.4),exp:S.day+2});
+    const tq=items.reduce((a,x)=>a+x.qty,0);S.catOffers.push({id:Date.now()+Math.random(),client:pick(CAT_CLIENTS),items,pay,due:DAYLEN*Math.min(.92,.32+tq*.013+Math.random()*.1),exp:S.day+2});
     R.news.push('📦 New catering request. See 🏦 Finance')}
   const d=S.day;
   if(S.rating<2){
@@ -1519,6 +1678,10 @@ function summary(){
    ${R.fin.int?`<div class="stat"><span>Bank interest</span><span>+${fmt(R.fin.int)}</span></div>`:''}
    ${R.fin.rent?`<div class="stat"><span>Rent collected</span><span>+${fmt(R.fin.rent)}</span></div>`:''}
    ${R.fin.log.filter(l=>!l.startsWith('📰')||Object.keys(S.fin.hold).some(k=>l.includes(STOCKS.find(t=>t.sym===k).n))).map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}`:''}
+  ${R.payTax?`<div class="stat"><span>🧾 Payroll taxes <small>(${(payRate()*100).toFixed(2)}% of wages)</small></span><span>-${fmt(R.payTax)}</span></div>`:''}
+  ${R.propTax?`<div class="stat"><span>🧾 Property tax</span><span>-${fmt(R.propTax)}</span></div>`:''}
+  ${R.mealsTax?`<div class="stat"><span>🧾 Meals tax collected <small>(7%, sent to MA DOR)</small></span><span>${fmt(R.mealsTax)}</span></div>`:''}
+  ${R.qTax?`<div class="stat"><span><b>🧾 Quarterly income tax</b><br><small>Federal 21% ${fmt(R.qTax.fed)} + MA 8% ${fmt(R.qTax.ma)}${R.qTax.plan?' · CFO saved 10%':''}</small></span><span>-${fmt(R.qTax.due)}</span></div>`:''}
   ${R.boardPay?`<div class="stat"><span>👔 Board salaries</span><span>-${fmt(R.boardPay)}</span></div>`:''}
   ${R.board&&R.board.length?`<p style="font-weight:800;margin:10px 0 2px">👔 Board report</p>${R.board.map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}`:''}
   ${R.news.map(n=>`<div class="stat"><span>${n}</span></div>`).join('')}
@@ -1558,9 +1721,10 @@ function manage(tab){
       return `<div class="upg"><span class="fc">${r.e}</span><div><b>${r.n}</b><br><small>Menu ${fmt(r.p)}</small> <small style="color:${col};font-weight:800">${lb}</small></div><div class="pr"><button onclick="setPrice('${r.id}',-.25)" aria-label="Lower price">−</button><b>${fmt(price(r))}</b><button onclick="setPrice('${r.id}',.25)" aria-label="Raise price">+</button></div></div>`}).join('')+
     `<button class="big alt" onclick="S.prices={};save();manage()">Reset to menu prices</button>`;
   }
-  if(MT==='rd'){
+  if(MT==='rd'&&RT==='lab'){body=rdTabs()+labBody()}
+  else if(MT==='rd'){
     const slots=1+S.upg.lab,avail=REC.filter(r=>r.d<=S.day&&hasReq(r)&&!S.known.includes(r.id)&&!S.rd.some(x=>x.id===r.id)),needEq=REC.filter(r=>!hasReq(r)&&!S.known.includes(r.id)),later=REC.filter(r=>r.d>S.day&&!S.known.includes(r.id)).length;
-    body=`<p class="note">Research new menu items. Each one takes a day and joins the menu after the next close. Research slots: ${S.rd.length}/${slots}.</p>`+
+    body=rdTabs()+`<p class="note">Research new menu items. Each one takes a day and joins the menu after the next close. Research slots: ${S.rd.length}/${slots}.</p>`+
     S.rd.map(x=>{const r=REC.find(z=>z.id===x.id);return `<div class="upg"><span class="fc">${r.e}</span><div><b>${r.n}</b><br><small>In progress, ready after next close</small></div></div>`}).join('')+
     (avail.length?avail.map(r=>`<div class="upg"><span class="fc">${r.e}</span><div><b>${r.n}</b>${r.vi?` <span class="vi">${r.vi}</span>`:''}<br><small>${r.ing.map(k=>ING[k].e).join(' ')} ${r.k==='drink'?'Bar':'Kitchen'}, sells for ${fmt(r.p)}</small></div><button ${S.money<rdCost(r)||S.rd.length>=slots?'disabled':''} onclick="research('${r.id}')">${fmt(rdCost(r))}</button></div>`).join(''):`<p class="note">${S.known.length>=REC.length?'Every item on the menu is researched.':'Nothing new to research right now.'}</p>`)+
     (later?`<p class="note">${later} more items become available to research as the days go by.</p>`:'')+
@@ -1588,6 +1752,7 @@ function manage(tab){
     `<p style="margin-top:12px;font-weight:800">📦 Catering requests</p>`+
     (S.catJob?`<div class="upg"><div><b>${S.catJob.client}</b> <small>booked for today</small><br><small>${S.catJob.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return r.e+' '+r.n+' ×'+x.qty}).join(', ')}</small></div></div>`:'')+
     (S.catOffers.length?S.catOffers.map(o=>{const due=7*60+Math.floor(o.due/DAYLEN*480);return `<div class="upg"><div><b>${o.client}</b><br><small>${o.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return r.e+' '+r.n+' ×'+x.qty}).join(', ')}</small><br><small>Due by ${Math.floor(due/60)}:${String(due%60).padStart(2,'0')}, pays ${fmt(o.pay)}</small></div><button ${S.catJob?'disabled':''} onclick="acceptCat(${o.id})">Accept</button></div>`}).join('')+'<p class="note">An accepted order runs during your next day. Make each item and tap the 📦 banner. Staff help when they are free. Missing the deadline costs rating.</p>':'<p class="note">No requests right now. They come in every few days.</p>')+
+    taxSection()+
     `<p style="margin-top:12px;font-weight:800">🏦 Bank loans</p>`+
     S.loans.map((l,i)=>`<div class="upg"><div><b>${fmt(l.amt)} loan</b><br><small>${fmt(l.pay)}/day, ${l.left} days left</small></div><button ${S.money<payoff(l)?'disabled':''} onclick="payOff(${i})">Pay off ${fmt(payoff(l))}</button></div>`).join('')+
     LOANS.map((o,i)=>{const lock=o.req&&S.branches.length<o.req;return `<div class="upg"><div><b>Borrow ${fmt(o.amt)}</b><br><small>${(o.rate*100).toFixed(1)}% a day for ${o.days} days: ${fmt(o.amt*(1+o.rate*o.days)/o.days)}/day${lock?`. Needs ${o.req} branches`:''}</small></div><button ${lock||S.loans.length>=2?'disabled':''} onclick="takeLoan(${i})">Borrow</button></div>`}).join('')+
@@ -1628,6 +1793,20 @@ const LOANS=[{amt:1000,rate:.01,days:15},{amt:5000,rate:.012,days:20},{amt:20000
 const avgProfit=()=>{const h=S.hist.slice(-7);return h.length?h.reduce((a,x)=>a+x.p,0)/h.length:0};
 function valuation(){return Math.round(Math.max(0,avgProfit())*30+2000+S.branches.reduce((a,id)=>a+LOC[id].cost*(1+.6*(S.brLvl[id]||0))*.5,0)+S.known.length*40)}
 const payoff=l=>Math.round(l.amt*l.left/l.days);
+function taxSection(){initTax();const T=S.tax,left=TAX.quarter-((S.day-1)%TAX.quarter),est=Math.max(0,T.qProfit+T.qInv)*(TAX.fed+TAX.ma)*(boardOn('cfo','tax')?.9:1);
+  const r=(a,b)=>`<div class="stat"><span>${a}</span><span>${b}</span></div>`;
+  return `<p style="margin-top:14px;font-weight:800">🧾 Taxes (Massachusetts)</p>
+  ${T.owed>0?`<div class="warn">Overdue income tax: <b>${fmt(T.owed)}</b>. It is paid automatically from cash each night.</div>`:''}
+  ${r('Next quarterly payment','in '+left+' day'+(left>1?'s':''))}
+  ${r('Taxable profit this quarter',fmt(T.qProfit+T.qInv))}
+  ${r('Estimated income tax',fmt(Math.max(est,TAX.maMin/4)))}
+  <details class="srcgrp"><summary>Tax rates and totals paid</summary>
+  ${r('Meals tax (6.25% MA + 0.75% Weymouth)','7% · '+fmt(T.paid.meals))}
+  ${r('Payroll: Social Security 6.2%, Medicare 1.45%, FUTA 0.6%, MA UI/PFML ~2.4%',fmt(T.paid.payroll))}
+  ${r('Income: federal 21% + MA excise 8% (min $456/yr)',fmt(T.paid.income))}
+  ${r('Property: ~1.1% homes, ~2.2% commercial per year',fmt(T.paid.property))}
+  ${T.hist.length?'<p class="note" style="margin-top:6px">Recent quarters: '+T.hist.map(h=>`day ${h.d}: ${fmt(h.due)}`).join(' · ')+'</p>':''}
+  <p class="note">Meals tax is paid by customers on top of menu prices, so it doesn't cut your profit. Rates are simplified for the game; real taxes depend on your business type.</p></details>`}
 function takeLoan(i){const o=LOANS[i];if(S.loans.length>=2)return;S.money+=o.amt;S.loans.push({amt:o.amt,days:o.days,left:o.days,pay:Math.round(o.amt*(1+o.rate*o.days)/o.days*100)/100});save();sfx.coin();toast('🏦 Borrowed '+fmt(o.amt));manage()}
 function payOff(i){const l=S.loans[i],c=payoff(l);if(S.money<c)return;S.money-=c;S.loans.splice(i,1);save();toast('🏦 Loan paid off');manage()}
 function ipo(){const v=valuation();if(v<25000||S.ipo.sold)return;S.money+=v*.2;S.ipo.sold=.2;save();sfx.coin();toast('🔔 Saigonesee is now a public company!');manage()}
@@ -1788,6 +1967,66 @@ function gateCard(g,why){const G=GATES[g],pct=(a,b)=>Math.max(0,Math.min(100,a/b
   ${bar('📅',S.day,G.day,'Day '+S.day+' / '+G.day)}
   ${bar('⭐',S.rating,G.rating,S.rating.toFixed(1)+' / '+G.rating.toFixed(1)+' stars')}</div>`}
 function toggleApp(a){if(!S.apps[a]&&!gateOk(a))return;const s0=S.apps[a];if(!s0){if(S.money<APPS[a].fee)return;S.money-=APPS[a].fee;S.apps[a]={on:true}}else s0.on=!s0.on;save();manage()}
+let RT='menu';
+function rdTabs(){return `<div class="tabs sm"><button class="${RT==='menu'?'on':''}" onclick="RT='menu';manage()">📋 Menu research</button><button class="${RT==='lab'?'on':''}" onclick="RT='lab';manage()">🧪 Invent new items${S.lab.leads.length?' 💡':''}</button></div>`}
+const hasIng=k=>(S.inv[k]||0)>0;
+function labBody(){
+  const L=S.lab,sel=L.sel;
+  const pool=[...new Set([...needSet()])].filter(k=>ING[k]).sort((a,b)=>ING_ORDER.indexOf(a)-ING_ORDER.indexOf(b));
+  let b=`<p class="note">Mix ingredients to invent new drinks and dishes. Pick a base (tea, coffee, milk, soda, baguette, noodles, rice paper, bao) plus 1–4 flavors. Source 200+ ingredients from around the world below. Good combos join your menu, and they might work at the real shop too 😎</p>`;
+  if(L.leads.length)b+=`<p style="font-weight:800;margin:10px 0 4px">💡 Ideas from the team</p>`+L.leads.map(id=>{const d=DISCO.find(x=>x.id===id);const need=d.ing.filter(k=>ING[k].src&&!L.src.includes(k));
+    return `<div class="lead"><b>${d.e} ${d.n}</b> <small>${d.vi}</small><br><small>Hint: try ${d.ing.slice(0,2).map(k=>ING[k].e+' '+ING[k].n).join(' + ')} and ${d.ing.length-2} more.${need.length?` Needs ${need.map(k=>ING[k].n).join(', ')} (source it below).`:''}</small></div>`}).join('');
+  if(L.last)b+=`<div class="labres ${L.last.ok?'ok':L.last.close?'close':'bad'}">${L.last.msg}</div>`;
+  b+=`<p style="font-weight:800;margin:12px 0 4px">🧪 Test bench <small>(${sel.length}/6 picked)</small></p>
+  <div class="bench">${sel.length?sel.map((k,i)=>`<button class="bchip" onclick="labPick('${k}')">${ING[k].e} ${ING[k].n} ✕</button>`).join(''):'<span class="note">Tap ingredients below to add them.</span>'}</div>
+  <input class="lsearch" placeholder="🔍 Search your ingredients" oninput="labFilter(this,'.labgrid .lchip')">
+  <div class="labgrid">${pool.map(k=>`<button class="lchip${sel.includes(k)?' on':''}${hasIng(k)?'':' out'}" data-n="${ING[k].n.toLowerCase()} ${(ING[k].reg||'').toLowerCase()}" onclick="labPick('${k}')"><span>${ING[k].e}</span>${ING[k].n}</button>`).join('')}</div>
+  <button class="big" ${sel.length<2||S.money<LAB_FEE||!sel.every(hasIng)?'disabled':''} onclick="labTest()">Test this recipe (${fmt(LAB_FEE)})</button>
+  ${sel.length&&!sel.every(hasIng)?'<p class="note" style="color:#B3261E">Some picked ingredients are out of stock. Buy them at the market first.</p>':''}`;
+  const srcList=Object.keys(ING).filter(k=>ING[k].src),regs=[...new Set(srcList.map(contOf))];
+  b+=`<p style="font-weight:800;margin:14px 0 4px">🌏 Source ingredients from around the world <small>(${L.src.length}/${srcList.length})</small></p><p class="note">Find a supplier once, then buy it at the market like anything else. The first batch is free.</p>
+  <input class="lsearch" placeholder="🔍 Search: yuzu, Japan, chocolate…" oninput="labFilter(this,'.srcrow',1)">`+
+  regs.map(rg=>{const ks=srcList.filter(k=>contOf(k)===rg);return `<details class="srcgrp"${rg.includes('Lab')?' open':''}><summary>${rg} <small>(${ks.filter(k=>L.src.includes(k)).length}/${ks.length})</small></summary>`+
+    ks.map(k=>`<div class="upg srcrow" data-n="${ING[k].n.toLowerCase()} ${rg.toLowerCase()} ${(ING[k].tags||[]).join(' ')}"><span class="fc">${ING[k].e}</span><div><b>${ING[k].n}</b><br><small>${ING[k].reg?ING[k].reg+' · ':''}${(ING[k].tags||[]).join(' · ')}</small></div>${L.src.includes(k)?'<small style="font-weight:800;color:#2E9B6F">✓</small>':`<button ${S.money<srcFee(k)?'disabled':''} onclick="sourceIng('${k}')">${fmt(srcFee(k))}</button>`}</div>`).join('')+`</details>`}).join('');
+  const book=[...L.found.map(id=>DISCO.find(x=>x.id===id)),...L.custom];
+  b+=`<p style="font-weight:800;margin:14px 0 4px">📓 Recipe notebook (${book.length})</p><p class="note">Classic ideas found: ${L.found.length}/${DISCO.length} · Your own creations: ${L.custom.length} · On the menu: ${book.filter(d=>!L.off.includes(d.id)).length}. No limit, and you can take items off the menu any time.</p>${book.length>4?'<input class="lsearch" placeholder="🔍 Search the notebook" oninput="labFilter(this,\'.note-card\')">':''}`+
+    (book.length?book.map(d=>{return `<div class="note-card" data-n="${(d.n+' '+(d.vi||'')+' '+d.ing.map(k=>ING[k].n).join(' ')).toLowerCase().replace(/"/g,'')}"><b>${d.e} ${d.n}</b> <small>${d.vi?d.vi+' · ':''}${fmt(d.p)}${d.stars?' · '+d.stars+'★':''}</small><br><small>${d.ing.map(k=>ING[k].e+' '+ING[k].n).join(' · ')}</small><br><small class="idea">🏪 Real-life idea: ${d.idea}</small><div class="nbtn"><button class="${L.off.includes(d.id)?'':'on'}" onclick="toggleMenu('${d.id}')">${L.off.includes(d.id)?'➕ Put on menu':'✓ On the menu'}</button></div></div>`}).join('')+`<button class="big alt" onclick="copyNotebook()">📋 Copy all ideas</button>`:'<p class="note">Nothing invented yet.</p>');
+  return b;
+}
+function labFilter(inp,sel,openGroups){const q=inp.value.trim().toLowerCase();document.querySelectorAll(sel).forEach(el=>el.style.display=!q||el.dataset.n.includes(q)?'':'none');
+  if(openGroups)document.querySelectorAll('.srcgrp').forEach(g=>{if(q)g.open=[...g.querySelectorAll('.srcrow')].some(r=>r.style.display!=='none')})}
+function toggleMenu(id){const L=S.lab,i=L.off.indexOf(id);if(i>=0)L.off.splice(i,1);else L.off.push(id);save();manage()}
+function labPick(k){const L=S.lab;const i=L.sel.indexOf(k);if(i>=0)L.sel.splice(i,1);else{if(L.sel.length>=6)return;L.sel.push(k)}L.last=null;save();manage()}
+function sourceIng(k){const fee=srcFee(k);if(S.money<fee||S.lab.src.includes(k))return;S.money-=fee;S.lab.src.push(k);S.inv[k]=(S.inv[k]||0)+ING[k].q;save();sfx.coin();toast('🌏 Found a supplier for '+ING[k].n+'. First batch is free!');manage()}
+function labTest(){
+  const L=S.lab,sel=L.sel.slice();if(sel.length<2||S.money<LAB_FEE||!sel.every(hasIng))return;
+  S.money-=LAB_FEE;S.spend+=LAB_FEE;sel.forEach(k=>S.inv[k]--);L.tries++;
+  const d=DISCO.find(x=>!L.found.includes(x.id)&&same(x.ing,sel));
+  if(d){L.found.push(d.id);L.leads=L.leads.filter(x=>x!==d.id);REC.push({...d,d:1,inv:1});S.known.push(d.id);S.newIds=[...(S.newIds||[]),d.id];
+    L.last={ok:1,msg:`🎉 <b>Eureka! ${d.e} ${d.n}</b> (${d.vi}) is on the menu at ${fmt(d.p)}.<br><small>🏪 Real-life idea: ${d.idea}</small>`};L.sel=[];sfx.coin();
+    S.buzz=Math.min(.5,S.buzz+.04);toast('🎉 New item invented: '+d.n)}
+  else{
+    const known=DISCO.find(x=>L.found.includes(x.id)&&same(x.ing,sel))||REC.find(r=>same(r.ing,sel));
+    let best=null,bo=0;DISCO.filter(x=>!L.found.includes(x.id)).forEach(x=>{const o=x.ing.filter(k=>sel.includes(k)).length;const sc=o-Math.abs(x.ing.length-sel.length)*.5;if(sc>bo){bo=sc;best=x}});
+    const ev=known?null:evalCombo(sel);
+    if(known)L.last={msg:`😅 That's the ${known.n}. It's already on your menu!`};
+    else if(ev&&!ev.fail&&ev.stars>=3.5){
+      {const d=makeCustom(sel,ev);L.custom.push(d);REC.push({...d,d:1,inv:1});S.known.push(d.id);S.newIds=[...(S.newIds||[]),d.id];
+        L.last={ok:1,msg:`🎉 <b>New creation! ${d.e} ${d.n}</b> scored ${'★'.repeat(Math.floor(d.stars))}${d.stars%1?'½':''} and joins the menu at ${fmt(d.p)}.<br><small>🏪 Real-life idea: ${d.idea}</small>`};L.sel=[];
+        S.buzz=Math.min(.5,S.buzz+.03);sfx.coin();save();manage();return}}
+    else if(ev&&!ev.fail&&ev.stars>=3)L.last={close:1,msg:`😋 ${'★'.repeat(Math.floor(ev.stars))} Pretty tasty, but not menu-worthy yet. Try swapping one flavor.${ev.tips.length?' Tasters noticed: '+ev.tips.join(', ')+'.':''}`};
+    else if(ev&&ev.fail&&!best)L.last={msg:'🧪 '+ev.fail};
+    else if(best&&best.ing.filter(k=>sel.includes(k)).length>=best.ing.length-1&&Math.abs(best.ing.length-sel.length)<=1){
+      const miss=best.ing.find(k=>!sel.includes(k)),extra=sel.find(k=>!best.ing.includes(k));
+      L.last={close:1,msg:`🤏 <b>So close!</b> Tasters loved it but something is off. ${extra?`Maybe swap out the ${ING[extra].n}`:'It needs one more thing'}${miss&&(ING[miss].src&&!L.src.includes(miss))?'. The missing piece is an ingredient you haven\'t sourced yet.':'.'}`}}
+    else if(best&&bo>=2)L.last={close:1,msg:`🤔 Interesting… ${ING[best.ing.find(k=>sel.includes(k))].e} ${ING[best.ing.find(k=>sel.includes(k))].n} has potential here. Keep experimenting!`};
+    else L.last={msg:(ev&&ev.fail?'🧪 '+ev.fail:pick(['😖 Tasters made a face. Try a different mix.','🙃 That was… creative. Not quite.','🥴 Nope. Back to the drawing board.'])+(ev&&ev.tips&&ev.tips.length?' They noticed: '+ev.tips.join(', ')+'.':''))};
+    sfx.bad();
+  }
+  save();manage();
+}
+function copyNotebook(){const t=[...S.lab.found.map(id=>DISCO.find(x=>x.id===id)),...S.lab.custom].map(d=>{return `${d.n}${d.vi?' ('+d.vi+')':''} - ${fmt(d.p)}\nIngredients: ${d.ing.map(k=>ING[k].n).join(', ')}\nIdea: ${d.idea}`}).join('\n\n');
+  try{navigator.clipboard.writeText('Saigonesee new item ideas\n\n'+t).then(()=>toast('📋 Copied! Paste it into Notes or a message'))}catch(e){toast('Could not copy on this device')}}
 function research(id){const r=REC.find(x=>x.id===id);if(S.money<rdCost(r)||S.rd.length>=1+S.upg.lab)return;
   S.money-=rdCost(r);S.rd.push({id,left:1});save();sfx.coin();toast('Researching '+r.n);manage()}
 function expandBr(id){const b=LOC[id],lv=S.brLvl[id]||0,c=Math.round(b.cost*.6*(lv+1));if(S.money<c||lv>=6)return;S.money-=c;S.brLvl[id]=lv+1;save();sfx.coin();toast(b.n+' expanded: more staff room and traffic');manage()}
@@ -1827,11 +2066,24 @@ function runBoard(){
   if(boardOn('coo','expand')){const bs=S.branches.map(id=>({id,st:S.brStats[id]})).filter(x=>x.st&&x.st.lost>x.st.dem*.2&&crewAt(x.id).length>=cap(x.id)&&(S.brLvl[x.id]||0)<6);
     const x=bs[0];if(x){const lv=S.brLvl[x.id]||0,c=Math.round(LOC[x.id].cost*.6*(lv+1));if(spendable()>c){S.money-=c;S.brLvl[x.id]=lv+1;log.push('👨‍💼 Expanded '+LOC[x.id].n+' (was turning customers away)')}}}
   // HR: fill open spots, care, schedule
-  if(boardOn('hr','hire')){const locs=['main',...S.branches];
-    locs.forEach(l=>{while(crewAt(l).length<cap(l)&&S.cands.length&&spendable()>totalWage()*2){
-      const want=l==='main'?(()=>{const c=crewAt('main'),b=c.filter(x=>x.skills.bar).length,k=c.filter(x=>x.skills.kit).length;return b<=k?'bar':'kit'})():null;
+  if(boardOn('hr','hire')){
+    // Work out how many people each location needs, neediest first
+    const perStaff=10;
+    const needs=['main',...S.branches].map(l=>{const have=crewAt(l).length,c=cap(l);let target=c;
+      if(l!=='main'){const st=S.brStats[l];target=Math.min(c,Math.max(2,st?Math.ceil(st.dem/perStaff):2))}
+      const turned=l==='main'?0:(S.brStats[l]?S.brStats[l].lost:0);
+      return {l,want:Math.max(0,target-have),prio:(have===0?1000:0)+turned}}).filter(x=>x.want>0).sort((a,b)=>b.prio-a.prio);
+    let hired=0,noCash=0;
+    needs.forEach(n=>{for(let i=0;i<n.want;i++){
+      const want=n.l==='main'?(()=>{const c=crewAt('main'),b=c.filter(x=>x.skills.bar).length,k=c.filter(x=>x.skills.kit).length;return b<=k?'bar':'kit'})():null;
+      if(S.cands.length<3)S.cands=S.cands.concat(genCands());          // post a job ad for more applicants
       S.cands.sort((a,b)=>((want&&!a.skills[want]?1:0)-(want&&!b.skills[want]?1:0))||(bestSp(a)*a.wage-bestSp(b)*b.wage));
-      const c=S.cands.shift();S.staff.push({...c,loc:l,days:0,mo:70});log.push('👩‍💼 Hired '+c.face+' '+c.name+' for '+locName(l)+' ('+fmt(c.wage)+'/day)')}});}
+      const c=S.cands[0];if(spendable()<c.wage*3+30){noCash++;break}
+      S.cands.shift();S.money-=30;S.staff.push({...c,loc:n.l,days:0,mo:70});hired++;
+      log.push('👩‍💼 Hired '+c.face+' '+c.name+' for '+locName(n.l)+' ('+fmt(c.wage)+'/day)')}});
+    if(hired)log.push('👩‍💼 Job ads and onboarding: -'+fmt(hired*30));
+    if(noCash)log.push('👩‍💼 Wanted to hire more but spare cash is below your reserve. Lower the reserve or grow profit.');
+  }
   if(boardOn('hr','care'))S.staff.filter(x=>x.mo<35).forEach(x=>{if(spendable()>25){S.money-=25;x.mo=Math.min(100,x.mo+15);log.push('👩‍💼 Gave '+x.name+' a $25 bonus to lift morale')}});
   if(boardOn('hr','sched')){const c=crewAt('main');let ch=0;c.forEach(x=>{const p=Object.keys(x.skills).length>1?'flex':Object.keys(x.skills)[0];if(x.pos!==p){x.pos=p;ch++}});if(ch)log.push('👩‍💼 Updated '+ch+' staff positions at Weymouth')}
   // Finance
@@ -1947,7 +2199,14 @@ $('pauseBtn').onclick=pause;
 
 $('trashBtn').onclick=()=>{if(R&&!R.paused&&R.tray.length){R.wasted+=R.tray.length;R.tray=[];renderTray()}};
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
-initFin();
+function initLab(){
+  S.lab=S.lab||{found:[],src:[],leads:[],tries:0,last:null,sel:[]};
+  S.lab.custom=S.lab.custom||[];S.lab.off=S.lab.off||[];
+  S.lab.found.forEach(id=>{const d=DISCO.find(x=>x.id===id);if(d&&!REC.some(r=>r.id===id))REC.push({...d,d:1,inv:1})});
+  S.lab.custom.forEach(d=>{if(!REC.some(r=>r.id===d.id))REC.push({...d,d:1,inv:1})});
+  if(!S.lab.leads.length&&!S.lab.found.length)S.lab.leads=['avosmoothie'];
+}
+initFin();initLab();initTax();
 intro();
 </script>
 </body>
