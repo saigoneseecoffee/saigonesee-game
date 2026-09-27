@@ -855,6 +855,9 @@ button,summary,.ing,.cust,.chip{touch-action:manipulation;-webkit-tap-highlight-
 .slotmsg{text-align:center;font-weight:800;font-size:17px;color:var(--y);margin:4px 0 10px}
 .casino .flyg button{background:#333!important;color:#fff!important;border-color:var(--y)!important}
 .casino .flyg button span{color:var(--y)!important}
+.regwrap{margin:8px 0}.regsum{font-weight:800;font-size:16px;padding:10px 12px;background:var(--k);color:var(--y);border-radius:12px;cursor:pointer;list-style:none}
+.regsum::-webkit-details-marker{display:none}.regsum small{color:#ddd}
+.regwrap[open]>.regsum{margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -1320,7 +1323,7 @@ const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `<span class
 // Property tax on real estate you own: about 1.1% a year for homes, 2.2% for commercial buildings. One game year = 40 days.
 const TAX={meals:.07,ss:.062,medi:.0145,futa:.006,maPay:.024,fed:.21,ma:.08,maMin:456,resProp:.011,comProp:.022,year:365,quarter:91};
 const payRate=()=>TAX.ss+TAX.medi+TAX.futa+TAX.maPay;
-const COMMERCIAL=['retail','tower','storage','parking','hotel','mall','skyscraper'];
+const COMMERCIAL=['retail','tower','storage','parking','hotel','mall','skyscraper','seattleoffice','sfoffice','vegashotel','cancunresort','warehouse','datacenter','stadiumbox','napavineyard','aspenchalet'];
 function initTax(){S.tax=S.tax||{qProfit:0,qInv:0,owed:0,paid:{income:0,payroll:0,property:0,meals:0},hist:[]}}
 const LB_URL='https://script.google.com/macros/s/AKfycbwqn0F_h2hLybTh73bg3_E2C_k_HGa3XmYTGmq3MbbFe5wb6s2GiaKT3fw45h50PDaIpQ/exec';
 // Firebase leaderboard: paste the firebaseConfig object from Firebase Console > Project settings > Your apps.
@@ -1451,6 +1454,94 @@ const LOC={
   jacksonville:{id:'jacksonville',n:'Jacksonville',cost:2000,rent:82,demand:1.7,st:'FL'},
   fortlauderdale:{id:'fortlauderdale',n:'Fort Lauderdale',cost:2600,rent:106,demand:1.9,st:'FL'},
   keywest:{id:'keywest',n:'Key West',cost:2200,rent:90,demand:1.75,st:'FL'},
+  nashville:{id:'nashville',n:'Nashville',cost:2200,rent:90,demand:1.8,st:'TN'},
+  memphis:{id:'memphis',n:'Memphis',cost:1500,rent:62,demand:1.55,st:'TN'},
+  louisville:{id:'louisville',n:'Louisville',cost:1500,rent:62,demand:1.55,st:'KY'},
+  birmingham:{id:'birmingham',n:'Birmingham',cost:1300,rent:54,demand:1.5,st:'AL'},
+  neworleans:{id:'neworleans',n:'New Orleans',cost:2400,rent:98,demand:1.9,st:'LA'},
+  batonrouge:{id:'batonrouge',n:'Baton Rouge',cost:1300,rent:54,demand:1.5,st:'LA'},
+  jackson:{id:'jackson',n:'Jackson',cost:1000,rent:42,demand:1.35,st:'MS'},
+  littlerock:{id:'littlerock',n:'Little Rock',cost:1100,rent:46,demand:1.4,st:'AR'},
+  charlestonwv:{id:'charlestonwv',n:'Charleston',cost:900,rent:38,demand:1.3,st:'WV'},
+  houston:{id:'houston',n:'Houston',cost:3200,rent:130,demand:2.15,st:'TX'},
+  dallas:{id:'dallas',n:'Dallas',cost:3000,rent:122,demand:2.05,st:'TX'},
+  austin:{id:'austin',n:'Austin',cost:3000,rent:122,demand:2.05,st:'TX'},
+  sanantonio:{id:'sanantonio',n:'San Antonio',cost:2200,rent:90,demand:1.8,st:'TX'},
+  fortworth:{id:'fortworth',n:'Fort Worth',cost:2100,rent:86,demand:1.75,st:'TX'},
+  elpaso:{id:'elpaso',n:'El Paso',cost:1300,rent:54,demand:1.5,st:'TX'},
+  okc:{id:'okc',n:'Oklahoma City',cost:1500,rent:62,demand:1.55,st:'OK'},
+  tulsa:{id:'tulsa',n:'Tulsa',cost:1300,rent:54,demand:1.5,st:'OK'},
+  chicago:{id:'chicago',n:'Chicago',cost:4200,rent:170,demand:2.3,st:'IL'},
+  evanston:{id:'evanston',n:'Evanston',cost:2200,rent:90,demand:1.7,st:'IL'},
+  detroit:{id:'detroit',n:'Detroit',cost:2000,rent:82,demand:1.7,st:'MI'},
+  annarbor:{id:'annarbor',n:'Ann Arbor',cost:1700,rent:70,demand:1.6,st:'MI'},
+  grandrapids:{id:'grandrapids',n:'Grand Rapids',cost:1400,rent:58,demand:1.5,st:'MI'},
+  columbus:{id:'columbus',n:'Columbus',cost:2000,rent:82,demand:1.75,st:'OH'},
+  cleveland:{id:'cleveland',n:'Cleveland',cost:1700,rent:70,demand:1.6,st:'OH'},
+  cincinnati:{id:'cincinnati',n:'Cincinnati',cost:1700,rent:70,demand:1.6,st:'OH'},
+  indianapolis:{id:'indianapolis',n:'Indianapolis',cost:1800,rent:74,demand:1.65,st:'IN'},
+  milwaukee:{id:'milwaukee',n:'Milwaukee',cost:1600,rent:66,demand:1.6,st:'WI'},
+  madison:{id:'madison',n:'Madison',cost:1500,rent:62,demand:1.55,st:'WI'},
+  minneapolis:{id:'minneapolis',n:'Minneapolis',cost:2400,rent:98,demand:1.85,st:'MN'},
+  stpaul:{id:'stpaul',n:'St. Paul (Hmong & Vietnamese town)',cost:2000,rent:82,demand:1.8,st:'MN'},
+  stlouis:{id:'stlouis',n:'St. Louis',cost:1800,rent:74,demand:1.65,st:'MO'},
+  kansascity:{id:'kansascity',n:'Kansas City',cost:1800,rent:74,demand:1.65,st:'MO'},
+  omaha:{id:'omaha',n:'Omaha',cost:1400,rent:58,demand:1.5,st:'NE'},
+  desmoines:{id:'desmoines',n:'Des Moines',cost:1200,rent:50,demand:1.45,st:'IA'},
+  wichita:{id:'wichita',n:'Wichita',cost:1100,rent:46,demand:1.4,st:'KS'},
+  fargo:{id:'fargo',n:'Fargo',cost:900,rent:38,demand:1.3,st:'ND'},
+  siouxfalls:{id:'siouxfalls',n:'Sioux Falls',cost:900,rent:38,demand:1.3,st:'SD'},
+  denver:{id:'denver',n:'Denver',cost:2800,rent:115,demand:1.95,st:'CO'},
+  boulder:{id:'boulder',n:'Boulder',cost:2200,rent:90,demand:1.75,st:'CO'},
+  aspen:{id:'aspen',n:'Aspen',cost:3500,rent:142,demand:1.9,st:'CO'},
+  slc:{id:'slc',n:'Salt Lake City',cost:2000,rent:82,demand:1.7,st:'UT'},
+  boise:{id:'boise',n:'Boise',cost:1500,rent:62,demand:1.55,st:'ID'},
+  phoenix:{id:'phoenix',n:'Phoenix',cost:2600,rent:106,demand:1.9,st:'AZ'},
+  tucson:{id:'tucson',n:'Tucson',cost:1500,rent:62,demand:1.55,st:'AZ'},
+  albuquerque:{id:'albuquerque',n:'Albuquerque',cost:1400,rent:58,demand:1.5,st:'NM'},
+  santafe:{id:'santafe',n:'Santa Fe',cost:1600,rent:66,demand:1.55,st:'NM'},
+  lasvegas:{id:'lasvegas',n:'Las Vegas',cost:3200,rent:130,demand:2.1,st:'NV'},
+  reno:{id:'reno',n:'Reno',cost:1500,rent:62,demand:1.55,st:'NV'},
+  bozeman:{id:'bozeman',n:'Bozeman',cost:1500,rent:62,demand:1.5,st:'MT'},
+  jacksonhole:{id:'jacksonhole',n:'Jackson Hole',cost:2600,rent:106,demand:1.7,st:'WY'},
+  la:{id:'la',n:'Los Angeles',cost:5000,rent:200,demand:2.45,st:'CA'},
+  littlesaigon:{id:'littlesaigon',n:'Little Saigon (Westminster)',cost:3600,rent:146,demand:2.4,st:'CA'},
+  sanjose:{id:'sanjose',n:'San Jose',cost:4200,rent:170,demand:2.3,st:'CA'},
+  sf:{id:'sf',n:'San Francisco',cost:5500,rent:220,demand:2.4,st:'CA'},
+  oakland:{id:'oakland',n:'Oakland',cost:3200,rent:130,demand:2.05,st:'CA'},
+  sandiego:{id:'sandiego',n:'San Diego',cost:3800,rent:154,demand:2.2,st:'CA'},
+  sacramento:{id:'sacramento',n:'Sacramento',cost:2400,rent:98,demand:1.85,st:'CA'},
+  fresno:{id:'fresno',n:'Fresno',cost:1500,rent:62,demand:1.55,st:'CA'},
+  seattle:{id:'seattle',n:'Seattle',cost:4200,rent:170,demand:2.3,st:'WA'},
+  spokane:{id:'spokane',n:'Spokane',cost:1300,rent:54,demand:1.5,st:'WA'},
+  portlandor:{id:'portlandor',n:'Portland',cost:3000,rent:122,demand:2.0,st:'OR'},
+  eugene:{id:'eugene',n:'Eugene',cost:1300,rent:54,demand:1.45,st:'OR'},
+  anchorage:{id:'anchorage',n:'Anchorage',cost:1800,rent:74,demand:1.5,st:'AK'},
+  honolulu:{id:'honolulu',n:'Honolulu',cost:4000,rent:160,demand:2.2,st:'HI'},
+  maui:{id:'maui',n:'Maui',cost:3400,rent:138,demand:1.95,st:'HI'},
+  toronto:{id:'toronto',n:'Toronto',cost:4200,rent:170,demand:2.3,st:'ON'},
+  ottawa:{id:'ottawa',n:'Ottawa',cost:2400,rent:98,demand:1.8,st:'ON'},
+  mississauga:{id:'mississauga',n:'Mississauga',cost:2600,rent:106,demand:1.85,st:'ON'},
+  montreal:{id:'montreal',n:'Montréal',cost:3200,rent:130,demand:2.1,st:'QC'},
+  quebeccity:{id:'quebeccity',n:'Québec City',cost:1900,rent:78,demand:1.65,st:'QC'},
+  vancouver:{id:'vancouver',n:'Vancouver',cost:4200,rent:170,demand:2.3,st:'BC'},
+  victoria:{id:'victoria',n:'Victoria',cost:1900,rent:78,demand:1.6,st:'BC'},
+  calgary:{id:'calgary',n:'Calgary',cost:2400,rent:98,demand:1.8,st:'AB'},
+  edmonton:{id:'edmonton',n:'Edmonton',cost:2100,rent:86,demand:1.7,st:'AB'},
+  banff:{id:'banff',n:'Banff',cost:2000,rent:82,demand:1.55,st:'AB'},
+  winnipeg:{id:'winnipeg',n:'Winnipeg',cost:1600,rent:66,demand:1.55,st:'MB'},
+  saskatoon:{id:'saskatoon',n:'Saskatoon',cost:1200,rent:50,demand:1.4,st:'SK'},
+  halifax:{id:'halifax',n:'Halifax',cost:1500,rent:62,demand:1.55,st:'NS'},
+  stjohns:{id:'stjohns',n:'St. John\'s',cost:1100,rent:46,demand:1.4,st:'NL'},
+  cdmx:{id:'cdmx',n:'Mexico City',cost:2600,rent:106,demand:2.2,st:'CDMX'},
+  guadalajara:{id:'guadalajara',n:'Guadalajara',cost:1600,rent:66,demand:1.8,st:'JAL'},
+  monterrey:{id:'monterrey',n:'Monterrey',cost:1700,rent:70,demand:1.8,st:'NL-MX'},
+  cancun:{id:'cancun',n:'Cancún',cost:2200,rent:90,demand:1.9,st:'QROO'},
+  tulum:{id:'tulum',n:'Tulum',cost:2000,rent:82,demand:1.75,st:'QROO'},
+  cabo:{id:'cabo',n:'Los Cabos',cost:2400,rent:98,demand:1.8,st:'BCS'},
+  tijuana:{id:'tijuana',n:'Tijuana',cost:1300,rent:54,demand:1.6,st:'BC-MX'},
+  oaxaca:{id:'oaxaca',n:'Oaxaca',cost:1100,rent:46,demand:1.55,st:'OAX'},
+  sanjuan:{id:'sanjuan',n:'San Juan',cost:1800,rent:74,demand:1.7,st:'PR'},
   quincy:{id:'quincy',n:'Quincy',cost:400,rent:25,demand:1.2},
   holbrook:{id:'holbrook',n:'Holbrook',cost:380,rent:20,demand:1.0},
   abington:{id:'abington',n:'Abington',cost:420,rent:22,demand:1.05},
@@ -1544,7 +1635,9 @@ if(!S.v17){if(S.upg.tu===1)S.upg.tu=2;S.v17=1}
 S.wx=S.wx||{t:rollWx(S.day),n:rollWx(S.day+1)};S.loans=S.loans||[];S.hist=S.hist||[];S.ipo=S.ipo||{sold:0};S.spend=S.spend||0;S.apps=S.apps||{};S.catOffers=S.catOffers||[];S.hof=S.hof||[];
 S.brLvl=S.brLvl||{};S.brRate=S.brRate||{};S.brStats=S.brStats||{};S.lastUsed=S.lastUsed||{};S.branches=(S.branches||[]).filter(b=>LOC[b]);
 S.staff.forEach(x=>{if(x.mo==null)x.mo=70});
-const locName=l=>l==='main'?'Weymouth':LOC[l].n+(LOC[l].st&&LOC[l].st!=='MA'?', '+LOC[l].st:'');
+const STINFO={"MA": ["Massachusetts", "ne"], "RI": ["Rhode Island", "ne"], "NH": ["New Hampshire", "ne"], "ME": ["Maine", "ne"], "CT": ["Connecticut", "ne"], "VT": ["Vermont", "ne"], "NY": ["New York", "ma"], "NJ": ["New Jersey", "ma"], "PA": ["Pennsylvania", "ma"], "DE": ["Delaware", "ma"], "MD": ["Maryland", "ma"], "DC": ["Washington, D.C.", "ma"], "VA": ["Virginia", "sa"], "NC": ["North Carolina", "sa"], "SC": ["South Carolina", "sa"], "GA": ["Georgia", "sa"], "FL": ["Florida", "sa"], "TN": ["Tennessee", "south"], "KY": ["Kentucky", "south"], "AL": ["Alabama", "south"], "LA": ["Louisiana", "south"], "MS": ["Mississippi", "south"], "AR": ["Arkansas", "south"], "WV": ["West Virginia", "south"], "TX": ["Texas", "south"], "OK": ["Oklahoma", "south"], "IL": ["Illinois", "mw"], "MI": ["Michigan", "mw"], "OH": ["Ohio", "mw"], "IN": ["Indiana", "mw"], "WI": ["Wisconsin", "mw"], "MN": ["Minnesota", "mw"], "MO": ["Missouri", "mw"], "NE": ["Nebraska", "mw"], "IA": ["Iowa", "mw"], "KS": ["Kansas", "mw"], "ND": ["North Dakota", "mw"], "SD": ["South Dakota", "mw"], "CO": ["Colorado", "mtn"], "UT": ["Utah", "mtn"], "ID": ["Idaho", "mtn"], "AZ": ["Arizona", "mtn"], "NM": ["New Mexico", "mtn"], "NV": ["Nevada", "mtn"], "MT": ["Montana", "mtn"], "WY": ["Wyoming", "mtn"], "CA": ["California", "pac"], "WA": ["Washington", "pac"], "OR": ["Oregon", "pac"], "AK": ["Alaska", "pac"], "HI": ["Hawaii", "pac"], "ON": ["Ontario", "can"], "QC": ["Québec", "can"], "BC": ["British Columbia", "can"], "AB": ["Alberta", "can"], "MB": ["Manitoba", "can"], "SK": ["Saskatchewan", "can"], "NS": ["Nova Scotia", "can"], "NL": ["Newfoundland", "can"], "CDMX": ["Ciudad de México", "mex"], "JAL": ["Jalisco", "mex"], "NL-MX": ["Nuevo León", "mex"], "QROO": ["Quintana Roo", "mex"], "BCS": ["Baja California Sur", "mex"], "BC-MX": ["Baja California", "mex"], "OAX": ["Oaxaca", "mex"], "PR": ["Puerto Rico", "mex"]};
+const BRREG=[["ne", "🦞", "New England", "New England"], ["ma", "🗽", "Mid-Atlantic", "Trung Đại Tây Dương"], ["sa", "🌴", "South Atlantic", "Nam Đại Tây Dương"], ["south", "🎸", "The South & Texas", "Miền Nam & Texas"], ["mw", "🌽", "Midwest", "Trung Tây"], ["mtn", "🏔️", "Mountain West", "Vùng núi phía Tây"], ["pac", "🌊", "Pacific Coast, Alaska & Hawaii", "Bờ Thái Bình Dương, Alaska & Hawaii"], ["can", "🍁", "Canada", "Canada"], ["mex", "🌮", "Mexico & Puerto Rico", "Mexico & Puerto Rico"]];
+const locName=l=>l==='main'?'Weymouth':LOC[l].n+(LOC[l].st&&LOC[l].st!=='MA'?', '+LOC[l].st.replace('-MX',''):'');
 const lvl=x=>Math.min(5+S.upg.train+S.upg.academy2,1+Math.floor(x.days/Math.max(2,5-S.upg.train)));
 const moFace=m=>m>80?'😄':m>50?'🙂':m>25?'😐':'😟';
 const spMul=x=>(1-.06*(lvl(x)-1))*(x.mo<25?1.25:x.mo>80?.9:1);
@@ -2375,7 +2468,9 @@ function manage(tab){
         <div class="arow" style="padding-left:0"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<10?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div></details>`}).join('')||'<p class="note">No branches yet.</p>';
     } else {
       body+=(!S.branches.length&&!gateOk('branch')?gateCard('branch','Grow Weymouth first. Your first branch unlocks when you reach these goals.'):
-        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+['MA','RI','NH','ME','CT','VT','NY','NJ','PA','DE','MD','DC','VA','NC','SC','GA','FL'].map(st0=>{const list=avail.filter(b=>(b.st||'MA')===st0).sort((a,b)=>a.cost-b.cost);if(!list.length)return '';const key='new:'+st0;const SN={MA:'Massachusetts',RI:'Rhode Island',NH:'New Hampshire',ME:'Maine',CT:'Connecticut',VT:'Vermont',NY:'New York',NJ:'New Jersey',PA:'Pennsylvania',DE:'Delaware',MD:'Maryland',DC:'Washington, D.C.',VA:'Virginia',NC:'North Carolina',SC:'South Carolina',GA:'Georgia',FL:'Florida'};const REG={MA:['🦞','New England','New England'],NY:['🗽','Mid-Atlantic','Trung Đại Tây Dương'],VA:['🌴','South Atlantic','Nam Đại Tây Dương']}[st0];return `${REG?`<p class="regdiv notr">${REG[0]} ${L(REG[1],REG[2])}</p>`:''}<details class="srcgrp" data-key="${key}"${OPEN.has(key)||(!OPEN.touched&&st0==='MA')?' open':''}><summary>${SN[st0]} <small>(${list.length})</small></summary>`+list.map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join('')+'</details>'}).join(''));
+        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+BRREG.map(([rg,ic,en,vi])=>{const sts=Object.keys(STINFO).filter(c=>STINFO[c][1]===rg).filter(c=>avail.some(b=>(b.st||'MA')===c));if(!sts.length)return '';
+          const rk='reg:'+rg,cnt=sts.reduce((n,c)=>n+avail.filter(b=>(b.st||'MA')===c).length,0);return `<details class="regwrap" data-key="${rk}"${OPEN.has(rk)||(!OPEN.touched&&rg==='ne')?' open':''}><summary class="regsum notr">${ic} ${L(en,vi)} <small>(${cnt})</small></summary>`+sts.map(st0=>{const list=avail.filter(b=>(b.st||'MA')===st0).sort((a,b)=>a.cost-b.cost);const key='new:'+st0;
+          return `<details class="srcgrp" data-key="${key}"${OPEN.has(key)||(!OPEN.touched&&st0==='MA')?' open':''}><summary>${STINFO[st0][0]} <small>(${list.length})</small></summary>`+list.map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join('')+'</details>'}).join('')+'</details>'}).join(''));
     }
   }
 
@@ -2557,6 +2652,28 @@ const PROPS=[
   {id:'hotel',n:'Boutique hotel in Newport, RI',e:'🏨',price:5000000,rent:26000,seasonal:1},
   {id:'mall',n:'Shopping plaza in Atlanta, GA',e:'🛍️',price:8000000,rent:40000},
   {id:'skyscraper',n:'Skyscraper in Manhattan, NY',e:'🌆',price:50000000,rent:250000},
+  {id:'studiola',n:'Studio apartment in Los Angeles, CA',e:'🏠',price:350000,rent:1600},
+  {id:'chicagocondo',n:'Lakefront condo in Chicago, IL',e:'🌆',price:600000,rent:2800},
+  {id:'austinduplex',n:'Duplex in Austin, TX',e:'🎸',price:450000,rent:2100},
+  {id:'nashvillehouse',n:'Short-term rental in Nashville, TN',e:'🤠',price:550000,rent:2600},
+  {id:'denvertown',n:'Townhouses in Denver, CO',e:'🏔️',price:800000,rent:3700},
+  {id:'torontocondo',n:'Condo tower units in Toronto, ON',e:'🍁',price:1100000,rent:5100},
+  {id:'vancouverhouse',n:'House in Vancouver, BC',e:'🌲',price:1600000,rent:7300},
+  {id:'montrealplex',n:'Triplex in Montréal, QC',e:'🥐',price:650000,rent:3000},
+  {id:'aspenchalet',n:'Ski chalet in Aspen, CO',e:'⛷️',price:4000000,rent:21000,seasonal:1},
+  {id:'mauivilla',n:'Beach villa on Maui, HI',e:'🌺',price:3500000,rent:18000,seasonal:1},
+  {id:'napavineyard',n:'Vineyard in Napa Valley, CA',e:'🍇',price:6000000,rent:29000,seasonal:1},
+  {id:'texasranch',n:'Cattle ranch in Texas',e:'🐄',price:2800000,rent:12500},
+  {id:'seattleoffice',n:'Tech office in Seattle, WA',e:'💻',price:12000000,rent:58000},
+  {id:'sfoffice',n:'Office building in San Francisco, CA',e:'🌉',price:20000000,rent:95000},
+  {id:'vegashotel',n:'Casino hotel in Las Vegas, NV',e:'🎰',price:40000000,rent:210000},
+  {id:'cancunresort',n:'Beach resort in Cancún, Mexico',e:'🏝️',price:15000000,rent:80000,seasonal:1},
+  {id:'cdmxbuilding',n:'Apartment building in Mexico City',e:'🌮',price:3000000,rent:14500},
+  {id:'tulumeco',n:'Eco-lodge in Tulum, Mexico',e:'🌿',price:1500000,rent:7500,seasonal:1},
+  {id:'alaskalodge',n:'Fishing lodge in Alaska',e:'🎣',price:900000,rent:4800,seasonal:1},
+  {id:'warehouse',n:'Distribution warehouse in Atlanta, GA',e:'🚚',price:5000000,rent:24000},
+  {id:'datacenter',n:'Data center in Virginia',e:'🖥️',price:30000000,rent:145000},
+  {id:'stadiumbox',n:'Stadium luxury suites in Dallas, TX',e:'🏈',price:8000000,rent:40000},
 ];
 const BANK={save:.001,cds:[{days:10,rate:.003},{days:30,rate:.0045}]};
 function initFin(){
@@ -2630,9 +2747,15 @@ function investBody(){
     `<p class="note">Interest earned so far: <b>${fmt(F.inc.int)}</b></p>`;
   }
   if(IT==='homes'){
-    b+=`<p class="note">Buy property to collect rent every day. Property values go up and down slowly. Selling costs a 5% fee. Now and then a property needs repairs.</p>`+
-    PROPS.map(r=>{const own=F.props[r.id],v=F.pval[r.id];return `<div class="upg"><span class="fc">${r.e}</span><div><b>${r.n}</b><br><small>Rent ${fmt(rentOf(r))}/day${r.seasonal?' (more in summer, less in winter)':''}</small><br><small>Value ${fmt(v)}${own?` · bought for ${fmt(own.paid)}`:''}</small></div>${own?`<button class="fire" onclick="sellProp('${r.id}')">Sell ${fmt(v*.95)}</button>`:`<button ${S.money<v?'disabled':''} onclick="buyProp('${r.id}')">${fmt(v)}</button>`}</div>`}).join('')+
-    `<p class="note">Rent collected so far: <b>${fmt(F.inc.rent)}</b></p>`;
+    const row=r=>{const own=F.props[r.id],v=F.pval[r.id];return `<div class="upg"><span class="fc">${r.e}</span><div><b>${r.n}</b><br><small>Rent ${fmt(rentOf(r))}/day${r.seasonal?' (more in summer, less in winter)':''}</small><br><small>Value ${fmt(v)}${own?` · bought for ${fmt(own.paid)}`:''}</small></div>${own?`<button class="fire" onclick="sellProp('${r.id}')">Sell ${fmt(v*.95)}</button>`:`<button ${S.money<v?'disabled':''} onclick="buyProp('${r.id}')">${fmt(v)}</button>`}</div>`};
+    const mine=PROPS.filter(r=>F.props[r.id]),rentDay=mine.reduce((a,r)=>a+rentOf(r),0),val=mine.reduce((a,r)=>a+F.pval[r.id],0);
+    b+=`<p class="note">Buy property to collect rent every day. Property values go up and down slowly. Selling costs a 5% fee. Now and then a property needs repairs.</p>
+    <div class="finsum notr"><div><small>${L('Properties owned','Bất động sản sở hữu')}</small><b>${mine.length} · ${fmt(val)}</b></div><div><small>${L('Rent per day','Tiền thuê mỗi ngày')}</small><b>${fmt(rentDay)}</b></div></div>`;
+    if(mine.length){const k='prop:mine';b+=`<details class="srcgrp" data-key="${k}"${OPEN.has(k)?' open':''}><summary>🔑 ${L('My properties','Của tôi')} <small>(${mine.length})</small></summary>${mine.map(row).join('')}</details>`}
+    [['start',L('🏡 Starter (under $1M)','🏡 Khởi đầu (dưới $1 triệu)'),0,1e6],['mid',L('🏢 Growing ($1M–$10M)','🏢 Phát triển ($1–10 triệu)'),1e6,1e7],['big',L('🌆 Trophy (over $10M)','🌆 Đẳng cấp (trên $10 triệu)'),1e7,1e12]].forEach(([id,t,lo,hi])=>{
+      const list=PROPS.filter(r=>!F.props[r.id]&&F.pval[r.id]>=lo&&F.pval[r.id]<hi).sort((a,b)=>F.pval[a.id]-F.pval[b.id]);if(!list.length)return;const k='prop:'+id;
+      b+=`<details class="srcgrp" data-key="${k}"${OPEN.has(k)||(!OPEN.touched&&id==='start')?' open':''}><summary class="notr">${t} <small>(${list.length})</small></summary>${list.map(row).join('')}</details>`});
+    b+=`<p class="note">Rent collected so far: <b>${fmt(F.inc.rent)}</b></p>`;
   }
   return b;
 }
