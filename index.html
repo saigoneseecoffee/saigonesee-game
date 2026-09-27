@@ -2592,7 +2592,11 @@ function funValue(){initFun();return TEAMS.filter(x=>x.kind==='team'&&S.fun.own[
 function companyScore(){return funValue()+farmValue()+portfolio()+valuation()+Math.max(0,S.money)+upgValue()*.9+staffValue()+Object.keys(S.board||{}).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].fee*.5,0)}
 function saveScore(reason){
   if(!S.pid){S.pid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);save()}
-  const e={pid:S.pid,name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
+  let maxDay=S.day;try{maxDay=Math.max(S.day,+localStorage.getItem('saigonesee-maxday')||0);localStorage.setItem('saigonesee-maxday',maxDay)}catch(x){}
+  const lg=(S.ledger||[]).slice(-1)[0];
+  const e={pid:S.pid,name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||'',
+    maxDay,run:S.run||1,rating:+S.rating.toFixed(2),cash:Math.round(S.money),lostPct:lg&&(lg.cust+lg.lost)?Math.round(lg.lost/(lg.cust+lg.lost)*100):0,
+    staff:S.staff.length,lang:typeof LANG!=='undefined'?LANG:'en',tut:S.tut?1:0};
   let hof=[];try{hof=JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(x){}
   const k=hof.findIndex(x=>x.pid===e.pid&&x.run===S.run);
   if(k>=0){if(e.value>=hof[k].value)hof[k]={...e,run:S.run};else hof[k].name=e.name}else hof.push({...e,run:S.run});
