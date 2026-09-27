@@ -1621,6 +1621,7 @@ function genCands(){
 const $=id=>document.getElementById(id);
 
 let S=load()||fresh();
+if(S&&S.__reset){const k=S;S=fresh();S.player=k.player;S.pid=k.pid;S.run=k.run||1;S.tut=1;S.tips=k.tips||{};S.unl={};S.hints={};save()}
 S.inv=S.inv||{...STARTER};S.upg.tu=S.upg.tu||0;
 S.prices=S.prices||{};S.staff=S.staff||[];
 S.staff.forEach(x=>{if(!x.skills){x.skills=x.role==='barista'?{bar:x.speed}:x.role==='banhmi'?{kit:x.speed}:{bar:x.speed,kit:x.speed};x.pos=x.role==='barista'?'bar':x.role==='banhmi'?'kit':'flex'}});
@@ -1654,9 +1655,9 @@ const cap=l=>l==='main'?3+S.upg.station:Math.min(24,4+2*(S.brLvl[l]||0));
 const crewAt=l=>S.staff.filter(x=>x.loc===l);
 const totalWage=()=>S.staff.reduce((a,x)=>a+x.wage,0);
 let R=null, last=0, raf=0, uid=0;
-function fresh(){return {wx:{t:'sunny',n:rollWx(2)},loans:[],hist:[],ipo:{sold:0},spend:0,apps:{},catOffers:[],catJob:null,known:REC.filter(r=>r.d===1).map(r=>r.id),rd:[],camps:[],comps:[],buzz:0,regs:[],newIds:[],prices:{},day:1,money:40,rating:4,upg:Object.fromEntries(UPG_IDS.map(k=>[k,0])),brLvl:{},brRate:{},brStats:{},lastUsed:{},best:1,inv:{...STARTER},staff:[],branches:[],cands:genCands(),lastBr:{}}}
+function fresh(){return {wx:{t:'sunny',n:rollWx(2)},loans:[],hist:[],ipo:{sold:0},spend:0,apps:{},catOffers:[],catJob:null,known:REC.filter(r=>r.d===1&&!r.inv).map(r=>r.id),rd:[],camps:[],comps:[],buzz:0,regs:[],newIds:[],prices:{},day:1,money:40,rating:4,upg:Object.fromEntries(UPG_IDS.map(k=>[k,0])),brLvl:{},brRate:{},brStats:{},lastUsed:{},best:1,inv:{...STARTER},staff:[],branches:[],cands:genCands(),lastBr:{}}}
 function load(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):null}catch(e){return null}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){if(S&&S.__closed)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const hasReq=r=>!r.req||[].concat(r.req).every(q=>S.upg[q]>0);
 const unlocked=()=>REC.filter(r=>S.known.includes(r.id)&&hasReq(r)&&!(S.lab&&S.lab.off&&S.lab.off.includes(r.id)));
@@ -2333,8 +2334,8 @@ function endDay(){
     R.news.push('📦 New catering request. See 🏦 Finance')}
   const d=S.day;
   if(S.rating<2){
-    const sum=summary();saveScore('closed');const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;initFin();S.life={profit:0,rev:0,served:0,sold:{},best:{d:0,p:0},addons:0};save();
-    showModal(`<h2>The shop had to close</h2><p>Your rating fell below 2 stars after day ${d}. Serve customers faster and get their orders right.</p>${sum}<button class="big" onclick="market()">Start over</button>`);
+    const sum=summary();saveScore('closed');markReset();S.__closed=1;
+    showModal(`<h2>The shop had to close</h2><p>Your rating fell below 2 stars after day ${d}. Serve customers faster and get their orders right.</p>${sum}<button class="big" onclick="doReset()">${L('Start over','Chơi lại từ đầu')}</button>`);
     R=null;return;
   }
   S.day++;S.best=Math.max(S.best||1,S.day);S.cands=genCands();runBoard();save();setTimeout(()=>autoPost('day'),300);
@@ -3285,10 +3286,12 @@ function book(fromPause){
   showModal(`<h2>Recipes</h2><p>Pick every ingredient. Order doesn't matter.</p>${addonMenu()}${unlocked().map(recRow).join('')}<button class="big" onclick="${R?'resume()':'closeModal()'}">${R?'Back to work':'Close'}</button>`,()=>book(fromPause));
 }
 function confirmReset(){
-  showModal(`<h2>Start over?</h2><p>Cash, days, staff, branches and upgrades all reset.</p><button class="big" onclick="doReset()">Start over</button><button class="big alt" onclick="${R?'pause2()':'intro()'}">Cancel</button>`);
+  showModal(`<h2 class="notr">${L('Start over?','Chơi lại từ đầu?')}</h2><p class="notr">${L('Everything resets: cash, days, staff, branches, upgrades, lab inventions, farm and investments. Your name and settings stay.','Mọi thứ sẽ về lại ban đầu: tiền, ngày, nhân viên, chi nhánh, nâng cấp, món sáng chế, nông trại và đầu tư. Tên và cài đặt vẫn giữ nguyên.')}</p><button class="big" onclick="doReset()">Start over</button><button class="big alt" onclick="${R?'pause2()':'intro()'}">Cancel</button>`);
 }
 function pause2(){R.paused=false;pause()}
-function doReset(){const pn=S.player,pid=S.pid,run=(S.run||1)+1;S=fresh();S.player=pn;S.pid=pid;S.run=run;initFin();S.life=S.life||{profit:0,rev:0,served:0,sold:{},best:{d:0,p:0},addons:0};save();R=null;intro()}
+// Start over = write a reset marker and reload, so every part of the game (lab inventions, farm, office…) starts clean
+function markReset(){try{localStorage.setItem(KEY,JSON.stringify({__reset:1,player:S.player,pid:S.pid,run:(S.run||1)+1,tips:S.tips||{}}))}catch(e){}}
+function doReset(){R=null;markReset();location.reload()}
 function intro(){
   hud();buildStreet();buildStation();renderTray();
   const cont=S.day>1;
