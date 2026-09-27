@@ -465,9 +465,9 @@ h2,.sign,.day b,.pill.money{font-family:"Baloo 2","Be Vietnam Pro",sans-serif}
 .how summary{color:var(--jade)}
 
 /* ===== v23: brand colors — Pantone 128 C yellow + black ===== */
-:root{--y:#F3D03E;--y2:#E0B91E;--yl:#FBEBA6;--k:#111111;--k2:#1C1C1C;--k3:#2A2A2A;--g:#6E6E6E;--cream:#FAF6EA;--cream2:#EFE8D5;--ink:#111111;
-  --jade:#111111;--jade2:#000000;--teal:#111111;--rattan:#F3D03E;--rattan2:#C9A91F;--mustard:#F3D03E;--terra:#111111;--terra2:#000;
-  --lac:#111111;--lac2:#000;--gold:#F3D03E;--stool:#111111;--sun:#F3D03E;--coffee:#111111;--paper:#FAF6EA;--blue:#111111}
+:root{--y:var(--y);--y2:#E0B91E;--yl:#FBEBA6;--k:var(--k);--k2:#1C1C1C;--k3:#2A2A2A;--g:#6E6E6E;--cream:#FAF6EA;--cream2:#EFE8D5;--ink:var(--k);
+  --jade:var(--k);--jade2:#000000;--teal:var(--k);--rattan:var(--y);--rattan2:#C9A91F;--mustard:var(--y);--terra:var(--k);--terra2:#000;
+  --lac:var(--k);--lac2:#000;--gold:var(--y);--stool:var(--k);--sun:var(--y);--coffee:var(--k);--paper:#FAF6EA;--blue:var(--k)}
 body{background-color:#0E0E0E;background-image:
   radial-gradient(circle at 50% 50%,rgba(243,208,62,.22) 0 5%,transparent 5.5%),
   radial-gradient(circle at 50% 50%,transparent 0 22%,rgba(243,208,62,.07) 22.5% 24%,transparent 24.5%),
@@ -477,7 +477,7 @@ body{background-color:#0E0E0E;background-image:
 #app .pill,#app .iconbtn{background:var(--y);border:2px solid var(--y);color:var(--k);box-shadow:0 2px 8px rgba(0,0,0,.5)}
 #app .stars i{color:var(--k)}
 #app .awning{background:linear-gradient(#1C1C1C,#0B0B0B);box-shadow:inset 0 -3px 0 var(--y)}
-#app .awning::after{background:radial-gradient(circle at 11px 0,#F3D03E 0 7px,transparent 7.5px) 0 0/22px 7px}
+#app .awning::after{background:radial-gradient(circle at 11px 0,var(--y) 0 7px,transparent 7.5px) 0 0/22px 7px}
 #app .sign{background:var(--k);border:2px solid var(--y);box-shadow:0 0 0 2px var(--k),0 4px 10px rgba(0,0,0,.45)}
 #app .sg1{color:var(--y)}#app .sg2{color:#F5F5F5}
 #app .queue,#app .crew{background:var(--k2);border-color:var(--k)}
@@ -487,15 +487,15 @@ body{background-color:#0E0E0E;background-image:
 #app .worker .b{background:#444}#app .worker .b div{background:var(--y)}
 #app .street{border-color:var(--k)!important;background-color:var(--cream)!important;background-image:
    linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,0) 6px),
-   linear-gradient(#111,#111),
+   linear-gradient(var(--k),var(--k)),
    repeating-linear-gradient(90deg,rgba(0,0,0,.025) 0 3px,transparent 3px 11px),
    linear-gradient(#FBF7EC,#F1EAD6)!important}
 #app .street::before{background:linear-gradient(rgba(0,0,0,.14),transparent 35%),
-   radial-gradient(circle at 50% 50%,#F3D03E 0 2.5px,transparent 3px) 0 0/26px 26px,
+   radial-gradient(circle at 50% 50%,var(--y) 0 2.5px,transparent 3px) 0 0/26px 26px,
    radial-gradient(circle at 50% 50%,transparent 0 8px,#1C1C1C 8.5px 10px,transparent 10.5px) 0 0/26px 26px,
    radial-gradient(circle at 0 0,#1C1C1C 0 4px,transparent 4.5px) 0 0/26px 26px,
    conic-gradient(from 45deg,#FAF6EA 0 25%,#E6E0CE 0 50%,#FAF6EA 0 75%,#E6E0CE 0) 0 0/26px 26px!important}
-#app .dboard rect:first-child{fill:#111}
+#app .dboard rect:first-child{fill:var(--k)}
 #app .bubble{border-color:#DDD5BE}
 #app .bubble .who{background:var(--k);color:var(--y)}
 #app .cust.regular .bubble{border-color:var(--y);box-shadow:0 0 0 2px var(--y),0 3px 8px rgba(0,0,0,.2)}
@@ -503,9 +503,9 @@ body{background-color:#0E0E0E;background-image:
 #app .cust.deliv .bubble .who{background:#555;color:#fff}
 #app .cust.match .bubble{background:#FFF8D6;box-shadow:0 0 0 2.5px var(--y),0 3px 8px rgba(0,0,0,.2)}
 #app .oi.byc{background:#F5F0DE}
-#app .oi .by{color:#111}
+#app .oi .by{color:var(--k)}
 #app .bar{background:rgba(0,0,0,.15)}
-#app .bar>div{background:linear-gradient(90deg,#E0B91E,#F3D03E)}
+#app .bar>div{background:linear-gradient(90deg,#E0B91E,var(--y))}
 #app .bar>div.low{background:linear-gradient(90deg,#B3261E,#E0473D)}
 #app .counter{background:repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 2px,transparent 2px 9px),linear-gradient(#2A2A2A,#141414)!important;border-top:3px solid var(--y)!important}
 #app .tray{background:linear-gradient(#F6F6F6,#DADADA);border-color:#9E9E9E}
@@ -531,7 +531,7 @@ body{background-color:#0E0E0E;background-image:
 .toast{background:rgba(17,17,17,.94);border-color:var(--y);color:#FFF}
 .float{color:var(--y);-webkit-text-stroke:1px #000}
 .tag{color:#B3261E}
-.warn{background:#FFF4CC;border-color:#111}
+.warn{background:#FFF4CC;border-color:var(--k)}
 .tsign{background:var(--k);border:3px solid var(--y);box-shadow:0 0 0 3px var(--k),0 8px 18px rgba(0,0,0,.3)}
 .tsign span{color:var(--y)}.tsign small{color:#F5F5F5}
 .how summary{color:var(--k)}
@@ -565,13 +565,13 @@ body{background-color:#0E0E0E;background-image:
 .mic{font-size:30px;width:38px;text-align:center;flex:0 0 38px}
 .mic .ic{width:30px;height:30px}
 .minfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.minfo b{font-size:17px;color:#111}
+.minfo b{font-size:17px;color:var(--k)}
 .minfo small{font-size:13px;color:#666;font-weight:600;line-height:1.35}
 .minfo .lowtxt{color:#B3261E;font-weight:800}
 .mbtns{display:flex;flex-direction:column;gap:5px;align-items:stretch}
-.mbuy{background:#111;color:#F3D03E;border:none;border-radius:12px;min-width:86px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;line-height:1.15;box-shadow:0 2px 0 #0004}
+.mbuy{background:var(--k);color:var(--y);border:none;border-radius:12px;min-width:86px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;line-height:1.15;box-shadow:0 2px 0 #0004}
 .mbuy b{font-size:16px}.mbuy span{font-size:12.5px;font-weight:700;color:#fff}
-.mbulk{background:#F3D03E;color:#111;border:none;border-radius:10px;font-size:12px;font-weight:800;padding:4px 6px}
+.mbulk{background:var(--y);color:var(--k);border:none;border-radius:10px;font-size:12px;font-weight:800;padding:4px 6px}
 .mbuy:disabled,.mbulk:disabled{opacity:.4}
 .mbuy:active,.mbulk:active{transform:translateY(1px)}
 /* bigger, clearer ingredient buttons: 4 per row */
@@ -584,10 +584,10 @@ body{background-color:#0E0E0E;background-image:
 #app .bubble .who{font-size:12.5px}
 /* funny event popup */
 .funpop{position:fixed;left:50%;top:32%;transform:translate(-50%,-10px) scale(.9);opacity:0;z-index:30;display:flex;align-items:center;gap:12px;
-  width:min(88vw,380px);padding:14px 16px;border-radius:18px;background:#FFFDF6;box-shadow:0 12px 32px rgba(0,0,0,.35);border:3px solid #111;animation:funin .35s ease-out forwards;pointer-events:none}
+  width:min(88vw,380px);padding:14px 16px;border-radius:18px;background:#FFFDF6;box-shadow:0 12px 32px rgba(0,0,0,.35);border:3px solid var(--k);animation:funin .35s ease-out forwards;pointer-events:none}
 .funpop.good{border-color:#2E9B6F}.funpop.bad{border-color:#B3261E}
 .funpop .fe{font-size:44px;line-height:1}
-.funpop .ft{font-size:15.5px;font-weight:700;color:#111;line-height:1.35}
+.funpop .ft{font-size:15.5px;font-weight:700;color:var(--k);line-height:1.35}
 .funpop .fa{font-size:22px;font-weight:800;margin-top:2px;font-family:"Baloo 2",sans-serif}
 .funpop.good .fa{color:#2E9B6F}.funpop.bad .fa{color:#B3261E}
 .funpop.out{animation:funout .45s ease-in forwards}
@@ -598,10 +598,10 @@ body{background-color:#0E0E0E;background-image:
 .exf{font-size:34px}
 .exl{margin:6px 0 0 48px;padding:0;font-size:13.5px;color:#555;line-height:1.5}
 .exo{display:flex;align-items:flex-start;gap:8px;padding:6px 0 2px 48px;font-size:14px;font-weight:600;line-height:1.35}
-.exo input{width:20px;height:20px;accent-color:#111;flex:0 0 20px;margin-top:1px}
+.exo input{width:20px;height:20px;accent-color:var(--k);flex:0 0 20px;margin-top:1px}
 .nmlab{display:block;font-weight:800;margin:14px 2px 6px;font-size:15px}
-.nmin{width:100%;font:inherit;font-size:18px;font-weight:700;padding:12px 14px;border:2px solid #111;border-radius:12px;background:#fff;color:#111}
-.nmin:focus{outline:3px solid #F3D03E;outline-offset:1px}
+.nmin{width:100%;font:inherit;font-size:18px;font-weight:700;padding:12px 14px;border:2px solid var(--k);border-radius:12px;background:#fff;color:var(--k)}
+.nmin:focus{outline:3px solid var(--y);outline-offset:1px}
 .toast{z-index:40!important}
 .nmin.need{border-color:#B3261E;background:#FFF1EE}
 .gate{background:#fff;border:1px solid #E7E0CC;border-radius:14px;padding:10px 12px;margin:10px 0}
@@ -611,7 +611,7 @@ body{background-color:#0E0E0E;background-image:
 .gbar i{display:block;height:9px;border-radius:6px;background:#E9E3D2;overflow:hidden}
 .gbar i b{display:block;height:100%;border-radius:6px}
 .gbar em{font-style:normal;font-size:12.5px;font-weight:700;color:#555;margin-top:2px}
-.addons{background:#111;color:#F3D03E;border-radius:14px;padding:10px 14px;margin:8px 0 10px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13.5px;font-weight:700}
+.addons{background:var(--k);color:var(--y);border-radius:14px;padding:10px 14px;margin:8px 0 10px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13.5px;font-weight:700}
 .addons b{grid-column:1/-1;color:#fff;font-size:15px}
 .addons div{color:#FDF3C4}
 /* ticket auto-fit levels */
@@ -649,22 +649,22 @@ body{background-color:#0E0E0E;background-image:
 #app .street.rows2 .bubble[data-fit] .oi .nm{font-size:11.5px!important}
 #app .street.rows2 .bubble[data-fit] .oi .mods{font-size:10.5px!important}
 .finsum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 8px}
-.finsum div{background:#111;color:#F3D03E;border-radius:12px;padding:8px 12px}
+.finsum div{background:var(--k);color:var(--y);border-radius:12px;padding:8px 12px}
 .finsum small{display:block;color:#ddd!important;font-size:12px}.finsum b{font-size:19px}
-.srow{display:flex;align-items:center;gap:10px;width:100%;background:#fff;border:1px solid #E7E0CC;border-radius:12px;padding:10px;margin:6px 0;text-align:left;font:inherit;color:#111}
+.srow{display:flex;align-items:center;gap:10px;width:100%;background:#fff;border:1px solid #E7E0CC;border-radius:12px;padding:10px;margin:6px 0;text-align:left;font:inherit;color:var(--k)}
 .srow .te,.th .te{font-size:28px}
 .srow .sn{flex:1;min-width:0;display:flex;flex-direction:column}.srow .sn b{font-size:15px}.srow .sn small{font-size:12px}
 .srow .sp{display:flex;flex-direction:column;align-items:flex-end;min-width:74px}.srow .sp b{font-size:15px}
 .spk{width:70px;height:28px}.tview .spk{width:100%;height:70px;background:#fff;border:1px solid #E7E0CC;border-radius:10px;margin:6px 0}
 .pct{font-size:12px;font-weight:800}.pct.up,.upt{color:#2E9B6F}.pct.dn,.dnt{color:#B3261E}
-.back{background:none;border:none;font:inherit;font-weight:800;padding:4px 0;color:#111}
+.back{background:none;border:none;font:inherit;font-weight:800;padding:4px 0;color:var(--k)}
 .th{display:flex;gap:10px;align-items:center}.th small{display:block;font-size:12.5px}
 .tp{font-size:24px;margin-top:6px}.tp b{font-family:"Baloo 2",sans-serif}
 .qty{display:flex;align-items:center;justify-content:center;gap:16px}
-.qty button{width:48px;height:48px;border-radius:12px;border:2px solid #111;background:#fff;font-size:24px;font-weight:800}
+.qty button{width:48px;height:48px;border-radius:12px;border:2px solid var(--k);background:#fff;font-size:24px;font-weight:800}
 .qty b{font-size:26px;min-width:80px;text-align:center}
 .qchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0}
-.qchips button{border:2px solid #111;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-weight:800;font-size:13px}
+.qchips button{border:2px solid var(--k);background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-weight:800;font-size:13px}
 .qchips button:disabled{opacity:.35}
 .tbtn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
 .tbtn button{min-height:52px;border-radius:14px;font:inherit;font-size:18px;font-weight:800;border:none}
@@ -673,31 +673,31 @@ body{background-color:#0E0E0E;background-image:
 .labres{border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14.5px;line-height:1.45}
 .labres.ok{background:#E3F4EA;border:2px solid #2E9B6F}.labres.close{background:#FFF4CC;border:2px solid #E0B91E}.labres.bad{background:#F6F1E4;border:2px solid #CFC6AD}
 .bench{min-height:44px;display:flex;flex-wrap:wrap;gap:6px;background:#fff;border:2px dashed #CFC6AD;border-radius:12px;padding:6px;margin-bottom:8px}
-.bchip{border:none;background:#111;color:#F3D03E;border-radius:999px;padding:5px 10px;font:inherit;font-size:13px;font-weight:700}
+.bchip{border:none;background:var(--k);color:var(--y);border-radius:999px;padding:5px 10px;font:inherit;font-size:13px;font-weight:700}
 .labgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:260px;overflow-y:auto;padding:2px}
-.lchip{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid #E3E3E3;background:#fff;border-radius:12px;padding:6px 4px;font:inherit;font-size:11.5px;font-weight:700;line-height:1.15;color:#111}
-.lchip span{font-size:22px}.lchip.on{border-color:#111;background:#FFF1B8}.lchip.out{opacity:.45}
+.lchip{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid #E3E3E3;background:#fff;border-radius:12px;padding:6px 4px;font:inherit;font-size:11.5px;font-weight:700;line-height:1.15;color:var(--k)}
+.lchip span{font-size:22px}.lchip.on{border-color:var(--k);background:#FFF1B8}.lchip.out{opacity:.45}
 .note-card{background:#fff;border:1px solid #E7E0CC;border-radius:12px;padding:8px 12px;margin:6px 0;font-size:14px;line-height:1.4}
 .note-card .idea{color:#2E6B57!important}
 .cst{font-size:11px;font-weight:800;border-radius:6px;padding:0 5px;margin-left:4px}.cst.ok{background:#2E9B6F;color:#fff}.cst.bad{background:#B3261E;color:#fff}
 #app .cater.urgent{box-shadow:inset 0 0 0 3px #B3261E}
-.lsearch{width:100%;font:inherit;font-size:15px;padding:9px 12px;border:2px solid #111;border-radius:12px;margin:4px 0 8px;background:#fff}
+.lsearch{width:100%;font:inherit;font-size:15px;padding:9px 12px;border:2px solid var(--k);border-radius:12px;margin:4px 0 8px;background:#fff}
 .srcgrp{background:#fff;border:1px solid #E7E0CC;border-radius:12px;margin:6px 0;padding:2px 10px}
 .srcgrp summary{font-weight:800;padding:8px 0;cursor:pointer}
 .srcgrp .upg{padding:8px 0!important}
-.nbtn{margin-top:6px}.nbtn button{border:2px solid #111;background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:13px;font-weight:800}.nbtn button.on{background:#F3D03E}
+.nbtn{margin-top:6px}.nbtn button{border:2px solid var(--k);background:#fff;border-radius:10px;padding:4px 10px;font:inherit;font-size:13px;font-weight:800}.nbtn button.on{background:var(--y)}
 .upg .flyg,.upg .flyall{flex:1 1 100%!important}
-.upg .flyg button{min-width:0!important;min-height:0!important;background:#fff!important;border:2px solid #111!important;box-shadow:none!important;font-size:inherit!important}
+.upg .flyg button{min-width:0!important;min-height:0!important;background:#fff!important;border:2px solid var(--k)!important;box-shadow:none!important;font-size:inherit!important}
 .upg .flyg button.run{background:#E3F4EA!important;border-color:#2E9B6F!important}
-.upg .flyall{background:#F3D03E!important;border:none!important}
+.upg .flyall{background:var(--y)!important;border:none!important}
 .upg .flyg button.run{opacity:1!important}
 .flyg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%;margin-top:8px}
-.flyg button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:2px solid #111;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;color:#111;text-align:left;min-width:0}
+.flyg button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:2px solid var(--k);background:#fff;border-radius:10px;padding:6px 10px;font:inherit;color:var(--k);text-align:left;min-width:0}
 .flyg button b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .flyg button span{font-size:12.5px;font-weight:700;color:#555}
 .flyg button.run{background:#E3F4EA;border-color:#2E9B6F}.flyg button.run span{color:#2E9B6F}
 .flyg button:disabled:not(.run){opacity:.45}
-.flyall{width:100%;margin-top:8px;border:none;background:#F3D03E;border-radius:12px;min-height:44px;font:inherit;font-weight:800;font-size:14.5px}
+.flyall{width:100%;margin-top:8px;border:none;background:var(--y);border-radius:12px;min-height:44px;font:inherit;font-weight:800;font-size:14.5px}
 .flyall:disabled{opacity:.45}
 .trg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px;margin-bottom:10px}
 .trg div{display:flex;justify-content:space-between;gap:6px;background:#fff;border:1px solid #E7E0CC;border-radius:8px;padding:5px 8px;font-size:13.5px;min-width:0}
@@ -709,12 +709,12 @@ body{background-color:#0E0E0E;background-image:
 .brc .bp{font-weight:800;font-size:14px}
 .brc .bd{padding:0 12px 10px}
 .brsort{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700;margin:4px 0}
-.brsort button{border:2px solid #111;background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px}
-.brsort button.on{background:#F3D03E}
+.brsort button{border:2px solid var(--k);background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px}
+.brsort button.on{background:var(--y)}
 .locpick{display:grid;grid-template-columns:44px 1fr 44px;gap:6px;margin:8px 0 4px}
-.locpick button{border:2px solid #111;background:#fff;border-radius:12px;font-size:16px;font-weight:800;min-height:44px}
+.locpick button{border:2px solid var(--k);background:#fff;border-radius:12px;font-size:16px;font-weight:800;min-height:44px}
 .locpick button:disabled{opacity:.35}
-.locpick select{font:inherit;font-size:16px;font-weight:800;border:2px solid #111;border-radius:12px;background:#F3D03E;color:#111;padding:0 10px;min-height:44px;width:100%}
+.locpick select{font:inherit;font-size:16px;font-weight:800;border:2px solid var(--k);border-radius:12px;background:var(--y);color:var(--k);padding:0 10px;min-height:44px;width:100%}
 .stf{border-bottom:1px solid #E7E0CC}
 .stf summary{display:flex;align-items:center;gap:10px;padding:10px 0;cursor:pointer;list-style:none}
 .stf summary::-webkit-details-marker{display:none}
@@ -724,7 +724,7 @@ body{background-color:#0E0E0E;background-image:
 .stf[open] .chev{transform:rotate(180deg)}
 .stf .sd{padding:0 0 10px 48px}
 .stf .sd .posb{padding-left:0!important;margin-top:6px}
-.fview{background:linear-gradient(#BFE3F5 0,#E6F4FA 38px,#9BCB6B 38px,#86B85A 100%);border-radius:14px;padding:6px 8px 8px;margin:8px 0;border:2px solid #111}
+.fview{background:linear-gradient(#BFE3F5 0,#E6F4FA 38px,#9BCB6B 38px,#86B85A 100%);border-radius:14px;padding:6px 8px 8px;margin:8px 0;border:2px solid var(--k)}
 .fview.empty{background:linear-gradient(#BFE3F5,#9BCB6B);text-align:center;padding:18px 10px}.fview.empty p{font-weight:800}
 .fview .sky{font-weight:800;font-size:13px;color:#1b3a4b;height:30px;display:flex;align-items:center}
 .freg{margin-top:4px}.frl{font-size:12px;font-weight:800;color:#fff;text-shadow:0 1px 2px #0008;margin:2px 2px 4px}
@@ -733,7 +733,7 @@ body{background-color:#0E0E0E;background-image:
 .ftile .tree svg{width:100%;height:56px;display:block}
 .ftile .tree{transform-origin:50% 90%;animation:sway 4s ease-in-out infinite}
 .ftile.st0 .tree,.ftile.st1 .tree{animation:none}
-.ftile .tb{height:5px;background:#0002;border-radius:4px;overflow:hidden;margin:1px 2px}.ftile .tb b{display:block;height:100%;background:#F3D03E}
+.ftile .tb{height:5px;background:#0002;border-radius:4px;overflow:hidden;margin:1px 2px}.ftile .tb b{display:block;height:100%;background:var(--y)}
 .ftile.st5 .tb b{background:#D32F2F}
 .ftile small{display:block;font-size:10px;font-weight:800;color:#1f3a14;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ftile.st5{box-shadow:0 0 0 2px #D32F2F inset}
@@ -758,14 +758,14 @@ body{background-color:#0E0E0E;background-image:
 .mgrp .flyall{margin:4px 0 6px}
 .mtop .big{margin-top:8px}
 .langsw{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 4px}
-.langsw button{border:2px solid #111;background:#fff;border-radius:12px;min-height:42px;font:inherit;font-weight:800;font-size:15px}
-.langsw button.on{background:#F3D03E}
+.langsw button{border:2px solid var(--k);background:#fff;border-radius:12px;min-height:42px;font:inherit;font-weight:800;font-size:15px}
+.langsw button.on{background:var(--y)}
 .setrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #E7E0CC}
 .setrow small{color:#666;font-size:13px}
-.setrow input[type=range]{width:45%;accent-color:#111}
-.sw{flex:0 0 56px;height:32px;border-radius:999px;border:2px solid #111;background:#ddd;position:relative;padding:0}
+.setrow input[type=range]{width:45%;accent-color:var(--k)}
+.sw{flex:0 0 56px;height:32px;border-radius:999px;border:2px solid var(--k);background:#ddd;position:relative;padding:0}
 .sw i{position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:left .15s}
-.sw.on{background:#F3D03E}.sw.on i{left:26px}
+.sw.on{background:var(--y)}.sw.on i{left:26px}
 .introset{display:grid;grid-template-columns:1fr 48px;gap:6px;align-items:center}
 .introset .langsw{margin:10px 0 4px}.introset .iconbtn{width:48px;height:42px;border-radius:12px;margin-top:6px}
 #app .hud{gap:5px!important;padding:8px 8px 6px!important}
@@ -774,7 +774,7 @@ body{background-color:#0E0E0E;background-image:
 #app .money{min-width:0!important;flex:1 1 auto;padding:1px 6px!important}
 #app .stars{min-width:0!important;flex:1 1 auto;padding:1px 6px!important;white-space:nowrap}
 #app .hud .iconbtn{flex:0 0 32px;width:32px!important;height:32px!important;font-size:13px!important}
-#app .hud .iconbtn#setBtn{background:#111;color:#F3D03E;border-color:#F3D03E}
+#app .hud .iconbtn#setBtn{background:var(--k);color:var(--y);border-color:var(--y)}
 html.bigtext .card{font-size:18px}html.bigtext .card p,html.bigtext .card .note{font-size:16.5px}html.bigtext .card small{font-size:14.5px}
 html.bigtext .upg b,html.bigtext .minfo b{font-size:18px}html.bigtext .stat{font-size:17px}
 html.bigtext #app .bubble[data-fit] .oi .nm{font-size:max(14px,var(--nm,14px))!important}html.bigtext #app .bubble[data-fit] .oi .mods{font-size:13px!important}
@@ -782,6 +782,31 @@ html.bigtext #app .ing .n{font-size:13px!important}html.bigtext .toast{font-size
 html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none!important;transition:none!important}
 #app .stars .one{display:none}
 @media (max-width:389px){#app .stars .fs{display:none}#app .stars .one{display:inline}}
+.tutov{position:fixed;inset:0;z-index:50;background:rgba(20,12,6,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.tutcard{width:min(92vw,380px);background:#FFFDF6;border:3px solid var(--k);border-radius:20px;padding:14px 16px 18px;box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.tuthead{display:flex;justify-content:flex-end;margin-bottom:2px}
+.tutclose{border:none;background:none;font:inherit;font-weight:800;font-size:14px;color:#886;opacity:.75;padding:2px 4px}
+.tutimg{background:#fff;border-radius:14px;margin:2px 0 12px;overflow:hidden}
+.tutimg svg{display:block;width:100%;height:auto}
+.tuttxt{font-size:17px;line-height:1.5;font-weight:700;color:#111;text-align:center;margin:6px 4px 14px}
+.tutdots{display:flex;justify-content:center;gap:6px;margin-bottom:14px}
+.tutdots i{width:7px;height:7px;border-radius:50%;background:#E3D9BE;display:block}
+.tutdots i.on{background:var(--y);width:18px;border-radius:4px}
+.tutnext{width:100%;min-height:50px;border:none;border-radius:14px;background:var(--y);color:var(--k);font:inherit;font-size:17px;font-weight:800}
+.tabtip{display:flex;gap:8px;align-items:center;background:#FFF8D6;border:1px solid #E9D48A;border-radius:12px;padding:8px 10px;margin:8px 0;font-size:14px;font-weight:600}
+.tabtip span{flex:1}.tabtip button{border:2px solid var(--k);background:var(--y);border-radius:8px;font:inherit;font-weight:800;font-size:13px;padding:4px 8px;white-space:nowrap}
+.unl{background:#E3F4EA;border:2px solid #2E9B6F;border-radius:12px;padding:8px 12px;margin:8px 0;font-size:15px}
+
+:root[data-theme="nau"]{--y:#C08552;--y2:#A66C3E;--yl:#EFD9C2;--k:#3A2414;--k2:#2A1A0E;--k3:#3F2A18}
+:root[data-theme="hong"]{--y:#F2A6C0;--y2:#E084A8;--yl:#FBE1EC;--k:#5A2334;--k2:#3E1826;--k3:#4A1F2C}
+:root[data-theme="cam"]{--y:#F2A65A;--y2:#E08A32;--yl:#FBE4C6;--k:#5A2E12;--k2:#3E1F0C;--k3:#4A2810}
+:root[data-theme="xanhla"]{--y:#8FC17A;--y2:#6BA855;--yl:#E4F3DE;--k:#1F3A22;--k2:#152918;--k3:#1C331F}
+:root[data-theme="xanhbien"]{--y:#7FB8E0;--y2:#5A9BCB;--yl:#DEEFFA;--k:#123047;--k2:#0C2233;--k3:#102A3D}
+.thmgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 4px}
+.thmcard{border:2px solid var(--k);border-radius:14px;padding:8px 4px;background:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit}
+.thmcard.on{box-shadow:0 0 0 3px var(--y) inset}
+.thmdot{width:34px;height:34px;border-radius:50%;background:conic-gradient(var(--sy) 0 50%, var(--sk) 50%)}
+.thmcard small{font-size:11.5px;font-weight:700;text-align:center;line-height:1.15}
 </style>
 </head>
 <body>
@@ -1391,29 +1416,123 @@ const matchRec=tray=>{const r=REC.find(r=>S.known.includes(r.id)&&same(r.ing,tra
 
 /* audio */
 let AC=null;
+const L=(en,vi)=>(typeof LANG!=='undefined'&&LANG==='vi')?vi:en;
 // ================= SETTINGS =================
-const SET=(()=>{try{return Object.assign({sound:true,vibe:true,big:false,motion:true,volume:.8},JSON.parse(localStorage.getItem('saigonesee-settings')||'{}'))}catch(e){return {sound:true,vibe:true,big:false,motion:true,volume:.8}}})();
+const SET=(()=>{try{return Object.assign({sound:true,vibe:true,big:false,motion:true,volume:.8,theme:'vang',music:false},JSON.parse(localStorage.getItem('saigonesee-settings')||'{}'))}catch(e){return {sound:true,vibe:true,big:false,motion:true,volume:.8}}})();
 function saveSet(){try{localStorage.setItem('saigonesee-settings',JSON.stringify(SET))}catch(e){}}
-function applySet(){document.documentElement.classList.toggle('bigtext',!!SET.big);document.documentElement.classList.toggle('nomotion',!SET.motion)}
+// Gentle ambient loop generated in-browser. No audio files, so it always loads instantly.
+let MAC=null,MGain=null,MNodes=[],MTimer=null;
+function musicCtx(){if(!MAC){try{MAC=new (window.AudioContext||window.webkitAudioContext)();MGain=MAC.createGain();MGain.gain.value=0;MGain.connect(MAC.destination)}catch(e){return null}}return MAC}
+function musicPad(freqs,dur){const ac=musicCtx();if(!ac)return;const t=ac.currentTime,g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.5,t+dur*.3);g.gain.linearRampToValueAtTime(0,t+dur);g.connect(MGain);
+  freqs.forEach(f=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+dur+.2);MNodes.push(o)})}
+const MCHORDS=[[261.6,329.6,392],[293.7,349.2,440],[220,277.2,329.6],[246.9,311.1,392]];
+let mci=0;
+function musicTick(){musicPad(MCHORDS[mci%MCHORDS.length],7.5);mci++;MTimer=setTimeout(musicTick,7000)}
+function musicSet(on){const ac=musicCtx();if(!ac)return;
+  if(on){MGain.gain.setTargetAtTime(.05,ac.currentTime,1.2);ac.resume&&ac.resume();if(!MTimer)musicTick()}
+  else{MGain.gain.setTargetAtTime(0,ac.currentTime,.8);clearTimeout(MTimer);MTimer=null}}
+document.addEventListener('click',()=>{if(SET.music&&musicCtx()&&musicCtx().state==='suspended')musicCtx().resume()},{once:true});
+const THEMES=[{id:'vang',en:'Sunshine Yellow',vi:'Vàng Sài Gòn',y:'#F3D03E',k:'#111'},{id:'nau',en:'Coffee Brown',vi:'Nâu Cà Phê',y:'#C08552',k:'#3A2414'},{id:'hong',en:'Strawberry Pink',vi:'Hồng Dâu',y:'#F2A6C0',k:'#5A2334'},{id:'cam',en:'Peach Orange',vi:'Cam Đào',y:'#F2A65A',k:'#5A2E12'},{id:'xanhla',en:'Matcha Green',vi:'Xanh Matcha',y:'#8FC17A',k:'#1F3A22'},{id:'xanhbien',en:'Ocean Blue',vi:'Xanh Biển',y:'#7FB8E0',k:'#123047'}];
+function applySet(){document.documentElement.classList.toggle('bigtext',!!SET.big);document.documentElement.classList.toggle('nomotion',!SET.motion);document.documentElement.setAttribute('data-theme',SET.theme||'vang');musicSet(!!SET.music)}
 function buzz(p){if(SET.vibe&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}}
-function setSet(k,v){SET[k]=v;saveSet();applySet();if(k==='sound'&&v)beep(880,.08);if(k==='vibe'&&v)buzz(40);settings(true)}
+function setSet(k,v){SET[k]=v;saveSet();applySet();if(k==='sound'&&v)beep(880,.08);if(k==='vibe'&&v)buzz(40);if(k==='theme')buzz(15);settings(true)}
 let SETFROM=null;
 function settings(keep){
   if(!keep){SETFROM=R&&!R.paused?'play':R?'pause':'menu';if(R&&!R.paused)R.paused=true}
   const tg=(k,on,t,d)=>`<div class="setrow"><div><b>${t}</b>${d?`<br><small>${d}</small>`:''}</div><button class="sw${on?' on':''}" role="switch" aria-checked="${on}" onclick="setSet('${k}',${!on})"><i></i></button></div>`;
   const canVibe=!!navigator.vibrate;
   showModal(`<h2>⚙️ Settings</h2>
-  <p style="font-weight:800;margin:8px 0 2px">🌐 Language</p>${langSwitch()}
-  ${tg('sound',SET.sound,'🔊 Sound effects','Coins, taps and alerts')}
+  <p style="font-weight:800;margin:8px 0 2px" class="notr">${L('🌐 Language','🌐 Ngôn ngữ')}</p>${langSwitch()}
+  <p style="font-weight:800;margin:14px 0 4px" class="notr">${L('🎨 Color theme','🎨 Màu giao diện')}</p>
+  <p class="note notr">${L('Pick a look you like. Change it any time.','Chọn màu bạn thích, đổi lúc nào cũng được.')}</p>
+  <div class="thmgrid notr">${THEMES.map(t=>`<button class="thmcard ${SET.theme===t.id?'on':''}" style="--sy:${t.y};--sk:${t.k}" onclick="setSet('theme','${t.id}')"><span class="thmdot"></span><small>${L(t.en,t.vi)}</small></button>`).join('')}</div>
+  <p style="font-weight:800;margin:14px 0 4px" class="notr">${L('🎵 Background music','🎵 Nhạc nền')}</p>
+  ${tg('music',SET.music,L('🎵 Soft background music','🎵 Nhạc nền nhẹ'),L('A calm instrumental loop while you play','Giai điệu nhẹ nhàng phát trong lúc chơi'))}
+  ${tg('sound',SET.sound,L('🔊 Sound effects','🔊 Âm thanh'),L('Coins, taps and alerts','Tiếng tiền, tiếng chạm và cảnh báo'))}
   ${SET.sound?`<div class="setrow"><div><b>🔉 Volume</b></div><input type="range" min="0" max="1" step="0.1" value="${SET.volume}" oninput="SET.volume=+this.value;saveSet()" onchange="beep(880,.08)" aria-label="Volume"></div>`:''}
   ${tg('vibe',SET.vibe,'📳 Vibration',canVibe?'Short buzz when you earn money or make a mistake':'Your phone or browser does not support vibration (iPhone Safari)')}
   ${tg('big',SET.big,'🔠 Large text','Bigger text in menus and orders')}
   ${tg('motion',SET.motion,'✨ Animations','Turn off to reduce motion')}
   <p style="font-weight:800;margin:12px 0 4px">👤 Player name</p>
   <input id="pnameS" class="nmin" maxlength="16" value="${(S.player||'').replace(/"/g,'')}" onchange="const v=this.value.trim();if(v){S.player=v;save();toast('Name saved')}">
+  <p style="font-weight:800;margin:14px 0 4px" class="notr">${L('💾 Move your game to another device','💾 Chuyển game sang máy khác')}</p>
+  <p class="note notr">${L('Save a file (or copy a save code), then open it on the other phone or computer.','Lưu file (hoặc chép mã lưu game), rồi mở trên điện thoại hoặc máy tính khác.')}</p>
+  <div class="arow notr" style="padding-left:0"><button onclick="exportSave()">💾 ${L('Save to file','Lưu ra file')}</button><button onclick="document.getElementById('loadfile').click()">📂 ${L('Open a file','Mở file')}</button></div>
+  <div class="arow notr" style="padding-left:0;margin-top:6px"><button onclick="copyCode()">📋 ${L('Copy save code','Chép mã lưu')}</button><button onclick="pasteCode()">📥 ${L('Paste save code','Dán mã lưu')}</button></div>
+  <input type="file" id="loadfile" accept=".json,.txt,application/json" style="display:none" onchange="importFile(this)">
+  <button class="big alt notr" onclick="S.tut=0;S.tips={};save();closeSettings();toast(L('Tips will show again','Hướng dẫn sẽ hiện lại'));if(R)setTimeout(tutStart,300)">🎓 ${L('Show the tutorial again','Xem lại hướng dẫn')}</button>
   <button class="big" onclick="closeSettings()">Done</button>
   <button class="big alt" onclick="confirmReset()">Start over</button>`);
 }
+function saveBlob(){return {game:'saigonesee',v:1,at:new Date().toISOString(),S,settings:SET,lang:LANG,hof:(()=>{try{return JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(e){return []}})()}}
+function exportSave(){save();const data=JSON.stringify(saveBlob());const name=`saigonesee-${(S.player||'player').replace(/[^\w-]+/g,'_')}-day${S.day}.json`;
+  try{const f=new File([data],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'Saigonesee save'}).catch(()=>{});return}}catch(e){}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);toast(L('💾 Save file downloaded','💾 Đã tải file lưu game'))}
+function applyLoad(txt){let d;try{d=JSON.parse(txt.trim().startsWith('{')?txt:decodeURIComponent(escape(atob(txt.trim()))))}catch(e){toast(L('That file or code is not a Saigonesee save','File hoặc mã này không phải bản lưu Saigonesee'));return}
+  if(!d||d.game!=='saigonesee'||!d.S||!d.S.day){toast(L('That file or code is not a Saigonesee save','File hoặc mã này không phải bản lưu Saigonesee'));return}
+  if(!confirm(L(`Load ${d.S.player||'this'} save (day ${d.S.day})? Your current progress on this device will be replaced.`,`Mở bản lưu của ${d.S.player||'người chơi'} (ngày ${d.S.day})? Tiến độ hiện tại trên máy này sẽ bị thay thế.`)))return;
+  try{localStorage.setItem(KEY,JSON.stringify(d.S));if(d.settings)localStorage.setItem('saigonesee-settings',JSON.stringify(d.settings));if(d.lang)localStorage.setItem('saigonesee-lang',d.lang);if(d.hof)localStorage.setItem('saigonesee-hof',JSON.stringify(d.hof))}catch(e){}
+  location.reload()}
+function importFile(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>applyLoad(String(r.result));r.readAsText(f);inp.value=''}
+function copyCode(){save();const code=btoa(unescape(encodeURIComponent(JSON.stringify(saveBlob()))));
+  const done=()=>toast(L('📋 Save code copied. Paste it on the other device','📋 Đã chép mã. Dán vào máy kia nhé'));
+  if(navigator.clipboard)navigator.clipboard.writeText(code).then(done).catch(()=>prompt(L('Copy this code','Chép mã này'),code));else prompt(L('Copy this code','Chép mã này'),code)}
+function pasteCode(){const c=prompt(L('Paste your save code here','Dán mã lưu game vào đây'));if(c)applyLoad(c)}
+const TUT_SVG={
+  hello:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><circle cx="60" cy="65" r="22" fill="#FFDDA8" stroke="#111" stroke-width="3"/><path d="M40 100q20-14 40 0" stroke="#111" stroke-width="3" fill="none"/><rect x="105" y="30" width="78" height="70" rx="10" fill="#fff" stroke="#111" stroke-width="3"/><text x="144" y="55" font-size="13" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" fill="#111">☕</text><rect x="115" y="68" width="58" height="10" rx="3" fill="#F3D03E"/><rect x="115" y="82" width="40" height="8" rx="3" fill="#ddd"/></svg>',
+  bar:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><rect x="26" y="30" width="60" height="60" rx="12" fill="#fff" stroke="#111" stroke-width="3"/><text x="56" y="68" font-size="26" text-anchor="middle">☕</text><rect x="114" y="30" width="60" height="60" rx="12" fill="#fff" stroke="#111" stroke-width="3"/><text x="144" y="68" font-size="26" text-anchor="middle">🥛</text><path d="M90 60h20M104 52l10 8-10 8" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="26" y="100" width="148" height="18" rx="9" fill="#111"/><rect x="30" y="104" width="60" height="10" rx="5" fill="#F3D03E"/></svg>',
+  tray:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><rect x="35" y="55" width="130" height="50" rx="12" fill="#fff" stroke="#111" stroke-width="3" stroke-dasharray="6 5"/><text x="70" y="88" font-size="26" text-anchor="middle">☕</text><text x="130" y="88" font-size="26" text-anchor="middle">🥛</text><path d="M100 30v18M92 40l8 8 8-8" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  hand:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><rect x="20" y="30" width="70" height="80" rx="10" fill="#fff" stroke="#111" stroke-width="3"/><text x="55" y="60" font-size="20" text-anchor="middle">☕</text><rect x="26" y="70" width="58" height="8" rx="4" fill="#8FC17A"/><path d="M96 68h40M120 52l16 16-16 16" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="160" cy="55" r="20" fill="#FFDDA8" stroke="#111" stroke-width="3"/><path d="M148 60q12 10 24 0" stroke="#111" stroke-width="3" fill="none"/><rect x="140" y="82" width="40" height="24" rx="8" fill="#fff" stroke="#111" stroke-width="3"/></svg>',
+  timer:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><circle cx="100" cy="60" r="34" fill="#FFDDA8" stroke="#111" stroke-width="3"/><path d="M84 65q16 12 32 0" stroke="#111" stroke-width="3" fill="none"/><rect x="55" y="105" width="90" height="14" rx="7" fill="#111"/><rect x="59" y="108" width="55" height="8" rx="4" fill="#E0473D"/></svg>',
+  gear:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><circle cx="70" cy="65" r="26" fill="#fff" stroke="#111" stroke-width="3"/><text x="70" y="74" font-size="24" text-anchor="middle">⚙️</text><circle cx="140" cy="65" r="26" fill="#fff" stroke="#111" stroke-width="3"/><text x="140" y="74" font-size="24" text-anchor="middle">❚❚</text></svg>',
+  night:'<svg viewBox="0 0 200 140"><rect x="10" y="10" width="180" height="120" rx="16" fill="#FBEBA6" stroke="#111" stroke-width="3"/><rect x="30" y="30" width="140" height="70" rx="10" fill="#fff" stroke="#111" stroke-width="3"/><rect x="42" y="42" width="35" height="46" rx="6" fill="#F3D03E" stroke="#111" stroke-width="2"/><text x="59" y="70" font-size="18" text-anchor="middle">👥</text><rect x="83" y="42" width="35" height="46" rx="6" fill="#8FC17A" stroke="#111" stroke-width="2"/><text x="100" y="70" font-size="18" text-anchor="middle">🔧</text><rect x="124" y="42" width="35" height="46" rx="6" fill="#7FB8E0" stroke="#111" stroke-width="2"/><text x="141" y="70" font-size="18" text-anchor="middle">🛒</text></svg>',
+};
+const TUT=[
+  {img:'hello',en:'These are your customers.<br>Their order is on the ticket.',vi:'Đây là khách của tiệm.<br>Món khách gọi hiện trên phiếu.'},
+  {img:'bar',en:'Tap the ingredients for the order.<br>Switch tabs to find more.',vi:'Chạm nguyên liệu để làm món.<br>Đổi tab để tìm thêm nguyên liệu.'},
+  {img:'tray',en:'Ingredients land on the tray.<br>Tap one there to remove it.',vi:'Nguyên liệu lên khay.<br>Chạm vào món trên khay để bỏ ra.'},
+  {img:'hand',en:'Tap the customer to serve them.<br>It glows green when it matches!',vi:'Chạm vào khách để giao món.<br>Đúng món thì phiếu sáng lên!'},
+  {img:'timer',en:'The bar shows their patience.<br>Fast service = bigger tips.',vi:'Thanh màu là độ kiên nhẫn.<br>Giao nhanh thì được tip nhiều hơn.'},
+  {img:'gear',en:'❚❚ pauses. ⚙️ has settings,<br>language, music and saving.',vi:'❚❚ để tạm dừng. ⚙️ có cài đặt,<br>ngôn ngữ, nhạc và lưu game.'},
+  {img:'night',en:'After closing: shop, hire staff<br>and upgrade. Good luck! ☕',vi:'Hết giờ bán: đi chợ, thuê người<br>và nâng cấp. Chúc may mắn! ☕'},
+];
+let TI=-1;
+function tutStart(){if(!R)return;R.paused=true;TI=0;tutShow()}
+function tutShow(){document.querySelectorAll('.tutov').forEach(e=>e.remove());const st=TUT[TI];if(!st){tutEnd();return}
+  const ov=document.createElement('div');ov.className='tutov notr';
+  const dots=TUT.map((_,i)=>`<i class="${i===TI?'on':''}"></i>`).join('');
+  ov.innerHTML=`<div class="tutcard">
+    <div class="tuthead"><span></span><button class="tutclose" onclick="tutEnd()">${L('Close','Đóng')} ✕</button></div>
+    <div class="tutimg">${TUT_SVG[st.img]}</div>
+    <p class="tuttxt">${L(st.en,st.vi)}</p>
+    <div class="tutdots">${dots}</div>
+    <button class="tutnext" onclick="TI++;tutShow()">${TI===TUT.length-1?L('Start playing!','Bắt đầu chơi!'):L('Next','Tiếp')} →</button>
+  </div>`;
+  document.body.appendChild(ov)}
+
+function tutEnd(){document.querySelectorAll('.tutov').forEach(e=>e.remove());S.tut=1;save();if(R){R.paused=false;last=performance.now()}}
+// Tips the first time a manage tab is opened
+const TAB_TIPS={
+  staff:['Hire people so they make orders for you. Tap a name to raise pay, give a bonus or move them.','Thuê nhân viên để họ tự làm món. Chạm vào tên để tăng lương, thưởng hay chuyển tiệm.'],
+  branch:['Open branches in other towns. They sell on their own as long as they have staff.','Mở chi nhánh ở town khác. Chi nhánh tự bán nếu có nhân viên.'],
+  menu:['Set your own prices. Higher prices earn more but scare some customers away.','Tự đặt giá bán. Giá cao lời nhiều nhưng một số khách sẽ bỏ đi.'],
+  rd:['Research new menu items, or invent your own in the lab.','Nghiên cứu món mới, hoặc tự sáng chế món trong phòng Lab.'],
+  mkt:['Run ads to bring in more customers, turn on delivery apps and watch competitors.','Chạy quảng cáo để thêm khách, bật app giao hàng và theo dõi đối thủ.'],
+  fin:['Track profit, take catering orders, borrow money, pay taxes and take the company public.','Theo dõi lợi nhuận, nhận đơn catering, vay tiền, nộp thuế và lên sàn.'],
+  upg:['Upgrades make the shop busier, customers more patient and tips bigger.','Nâng cấp giúp tiệm đông hơn, khách chịu chờ lâu hơn và tip nhiều hơn.'],
+  eq:['Machines speed up staff and unlock new items like espresso drinks.','Máy móc giúp làm nhanh hơn và mở món mới như espresso.'],
+  board:['Directors run parts of the company for you every night.','Ban giám đốc tự điều hành công ty giúp bạn mỗi đêm.'],
+  office:['Office teams make each director stronger.','Các phòng ban giúp từng giám đốc làm việc tốt hơn.'],
+  invest:['Grow spare cash with stocks, bank savings and real estate.','Làm tiền dư sinh lời bằng cổ phiếu, gửi tiết kiệm và bất động sản.'],
+  farm:['Grow your own coffee, roast it and sell bags of Saigonesee coffee.','Tự trồng cà phê, rang và bán cà phê Saigonesee đóng bịch.'],
+  stats:['Your all-time numbers and what unlocks next.','Số liệu từ đầu tới giờ và những gì sắp mở khoá.'],
+};
+function tabTip(t){S.tips=S.tips||{};const tip=TAB_TIPS[t];if(!tip||S.tips[t])return '';return `<div class="tabtip notr"><span>💡 ${L(tip[0],tip[1])}</span><button onclick="S.tips['${t}']=1;save();manage()">${L('Got it','Đã hiểu')}</button></div>`}
+// Unlock announcements
+function checkUnlocks(){S.unl=S.unl||{};const out=[];
+  Object.keys(GATES).forEach(g=>{if(!S.unl[g]&&gateOk(g)){S.unl[g]=1;out.push(g)}});return out}
+const UNL_TXT={pickup:['📱 Online pickup','📣 Marketing'],uber:['🛵 Uber Eats','📣 Marketing'],door:['🚗 DoorDash','📣 Marketing'],grub:['🥡 Grubhub','📣 Marketing'],branch:['🏪 Your first branch','🏪 Branches'],board:['👔 Board of directors & 🏢 Office','👔 Board'],invest:['📈 Investing','📈 Invest'],farm:['🌱 Coffee farm','🌱 Farm']};
+function unlockCards(list){return list.map(g=>{const u=UNL_TXT[g]||[GATES[g].n,''];return `<div class="unl notr">🔓 <b>${L('New unlocked:','Mới mở khoá:')} ${u[0]}</b><br><small>${L('Find it in Manage shop →','Xem trong Quản lý tiệm →')} ${u[1]}</small></div>`}).join('')}
 function closeSettings(){if(SETFROM==='play')resume();else if(SETFROM==='pause')pause2();else intro()}
 applySet();
 function beep(f,dur=.12,type='triangle',vol=.08){if(!SET.sound)return;vol*=SET.volume;
@@ -1613,7 +1732,7 @@ function funEvent(){
 }
 function funPop(e,t,amt){
   const d=document.createElement('div');d.className='funpop '+(amt>0?'good':'bad');
-  d.innerHTML=`<span class="fe">${e}</span><div><div class="ft">${t}</div><div class="fa">${amt>0?'+':'−'}${fmt(Math.abs(amt))}</div></div>`;
+  d.innerHTML=`<span class="fe">${e}</span><div><div class="ft">${t}</div>${amt?`<div class="fa">${amt>0?'+':'−'}${fmt(Math.abs(amt))}</div>`:''}</div>`;if(!amt)d.classList.add('good');
   document.body.appendChild(d);setTimeout(()=>d.classList.add('out'),3600);setTimeout(()=>d.remove(),4100);
 }
 function eventsTick(){
@@ -1769,6 +1888,7 @@ function startDay(){
   R.crew=crewAt('main').map(x=>({s:x,t:0,cool:1+Math.random(),c:null,it:null}));buildCrew();
   renderTray();hud();last=performance.now();cancelAnimationFrame(raf);
   setTimeout(()=>{if(!R)return;toast(WX[S.wx.t].e+' '+WX[S.wx.t].n+(h?' and it\'s '+h[0]+'!':' today'));if(R.special)setTimeout(()=>R&&toast('⭐ Today\'s special: '+R.special.n),2200);if(S.day%7===0)setTimeout(()=>R&&toast('🎉 Weekend! Three train rushes today'),4400)},400);raf=requestAnimationFrame(loop);
+  if(!S.tut)setTimeout(()=>{if(R&&!R.paused&&R.cust.some(Boolean))tutStart();else if(R)setTimeout(()=>R&&!S.tut&&tutStart(),1500)},1600);
 }
 function loop(now){
   const dt=Math.min(.1,(now-last)/1000);last=now;
@@ -1875,7 +1995,8 @@ function endDay(){
     R=null;return;
   }
   S.day++;S.best=Math.max(S.best||1,S.day);S.cands=genCands();runBoard();save();setTimeout(()=>autoPost('day'),300);
-  showModal(`<h2>Day ${d} closed</h2>${S.known.length<REC.length?`<p class="note">${S.known.length} of ${REC.length} menu items researched.</p>`:`<p class="note">Full menu. Best run: day ${S.best-1}.</p>`}${summary()}<button class="big" onclick="manage('staff')">Manage shop</button>`);
+  const unl=checkUnlocks();if(unl.length){sfx.coin();setTimeout(()=>unl.forEach((g,i)=>setTimeout(()=>funPop('🔓',L('New unlocked: ','Mới mở khoá: ')+(UNL_TXT[g]||[GATES[g].n])[0],0),i*1800)),600)}
+  showModal(`<h2>Day ${d} closed</h2>${unlockCards(unl)}${S.known.length<REC.length?`<p class="note">${S.known.length} of ${REC.length} menu items researched.</p>`:`<p class="note">Full menu. Best run: day ${S.best-1}.</p>`}${summary()}<button class="big" onclick="manage('staff')">Manage shop</button>`);
   R=null;hud();
 }
 function genReviews(){
@@ -2056,7 +2177,7 @@ function manage(tab){
   }
   if(MT==='upg'||MT==='eq')body=(MT==='eq'?'<p class="note">Equipment works at every location. Some machines unlock new menu items in 🔬 R&D.</p>':'')+'<div id="upgs"></div>';
   showModal(`<h2>Manage shop</h2><p>Cash: <b>${fmt(S.money)}</b><br>Daily wages: <b>${fmt(totalWage())}</b></p>
-  <div class="tabs">${tabs.map(([k,n])=>`<button class="${k===MT?'on':''}" onclick="manage('${k}')">${n}</button>`).join('')}</div>${body}
+  <div class="tabs">${tabs.map(([k,n])=>`<button class="${k===MT?'on':''}" onclick="manage('${k}')">${n}</button>`).join('')}</div>${tabTip(MT)}${body}
   <button class="big" onclick="preDay()">Go to market</button>`);
   if(MT==='upg'||MT==='eq')renderUpg();
   reapplyFilters();$('card').scrollTop=sc;
@@ -2715,16 +2836,20 @@ function trNode(n){if(n.__tr===n.nodeValue)return;const p=n.parentNode;if(!p||SK
   const v=trStr(n.nodeValue);if(v!=null){n.__en=n.nodeValue;n.nodeValue=v;n.__tr=v}}
 function trTree(root){if(root.nodeType===3){trNode(root);return}if(root.nodeType!==1||SKIP[root.nodeName])return;
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())trNode(n);
-  root.querySelectorAll&&root.querySelectorAll('[placeholder]').forEach(e=>{const v=trStr(e.placeholder);if(v!=null){e.__enph=e.__enph||e.placeholder;e.placeholder=v}})}
+  [root,...(root.querySelectorAll?root.querySelectorAll('[placeholder]'):[])].filter(e=>e.getAttribute&&e.getAttribute('placeholder')).forEach(e=>{const v=trStr(e.placeholder);if(v!=null){e.__enph=e.__enph||e.placeholder;e.placeholder=v}})}
 function untrTree(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){if(n.__en!==undefined&&n.nodeValue===n.__tr){n.nodeValue=n.__en;n.__tr=undefined}}
   document.querySelectorAll('[placeholder]').forEach(e=>{if(e.__enph)e.placeholder=e.__enph})}
 const trObs=new MutationObserver(ms=>{if(LANG!=='vi')return;for(const m of ms){if(m.type==='characterData')trNode(m.target);else m.addedNodes.forEach(trTree)}});
 trObs.observe(document.body,{subtree:true,childList:true,characterData:true});
 [["⚙️ Settings","⚙️ Cài đặt"],["🌐 Language","🌐 Ngôn ngữ"],["🔊 Sound effects","🔊 Âm thanh"],["Coins, taps and alerts","Tiếng tiền, tiếng chạm và cảnh báo"],["🔉 Volume","🔉 Âm lượng"],["📳 Vibration","📳 Rung"],["Short buzz when you earn money or make a mistake","Rung nhẹ khi được tiền hoặc làm sai"],["Your phone or browser does not support vibration (iPhone Safari)","Điện thoại hoặc trình duyệt này không hỗ trợ rung (Safari trên iPhone)"],["🔠 Large text","🔠 Chữ to"],["Bigger text in menus and orders","Chữ to hơn trong menu và phiếu order"],["✨ Animations","✨ Hiệu ứng động"],["Turn off to reduce motion","Tắt để giảm chuyển động"],["👤 Player name","👤 Tên người chơi"],["Done","Xong"],["Name saved","Đã lưu tên"]].forEach(([a,b])=>VI_EXACT.set(a,b));
+Object.entries({"+ $10 of test supplies per experiment.": "+ $10 vật tư mỗi lần thử nghiệm.", "+15% customers everywhere for 3 days": "+15% khách ở mọi nơi trong 3 ngày", "+20% customers at one location for 2 days": "+20% khách ở một tiệm trong 2 ngày", "+25% everywhere for 4 days, pulls customers from competitors": "+25% khách ở mọi nơi trong 4 ngày, kéo khách từ đối thủ", "+40% everywhere for 2 days and a big buzz boost": "+40% khách ở mọi nơi trong 2 ngày và tăng mạnh độ nổi tiếng", ". Share price:": ". Giá cổ phiếu:", ". You own": ". Bạn sở hữu", "0.1% interest every day. Take money out any time.": "Lãi 0.1% mỗi ngày. Rút tiền lúc nào cũng được.", "10-day CD": "Sổ 10 ngày", "30-day CD": "Sổ 30 ngày", ": ready after 10 days, then every 4. Fruity and tart, a local specialty.": ": thu hoạch sau 10 ngày, rồi mỗi 4 ngày. Vị trái cây, chua nhẹ, đặc sản địa phương.", ": ready after 10 days, then every 5. Rare round beans, rich and sweet.": ": thu hoạch sau 10 ngày, rồi mỗi 5 ngày. Hạt tròn hiếm, đậm và ngọt.", ": ready after 12 days, then every 5. Smooth and bright. Great for espresso.": ": thu hoạch sau 12 ngày, rồi mỗi 5 ngày. Êm và sáng vị. Hợp làm espresso.", ": ready after 16 days, then every 6. Premium Đà Lạt heirloom Arabica.": ": thu hoạch sau 16 ngày, rồi mỗi 6 ngày. Arabica cổ quý của Đà Lạt.", ": ready after 8 days, then every 4. Strong and bold. Classic phin coffee.": ": thu hoạch sau 8 ngày, rồi mỗi 4 ngày. Đậm và mạnh. Cà phê phin kinh điển.", "An accepted order runs during your next day. Make each item and tap the 📦 banner. Staff help when they are free. Missing the deadline costs rating.": "Đơn đã nhận sẽ làm trong ngày kế tiếp. Làm từng món rồi chạm vào banner 📦. Nhân viên rảnh sẽ phụ. Trễ hạn sẽ bị trừ sao.", "Average vs. menu:": "Trung bình so với menu:", "Buy back company shares": "Mua lại cổ phần công ty", "Buy equipment like an espresso machine or deep fryer to unlock more menu items. Turn on delivery apps and online pickup for extra orders.": "Mua thiết bị như máy espresso hay nồi chiên để mở thêm món. Bật app giao hàng và đặt trước để có thêm đơn.", "Buy land in Vietnam's coffee regions, plant varieties, and hire farmers to pick the cherries. Each farmer covers about 3–5 plots. Farm efficiency now:": "Mua đất ở các vùng cà phê Việt Nam, trồng giống và thuê nông dân hái trái. Mỗi nông dân lo khoảng 3–5 lô. Hiệu suất nông trại hiện tại:", "Buy property to collect rent every day. Property values go up and down slowly. Selling costs a 5% fee. Now and then a property needs repairs.": "Mua nhà đất để thu tiền thuê mỗi ngày. Giá nhà lên xuống chậm. Bán mất phí 5%. Thỉnh thoảng phải sửa chữa.", "Company value:": "Giá trị công ty:", "Customers grab a bag on the way out": "Khách mua bịch khi ra về", "Delivery orders (🛵 🚗 🥡) show up at Weymouth with a dashed bubble. Each app keeps 30% and there's no tip, but you get extra orders everywhere. 📱 Online pickup has no commission: customers order ahead, wait longer and still tip a little.": "Đơn giao hàng (🛵 🚗 🥡) hiện ở Weymouth với phiếu viền đứt. Mỗi app lấy 30% và không có tip, nhưng có thêm đơn ở mọi nơi. 📱 Đặt trước không mất hoa hồng: khách đặt sẵn, chờ lâu hơn và vẫn tip chút ít.", "Directors run parts of the company for you each night after closing. They only spend money above your cash reserve.": "Ban giám đốc điều hành công ty giúp bạn mỗi tối sau khi đóng cửa. Họ chỉ tiêu phần tiền vượt quỹ dự phòng.", "Each team works for its director. Without the director on the 👔 Board, a team works at half strength. More seats come with the 🏢 Regional office upgrade. Office rent is $15 per desk per day.": "Mỗi phòng làm việc cho giám đốc của mình. Không có giám đốc trong 👔 Ban giám đốc thì phòng chỉ làm được một nửa. Thêm chỗ ngồi bằng nâng cấp 🏢 Văn phòng khu vực. Tiền thuê $15 mỗi chỗ mỗi ngày.", "Equipment works at every location. Some machines unlock new menu items in 🔬 R&D.": "Thiết bị dùng cho mọi tiệm. Một số máy mở món mới trong 🔬 R&D.", "Expand branches that turn customers away": "Mở rộng chi nhánh đang từ chối khách", "Find a supplier once, then buy it at the market like anything else. The first batch is free.": "Tìm nhà cung cấp một lần, sau đó mua ở chợ như mọi thứ khác. Lô đầu miễn phí.", "Give a bonus when someone is unhappy": "Thưởng khi nhân viên buồn", "Hire staff wherever they are needed, busiest spots first": "Tuyển người ở nơi cần, chỗ đông nhất trước", "Interest earned so far:": "Tiền lãi tới giờ:", "Last night:": "Tối qua:", "Lock money away for more interest. Taking it out early loses all the interest.": "Gửi có kỳ hạn để lãi cao hơn. Rút trước hạn mất hết tiền lãi.", "Lower prices when customers walk out over them": "Hạ giá khi khách bỏ đi vì đắt", "Meals tax is paid by customers on top of menu prices, so it doesn't cut your profit. Rates are simplified for the game; real taxes depend on your business type.": "Thuế bữa ăn do khách trả thêm trên giá menu nên không trừ vào lời. Mức thuế đã giản lược cho game; thuế thật tuỳ loại hình doanh nghiệp.", "No competitors nearby right now.": "Hiện chưa có đối thủ gần đây.", "No scores yet.": "Chưa có điểm.", "Nothing new to research right now.": "Hiện chưa có món mới để nghiên cứu.", "On this device": "Trên máy này", "Pay off loans early": "Trả nợ vay sớm", "Pick every ingredient. Order doesn't matter.": "Chọn đủ nguyên liệu. Thứ tự không quan trọng.", "Plan deductions: 10% less income tax": "Tìm khoản khấu trừ: giảm 10% thuế thu nhập", "Price changes each night.": "Giá thay đổi mỗi đêm.", "Profit history shows up after your first day.": "Lịch sử lợi nhuận sẽ hiện sau ngày đầu tiên.", "Property: ~1.1% homes, ~2.2% commercial per year": "Nhà đất: ~1.1% nhà ở, ~2.2% thương mại mỗi năm", "Rent collected so far:": "Tiền thuê thu được tới giờ:", "Research new menu items": "Nghiên cứu món mới", "Research new menu items in 🔬 R&D, run marketing, beat competitors and turn customers into regulars. The game has no day limit.": "Nghiên cứu món mới trong 🔬 R&D, chạy marketing, vượt đối thủ và biến khách thành khách quen. Game không giới hạn số ngày.", "Researchers experiment every night on their own, using ingredients you've sourced. Higher skill finds better recipes. They also chase the team's ideas. Salaries:": "Nghiên cứu viên tự thử nghiệm mỗi đêm bằng nguyên liệu bạn đã tìm được. Tay nghề cao tìm ra công thức ngon hơn. Họ cũng giải các ý tưởng của team. Lương:", "Restock Weymouth every morning": "Nhập hàng cho Weymouth mỗi sáng", "Run ads when buzz drops or a competitor opens": "Chạy quảng cáo khi độ nổi tiếng giảm hoặc có đối thủ mở", "Scores save automatically every couple of minutes while you play. Score = company value + cash + everything you've invested in the shop. Your company right now:": "Điểm tự lưu vài phút một lần khi bạn chơi. Điểm = giá trị công ty + tiền mặt + mọi khoản đầu tư vào tiệm. Công ty của bạn hiện tại:", "Sell some items first.": "Bán vài món trước đã.", "Sell your own roasted coffee in 500 g bags. Needs a roastery and packaging line.": "Bán cà phê tự rang theo bịch 500 g. Cần có nhà máy rang và dây chuyền đóng gói.", "Serve customers quickly and some will become regulars. Regulars wait longer and tip more.": "Phục vụ nhanh thì một số khách sẽ thành khách quen. Khách quen chờ lâu hơn và tip nhiều hơn.", "Set staff positions at Weymouth": "Tự xếp vị trí nhân viên ở Weymouth", "Set your own prices. Higher prices earn more per order but bring fewer customers, smaller tips and lower ratings. Some customers walk out if it's too pricey.": "Tự đặt giá bán. Giá cao lời hơn mỗi đơn nhưng ít khách hơn, tip ít hơn và bị đánh giá thấp. Quá đắt thì một số khách bỏ đi.", "Some staff can flex between Bar and Kitchen. Set everyone's position in the schedule. After closing, set your prices, hire staff, pay wages and open new branches.": "Một số nhân viên làm được cả Quầy bar và Bếp. Xếp vị trí cho mọi người trong lịch làm. Sau giờ đóng cửa, đặt giá, thuê người, trả lương và mở chi nhánh.", "Switch between the Bar and Kitchen to find ingredients. Stock up at the market before each day. Baguettes, milk, greens and foams spoil overnight.": "Chuyển giữa Quầy bar và Bếp để tìm nguyên liệu. Đi chợ trước mỗi ngày. Bánh mì, sữa, rau và foam để qua đêm sẽ hư.", "Tap a stock to buy or sell. Prices move every night, so they can go up or down. Spread your money out to be safer.": "Chạm vào một mã để mua bán. Giá đổi mỗi đêm, có thể lên hoặc xuống. Chia tiền ra nhiều mã cho an toàn.", "Total:": "Tổng:", "Waiting for roasted beans…": "Đang chờ cà phê rang…", "Watch the weather and holidays, take catering orders, borrow from the bank or take your company public, and climb the 🏆 leaderboard.": "Theo dõi thời tiết và ngày lễ, nhận đơn catering, vay ngân hàng hoặc đưa công ty lên sàn, và leo 🏆 bảng xếp hạng.", "bags in the warehouse": "bịch trong kho", "bags packed ·": "bịch đã đóng ·", "no staff": "chưa có người", "🌏 Source ingredients from around the world": "🌏 Tìm nguyên liệu khắp thế giới", "👥 HR team": "👥 Phòng nhân sự", "👩‍🔬 Research team": "👩‍🔬 Team nghiên cứu", "💹 Finance team": "💹 Phòng tài chính", "💻 IT team": "💻 Phòng IT", "📣 Marketing team": "📣 Phòng marketing", "🚚 Operations team": "🚚 Phòng vận hành", "📦 Packaging line installed: roasted beans become 500 g bags ($0.40 per bag).": "📦 Đã có dây chuyền đóng gói: cà phê rang được đóng bịch 500 g ($0.40 mỗi bịch).", "📹 Camera an ninh": "📹 Camera an ninh", "🔍 Search your ingredients": "🔍 Tìm nguyên liệu", "🧪 Invent new items 💡": "🧪 Sáng chế món mới 💡", "Open 7am to 3pm. Customers order from the real Saigonesee menu: phin coffee, matcha, bánh mì, spring rolls and vermicelli bowls.": "Mở cửa từ 7 giờ sáng tới 3 giờ chiều. Khách gọi món từ menu thật của Saigonesee: cà phê phin, matcha, bánh mì, gỏi cuốn và bún.", "Cool highlands for Arabica and Moka. Best for Arabica Catimor and Moka (Typica) (+25% harvest).": "Cao nguyên mát cho Arabica và Moka. Hợp nhất với Arabica Catimor và Moka (+25% sản lượng).", "Northern mountains, bright Arabica. Best for Arabica Catimor and Culi (peaberry) (+25% harvest).": "Núi rừng phía Bắc, Arabica sáng vị. Hợp nhất với Arabica Catimor và Culi (+25% sản lượng).", "Red basalt soil, great for Robusta. Best for Robusta and Culi (peaberry) (+25% harvest).": "Đất đỏ bazan, rất hợp Robusta. Hợp nhất với Robusta và Culi (+25% sản lượng).", "Vietnam's Robusta capital. Best for Robusta and Excelsa (cà phê mít) (+25% harvest).": "Thủ phủ Robusta của Việt Nam. Hợp nhất với Robusta và Excelsa (cà phê mít) (+25% sản lượng).", "Go public (IPO)": "Lên sàn (IPO)", "Law office in Quincy": "Văn phòng luật ở Quincy"}).forEach(([a,b])=>VI_EXACT.set(a,b));
+VI_RX.unshift(...[[/^\((\d+) plots?\)$/,"($1 lô)"],[/^\((\d+)\/6 picked\)$/,"($1/6 đã chọn)"],[/^\(([\d.]+)% of wages\)$/,"($1% tiền lương)"],[/^(\d+) bags in stock · suggested (.+)$/,"$1 bịch trong kho · giá gợi ý $2"],[/^([\d.]+)% every day, about \+(\d+)% total$/,"$1% mỗi ngày, tổng khoảng +$2%"],[/^(\d+)\/(\d+) staff$/,"$1/$2 nhân viên"],[/^(\d+)\/(\d+) customers, ★ (.+)$/,"$1/$2 khách, ★ $3"],[/^(\d+) plots · (.+) kg harvested · (.+) sales$/,"$1 lô · $2 kg thu hoạch · $3 doanh thu"],[/^([\d.]+)% a day for (\d+) days: (.+)\/day\. Needs (\d+) branches$/,"$1% mỗi ngày trong $2 ngày: $3/ngày. Cần $4 chi nhánh"],[/^([\d.]+)% a day for (\d+) days: (.+)\/day$/,"$1% mỗi ngày trong $2 ngày: $3/ngày"],[/^About 20 bags a day, \$2 shipping each · setup (.+)$/,"Khoảng 20 bịch mỗi ngày, ship $2 mỗi bịch · phí cài $1"],[/^About 200 bags a day at 70% of your price · setup (.+)$/,"Khoảng 200 bịch mỗi ngày, giá 70% · phí cài $1"],[/^About 30 bags a day across the South Shore · setup (.+)$/,"Khoảng 30 bịch mỗi ngày khắp South Shore · phí cài $1"],[/^About 80 bags a day at 60% of your price · setup (.+)$/,"Khoảng 80 bịch mỗi ngày, giá 60% · phí cài $1"],[/^About 20 bags a day, \$2 shipping each$/,"Khoảng 20 bịch mỗi ngày, ship $2 mỗi bịch"],[/^About 30 bags a day across the South Shore$/,"Khoảng 30 bịch mỗi ngày khắp South Shore"],[/^All-time: (.+) kg harvested · (.+) kg roasted · (.+) bags sold · (.+) revenue\.$/,"Từ đầu tới giờ: $1 kg thu hoạch · $2 kg rang · $3 bịch đã bán · $4 doanh thu."],[/^Classic ideas found: (\d+)\/(\d+) · Your own creations: (\d+) · On the menu: (\d+)\. No limit, and you can take items off the menu any time\.$/,"Món cổ điển đã tìm: $1/$2 · Món tự chế: $3 · Đang trên menu: $4. Không giới hạn, có thể gỡ món khỏi menu bất cứ lúc nào."],[/^(.+) and (\d+) more\. Needs (.+) \(source it below\)\.$/,"$1 và $2 thứ nữa. Cần $3 (tìm nhà cung cấp bên dưới)."],[/^(.+) and (\d+) more\.$/,"$1 và $2 thứ nữa."],[/^Hint: try (.+) \+$/,"Gợi ý: thử $1 +"],[/^Day (\d+), (.+)$/,"Ngày $1, $2"],[/^Due by (.+), pays (.+)$/,"Hạn $1, trả $2"],[/^Last day: (.+)\. 7-day average: (.+)\.$/,"Hôm qua: $1. Trung bình 7 ngày: $2."],[/^Menu (\$[\d.,]+)$/,"Giá menu $1"],[/^One-time setup (.+)$/,"Phí cài một lần $1"],[/^Plot (\d+) · (.+)$/,"Lô $1 · $2"],[/^Rent (.+)\/day \(more in summer, less in winter\)$/,"Thuê $1/ngày (hè nhiều, đông ít)"],[/^Rent (.+)\/day$/,"Thuê $1/ngày"],[/^Reports to the (.+) (HR|Finance|Marketing|Operations) Director\. Hire people to unlock bonuses\.$/,"Báo cáo cho giám đốc $2 $1. Thuê người để mở hiệu quả."],[/^Reports to the (.+)\. Now: (.+)\.$/,"Báo cáo cho $1. Hiện tại: $2."],[/^Research new menu items\. Each one takes a day and joins the menu after the next close\. Research slots: (\d+)\/(\d+)\.$/,"Nghiên cứu món mới. Mỗi món mất 1 ngày và lên menu sau lần đóng cửa kế tiếp. Chỗ nghiên cứu: $1/$2."],[/^Roasts up to (.+) kg of cherries a day \(6 kg cherries → 1 kg roasted\)\. About \$0\.03\/kg trucking \+ \$0\.30\/kg roasting\.$/,"Rang tối đa $1 kg trái mỗi ngày (6 kg trái ra 1 kg rang). Khoảng $0.03/kg chở hàng + $0.30/kg rang."],[/^Sell 20% of the company for (.+)\. Shareholders get half your share of daily profit and dislike falling profits\. Needs a value of \$25,000\.$/,"Bán 20% công ty lấy $1. Cổ đông được chia nửa lợi nhuận hằng ngày của phần họ và không thích lợi nhuận giảm. Cần giá trị $25,000."],[/^Test this recipe \((.+)\)$/,"Thử công thức này ($1)"],[/^Upgrade to (.+) · (.+) \((.+) kg\/day\)$/,"Nâng cấp lên $1 · $2 ($3 kg/ngày)"],[/^Build a (.+) · (.+) \((.+) kg\/day\)$/,"Xây $1 · $2 ($3 kg/ngày)"],[/^Value (\$[\d,]+)$/,"Giá trị $1"],[/^Value (\$[\d,]+) · bought for (.+)$/,"Giá trị $1 · mua giá $2"],[/^(\S+) Day (\d+) · (\S+)$/,"$1 Ngày $2 · $3"],[/^👩‍💼 Hired (.+) for (.+) \((.+)\/day\)$/,"👩‍💼 Đã thuê $1 cho $2 ($3/ngày)"],[/^👩‍💼 Job ads and onboarding: (.+)$/,"👩‍💼 Phí tuyển dụng: $1"],[/^📄 Flyers at all (\d+) locations · (.+)$/,"📄 Phát flyer ở cả $1 tiệm · $2"],[/^🛠️ (\d+) more items need equipment first: (.+)\.$/,"🛠️ Còn $1 món cần có thiết bị trước: $2."],[/^🟡 (\d+) location\(s\) have open spots\. Total staff: (\d+)$/,"🟡 $1 tiệm còn chỗ trống. Tổng nhân viên: $2"],[/^🟢 Every location is fully staffed\. Total staff: (\d+)$/,"🟢 Mọi tiệm đã đủ người. Tổng nhân viên: $1"],[/^🧺 Sell cherries \((\d+)% of normal\)$/,"🧺 Bán trái ($1% giá thường)"]]);
+Object.entries({"Tracks the whole market. Slow and steady.": "Theo cả thị trường. Chậm mà chắc.", "Stable bank that pays a daily dividend.": "Ngân hàng ổn định, trả cổ tức mỗi ngày.", "Coffee giant. Pays a small dividend.": "Tập đoàn cà phê lớn. Trả cổ tức nhỏ.", "Fast-growing noodle chain.": "Chuỗi phở đang lớn nhanh.", "Ships goods out of Boston Harbor.": "Vận chuyển hàng từ cảng Boston.", "Sports TV and streaming.": "Truyền hình thể thao và streaming.", "Robots! Big swings up and down.": "Robot! Lên xuống rất mạnh.", "Solar and wind. Very bumpy ride.": "Điện mặt trời và gió. Rất bấp bênh.", "A meme coin. Could double or crash any day!": "Coin meme. Có thể gấp đôi hoặc sập bất cứ lúc nào!"}).forEach(([a,b])=>VI_EXACT.set(a,b));VI_FN.unshift([/^([A-Z]{2,5}) · (.+)$/,(m,a,b)=>VI_EXACT.has(b)?a+' · '+VI_EXACT.get(b):m]);
 function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';if(l==='vi')trTree(document.body);else untrTree(document.body);document.querySelectorAll('.langsw button').forEach(b=>b.classList.toggle('on',b.dataset.l===l))}
 function langSwitch(){return `<div class="langsw notr"><button data-l="en" class="${LANG==='en'?'on':''}" onclick="setLang('en')">🇺🇸 English</button><button data-l="vi" class="${LANG==='vi'?'on':''}" onclick="setLang('vi')">🇻🇳 Tiếng Việt</button></div>`}
 
 initFin();initLab();initTax();initFarm();initOffice();
+if(!S.unl){S.unl={};Object.keys(GATES).forEach(g=>{if(gateOk(g))S.unl[g]=1});if(S.day>3){S.tut=1;S.tips=S.tips||{};Object.keys(TAB_TIPS).forEach(t=>S.tips[t]=1)}save()}
 if(LANG==='vi')setTimeout(()=>setLang('vi'),0);
 intro();
 </script>
