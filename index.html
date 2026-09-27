@@ -843,6 +843,18 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none!im
 .helpul{margin:0 0 14px;padding-left:20px;font-size:15.5px;line-height:1.5;font-weight:600;color:#222}.helpul li{margin:6px 0}
 .mhead{display:flex;align-items:center;justify-content:space-between;gap:8px}.mhead h2{margin:0}
 .hgear{flex:0 0 44px;width:44px;height:44px;border-radius:50%;border:2px solid var(--k);background:var(--y);font-size:20px;box-shadow:0 2px 0 var(--k)}
+.regdiv{font-weight:800;font-size:13px;color:#666;text-transform:uppercase;letter-spacing:.5px;margin:14px 2px 2px}
+button,summary,.ing,.cust,.chip{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.prodico{font-size:34px;display:block;text-align:center;line-height:46px}
+.casino{background:#1E1E1E;border-radius:16px;padding:14px;margin:8px 0;color:#eee}
+.casino .note{color:#ccc!important}
+.reels{display:flex;justify-content:center;gap:10px;margin:4px 0 8px}
+.reels span{width:74px;height:84px;border-radius:12px;background:#FFFDF6;display:flex;align-items:center;justify-content:center;font-size:44px;border:3px solid var(--y)}
+.reels.spinning span{animation:reel .12s linear infinite}
+@keyframes reel{50%{transform:translateY(-6px)}}
+.slotmsg{text-align:center;font-weight:800;font-size:17px;color:var(--y);margin:4px 0 10px}
+.casino .flyg button{background:#333!important;color:#fff!important;border-color:var(--y)!important}
+.casino .flyg button span{color:var(--y)!important}
 </style>
 </head>
 <body>
@@ -852,8 +864,8 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none!im
     <div class="pill money" id="money">$0</div>
     <div class="pill stars" id="stars"></div>
     <div class="sp"></div>
-    <button class="iconbtn" id="setBtn" aria-label="Settings" onclick="settings()">⚙️</button>
-    <button class="iconbtn" id="pauseBtn" aria-label="Pause">❚❚</button>
+    <button class="iconbtn" id="setBtn" data-fast aria-label="Settings" onclick="settings()">⚙️</button>
+    <button class="iconbtn" id="pauseBtn" data-fast aria-label="Pause">❚❚</button>
   </header>
   <div class="awning"><div class="sign"><span class="sg1">SAIGONESEE</span><span class="sg2">Cà Phê · Bánh Mì</span></div></div>
   <div class="queue" id="queue"></div>
@@ -1103,7 +1115,7 @@ const UPG=[
   {id:'patio',n:'⛱️ Patio seating',d:'+10% customers on sunny and hot days per level',base:300,max:4},
   {id:'quay',n:'🛎️ Bigger counter',d:'Room for 1 more customer at the counter (up to 8)',base:140,max:5},
   {id:'line',n:'🚶 Waiting line',d:'1 more spot in the waiting line (starts with 2)',base:60,max:5},
-  {id:'station',n:'🧑‍🍳 Extra work station',d:'Room for 1 more staff member at Weymouth (up to 16)',base:180,max:13},
+  {id:'station',n:'🧑‍🍳 Extra work station',d:'Room for 1 more staff member at Weymouth (up to 24)',base:180,max:21},
   {id:'plants',n:'🪴 Plants & greenery',d:'Customers wait 3% longer per level',base:150,max:6},
   {id:'wifi',n:'📶 Free Wi-Fi',d:'+4% customers at Weymouth per level',base:180,max:4},
   {id:'restroom',n:'🚻 Nicer restroom',d:'Customers wait 4% longer per level',base:250,max:4},
@@ -1288,22 +1300,27 @@ const WX={sunny:{e:'☀️',n:'Sunny',m:1.05,patio:1},cloudy:{e:'⛅',n:'Cloudy'
   heat:{e:'🥵',n:'Heat wave',m:1.1,patio:1,drink:1.4,hot:.4},snow:{e:'🌨️',n:'Snow',m:.7,food:1.25,hot:2},cold:{e:'🥶',n:'Freezing',m:.85,food:1.2,hot:2}};
 const WXP={Spring:{sunny:4,cloudy:3,rain:3,storm:1},Summer:{sunny:5,heat:3,cloudy:2,storm:1},Fall:{sunny:3,cloudy:4,rain:3},Winter:{cloudy:3,snow:3,cold:3,sunny:1}};
 const HOLI={14:['🎆 4th of July',1.3],29:['🎃 Halloween',1.2],35:['🎄 Christmas week',1.25],38:['🧧 Lunar New Year',1.4],6:["💐 Mother's Day",1.3]};
-const season=d=>SEASONS[Math.floor((d-1)/10)%4];
-const holiday=d=>HOLI[(d-1)%40+1]||null;
+// Real calendar: day 1 = March 1. Seasons follow the months, holidays fall on their real dates.
+const dateOf=d=>new Date(2026,2,d);
+const MONTHS_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dateStr=d=>{const t=dateOf(d);return L(MONTHS_EN[t.getMonth()]+' '+t.getDate(),t.getDate()+'/'+(t.getMonth()+1))};
+const season=d=>{const m=dateOf(d).getMonth();return SEASONS[m>=2&&m<=4?0:m>=5&&m<=7?1:m>=8&&m<=10?2:3]};
+const HOLI2=[[1,1,1,"🎉 New Year's Day",.9],[2,14,14,"💝 Valentine's Day",1.25],[2,15,19,'🧧 Lunar New Year',1.4],[5,8,10,"💐 Mother's Day",1.3],[6,19,21,"👔 Father's Day",1.15],[7,4,4,'🎆 4th of July',1.3],[9,24,26,'🥮 Mid-Autumn Festival',1.25],[10,31,31,'🎃 Halloween',1.2],[11,26,26,'🦃 Thanksgiving',.7],[11,27,27,'🛍️ Black Friday',1.3],[12,20,26,'🎄 Christmas week',1.25],[12,31,31,"🥂 New Year's Eve",1.15]];
+const holiday=d=>{const t=dateOf(d),m=t.getMonth()+1,dd=t.getDate();const h=HOLI2.find(x=>x[0]===m&&dd>=x[1]&&dd<=x[2]);return h?[h[3],h[4]]:null};
 function rollWx(d){const t=WXP[season(d)[0]],tot=Object.values(t).reduce((a,b)=>a+b,0);let x=Math.random()*tot;for(const k in t){x-=t[k];if(x<=0)return k}return 'cloudy'}
 const wxMul=()=>{const w=WX[S.wx.t],h=holiday(S.day);const wm=S.upg&&S.upg.hvac&&(S.wx.t==='heat'||S.wx.t==='cold')?(w.m+1)/2:w.m;return wm*(w.patio?1+.1*S.upg.patio:1)*(h?h[1]:1)};
 const SEA_VI={Spring:'Xuân',Summer:'Hè',Fall:'Thu',Winter:'Đông'},WX_VI={sunny:'Nắng',cloudy:'Nhiều mây',rain:'Mưa',storm:'Giông bão',heat:'Nắng nóng',snow:'Tuyết',cold:'Lạnh buốt'};
-const HOLI_VI={"🎆 4th of July":"🎆 Quốc khánh Mỹ 4/7","🎃 Halloween":"🎃 Halloween","🎄 Christmas week":"🎄 Tuần lễ Giáng sinh","🧧 Lunar New Year":"🧧 Tết Nguyên Đán","💐 Mother's Day":"💐 Ngày của Mẹ"};
-const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `<span class="notr">${se[1]} ${L(se[0],SEA_VI[se[0]])}, ${w.e} ${L(w.n,WX_VI[k])}${h?`, <b>${L(h[0],HOLI_VI[h[0]]||h[0])}</b>`:''}</span>`};
+const HOLI_VI={"🎆 4th of July":"🎆 Quốc khánh Mỹ 4/7","🎃 Halloween":"🎃 Halloween","🎄 Christmas week":"🎄 Tuần lễ Giáng sinh","🧧 Lunar New Year":"🧧 Tết Nguyên Đán","💐 Mother's Day":"💐 Ngày của Mẹ","🎉 New Year's Day":"🎉 Tết Dương lịch","💝 Valentine's Day":"💝 Lễ Tình nhân","👔 Father's Day":"👔 Ngày của Cha","🥮 Mid-Autumn Festival":"🥮 Tết Trung Thu","🦃 Thanksgiving":"🦃 Lễ Tạ ơn","🛍️ Black Friday":"🛍️ Black Friday","🥂 New Year's Eve":"🥂 Giao thừa Dương lịch"};
+const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `<span class="notr">📅 ${dateStr(d)} · ${se[1]} ${L(se[0],SEA_VI[se[0]])}, ${w.e} ${L(w.n,WX_VI[k])}${h?`, <b>${L(h[0],HOLI_VI[h[0]]||h[0])}</b>`:''}</span>`};
 // Online leaderboard: paste your Google Apps Script web app URL here (see leaderboard-apps-script.gs). Leave empty for on-device only.
 // ================= TAXES (simplified Massachusetts small business) =================
 // Meals tax: 6.25% MA sales tax on meals + 0.75% Weymouth local option = 7%, collected from customers and sent to MA DOR.
 // Employer payroll taxes: Social Security 6.2% + Medicare 1.45% + FUTA 0.6% + MA unemployment, PFML and workforce training ≈ 2.4%.
 // Income: federal corporate 21% + MA corporate excise 8% on quarterly profit (MA minimum excise $456 a year).
 // Property tax on real estate you own: about 1.1% a year for homes, 2.2% for commercial buildings. One game year = 40 days.
-const TAX={meals:.07,ss:.062,medi:.0145,futa:.006,maPay:.024,fed:.21,ma:.08,maMin:456,resProp:.011,comProp:.022,year:40,quarter:10};
+const TAX={meals:.07,ss:.062,medi:.0145,futa:.006,maPay:.024,fed:.21,ma:.08,maMin:456,resProp:.011,comProp:.022,year:365,quarter:91};
 const payRate=()=>TAX.ss+TAX.medi+TAX.futa+TAX.maPay;
-const COMMERCIAL=['retail','tower'];
+const COMMERCIAL=['retail','tower','storage','parking','hotel','mall','skyscraper'];
 function initTax(){S.tax=S.tax||{qProfit:0,qInv:0,owed:0,paid:{income:0,payroll:0,property:0,meals:0},hist:[]}}
 const LB_URL='https://script.google.com/macros/s/AKfycbwqn0F_h2hLybTh73bg3_E2C_k_HGa3XmYTGmq3MbbFe5wb6s2GiaKT3fw45h50PDaIpQ/exec';
 // Firebase leaderboard: paste the firebaseConfig object from Firebase Console > Project settings > Your apps.
@@ -1382,6 +1399,58 @@ const LOC={
   burlingtonvt:{id:'burlingtonvt',n:'Burlington',cost:1400,rent:58,demand:1.6,st:'VT'},
   montpelier:{id:'montpelier',n:'Montpelier',cost:900,rent:40,demand:1.3,st:'VT'},
   stowe:{id:'stowe',n:'Stowe',cost:1500,rent:64,demand:1.55,st:'VT'},
+  manhattan:{id:'manhattan',n:'Manhattan',cost:6000,rent:240,demand:2.6,st:'NY'},
+  brooklyn:{id:'brooklyn',n:'Brooklyn',cost:4200,rent:170,demand:2.3,st:'NY'},
+  queens:{id:'queens',n:'Queens (Flushing)',cost:3800,rent:150,demand:2.25,st:'NY'},
+  bronx:{id:'bronx',n:'The Bronx',cost:2600,rent:105,demand:1.9,st:'NY'},
+  statenisland:{id:'statenisland',n:'Staten Island',cost:2200,rent:90,demand:1.7,st:'NY'},
+  longisland:{id:'longisland',n:'Long Island',cost:2800,rent:115,demand:1.85,st:'NY'},
+  yonkers:{id:'yonkers',n:'Yonkers',cost:2100,rent:86,demand:1.7,st:'NY'},
+  albany:{id:'albany',n:'Albany',cost:1300,rent:54,demand:1.5,st:'NY'},
+  buffalo:{id:'buffalo',n:'Buffalo',cost:1200,rent:50,demand:1.5,st:'NY'},
+  rochester:{id:'rochester',n:'Rochester',cost:1100,rent:46,demand:1.45,st:'NY'},
+  ithaca:{id:'ithaca',n:'Ithaca',cost:1000,rent:42,demand:1.4,st:'NY'},
+  jerseycity:{id:'jerseycity',n:'Jersey City',cost:3200,rent:130,demand:2.1,st:'NJ'},
+  hoboken:{id:'hoboken',n:'Hoboken',cost:3000,rent:122,demand:2.0,st:'NJ'},
+  newark:{id:'newark',n:'Newark',cost:2400,rent:98,demand:1.85,st:'NJ'},
+  princeton:{id:'princeton',n:'Princeton',cost:2200,rent:90,demand:1.75,st:'NJ'},
+  atlanticcity:{id:'atlanticcity',n:'Atlantic City',cost:1900,rent:78,demand:1.7,st:'NJ'},
+  cherryhill:{id:'cherryhill',n:'Cherry Hill',cost:1600,rent:66,demand:1.6,st:'NJ'},
+  philadelphia:{id:'philadelphia',n:'Philadelphia',cost:3400,rent:138,demand:2.15,st:'PA'},
+  pittsburgh:{id:'pittsburgh',n:'Pittsburgh',cost:2200,rent:90,demand:1.8,st:'PA'},
+  allentown:{id:'allentown',n:'Allentown',cost:1200,rent:50,demand:1.45,st:'PA'},
+  harrisburg:{id:'harrisburg',n:'Harrisburg',cost:1100,rent:46,demand:1.4,st:'PA'},
+  statecollege:{id:'statecollege',n:'State College',cost:1000,rent:42,demand:1.4,st:'PA'},
+  wilmingtonde:{id:'wilmingtonde',n:'Wilmington',cost:1500,rent:62,demand:1.55,st:'DE'},
+  rehoboth:{id:'rehoboth',n:'Rehoboth Beach',cost:1400,rent:58,demand:1.55,st:'DE'},
+  baltimore:{id:'baltimore',n:'Baltimore',cost:2500,rent:102,demand:1.9,st:'MD'},
+  annapolis:{id:'annapolis',n:'Annapolis',cost:1800,rent:74,demand:1.65,st:'MD'},
+  silverspring:{id:'silverspring',n:'Silver Spring',cost:2000,rent:82,demand:1.75,st:'MD'},
+  ocean:{id:'ocean',n:'Ocean City',cost:1500,rent:62,demand:1.55,st:'MD'},
+  dc:{id:'dc',n:'Washington, D.C.',cost:4500,rent:180,demand:2.35,st:'DC'},
+  georgetown:{id:'georgetown',n:'Georgetown',cost:4000,rent:160,demand:2.2,st:'DC'},
+  arlington:{id:'arlington',n:'Arlington',cost:3000,rent:122,demand:2.0,st:'VA'},
+  fallschurch:{id:'fallschurch',n:'Falls Church (Eden Center)',cost:2800,rent:115,demand:2.1,st:'VA'},
+  richmond:{id:'richmond',n:'Richmond',cost:1800,rent:74,demand:1.65,st:'VA'},
+  norfolk:{id:'norfolk',n:'Norfolk',cost:1500,rent:62,demand:1.55,st:'VA'},
+  virginiabeach:{id:'virginiabeach',n:'Virginia Beach',cost:1700,rent:70,demand:1.6,st:'VA'},
+  charlotte:{id:'charlotte',n:'Charlotte',cost:2300,rent:94,demand:1.85,st:'NC'},
+  raleigh:{id:'raleigh',n:'Raleigh',cost:2000,rent:82,demand:1.75,st:'NC'},
+  durham:{id:'durham',n:'Durham',cost:1700,rent:70,demand:1.65,st:'NC'},
+  asheville:{id:'asheville',n:'Asheville',cost:1400,rent:58,demand:1.55,st:'NC'},
+  wilmingtonnc:{id:'wilmingtonnc',n:'Wilmington',cost:1300,rent:54,demand:1.5,st:'NC'},
+  charleston:{id:'charleston',n:'Charleston',cost:1900,rent:78,demand:1.7,st:'SC'},
+  columbia:{id:'columbia',n:'Columbia',cost:1300,rent:54,demand:1.45,st:'SC'},
+  myrtle:{id:'myrtle',n:'Myrtle Beach',cost:1500,rent:62,demand:1.55,st:'SC'},
+  atlanta:{id:'atlanta',n:'Atlanta',cost:3200,rent:130,demand:2.1,st:'GA'},
+  savannah:{id:'savannah',n:'Savannah',cost:1700,rent:70,demand:1.6,st:'GA'},
+  athens:{id:'athens',n:'Athens',cost:1200,rent:50,demand:1.45,st:'GA'},
+  miami:{id:'miami',n:'Miami',cost:4000,rent:160,demand:2.3,st:'FL'},
+  orlando:{id:'orlando',n:'Orlando',cost:2800,rent:115,demand:2.0,st:'FL'},
+  tampa:{id:'tampa',n:'Tampa',cost:2400,rent:98,demand:1.85,st:'FL'},
+  jacksonville:{id:'jacksonville',n:'Jacksonville',cost:2000,rent:82,demand:1.7,st:'FL'},
+  fortlauderdale:{id:'fortlauderdale',n:'Fort Lauderdale',cost:2600,rent:106,demand:1.9,st:'FL'},
+  keywest:{id:'keywest',n:'Key West',cost:2200,rent:90,demand:1.75,st:'FL'},
   quincy:{id:'quincy',n:'Quincy',cost:400,rent:25,demand:1.2},
   holbrook:{id:'holbrook',n:'Holbrook',cost:380,rent:20,demand:1.0},
   abington:{id:'abington',n:'Abington',cost:420,rent:22,demand:1.05},
@@ -1416,7 +1485,7 @@ const EXECS={
   coo:{e:'👨‍💼',n:'Operations Director',d:'Runs inventory and branches',fee:800,sal:90,opts:{stock:'Restock Weymouth every morning',open:'Open a new branch when profit is up and there is spare cash',expand:'Expand branches that turn customers away'}},
   cfo:{e:'🧑‍💼',n:'Finance Director',d:'Runs money and prices',fee:800,sal:80,opts:{loans:'Pay off loans early',prices:'Lower prices when customers walk out over them',buyback:'Buy back company shares',tax:'Plan deductions: 10% less income tax'}},
   cmo:{e:'👩‍🎤',n:'Marketing Director',d:'Runs ads and catering',fee:600,sal:70,opts:{ads:'Run ads when buzz drops or a competitor opens',cater:'Accept catering requests'}},
-  cpo:{e:'👨‍🍳',n:'Product Director',d:'Runs research',fee:500,sal:60,opts:{rd:'Research new menu items'}},
+  cpo:{e:'👨‍🍳',n:'Product Director',d:'Runs research',fee:500,sal:60,opts:{rd:'Research new menu items',cut:'Cut items that don\'t sell and research replacements',season:'Build a seasonal menu (feature items that fit the season and holidays)'}},
 };
 const RESERVES=[500,2000,5000,20000];
 // ================= OFFICE TEAMS =================
@@ -1482,13 +1551,13 @@ const spMul=x=>(1-.06*(lvl(x)-1))*(x.mo<25?1.25:x.mo>80?.9:1);
 const campOn=(id,l)=>S.camps.find(c=>c.id===id&&(!l||c.loc===l));
 const boost=l=>S.camps.reduce((a,c)=>{const k=CAMP.find(z=>z.id===c.id);return a+(k.local?(c.loc===l?k.main:0):k.all)},0);
 const compHit=l=>{const c=S.comps.find(z=>z.loc===l);return c?c.str*.35:0};
-const demand=l=>(1+boost(l))*(1+S.buzz)*(1-compHit(l))*(1+.07*S.upg.kiosk)*wxMul()*(l==='main'?(1+.04*S.upg.wifi)*(1+.03*S.upg.menus)*(S.upg.kids&&S.day%7===0?1.08:1)*(1+.02*S.upg.aroma)*(S.upg.drive?1.12:1)*(S.upg.music&&S.day%7===0?1.1:1):1);
+const demand=l=>(1+boost(l))*(1+S.buzz)*(1+funBoost())*(1-compHit(l))*(1+.07*S.upg.kiosk)*wxMul()*(l==='main'?(1+.04*S.upg.wifi)*(1+.03*S.upg.menus)*(S.upg.kids&&S.day%7===0?1.08:1)*(1+.02*S.upg.aroma)*(S.upg.drive?1.12:1)*(S.upg.music&&S.day%7===0?1.1:1):1);
 const recMul=r=>{let m=S.upg.kds?.92:1;const I=r.ing;if(S.upg.nitro&&I.includes('coldbrew'))m*=.8;if(S.upg.autofryer&&I.includes('eggroll'))m*=.85;if(S.upg.steamer2&&I.includes('milk'))m*=.9;if(S.upg.dispenser&&(I.includes('syrup')||I.includes('cond')))m*=.9;if(S.upg.icecream&&I.includes('ice'))m*=.92;if(S.upg.toaster&&I.includes('baguette'))m*=.88;if(S.upg.ricecooker&&(I.includes('bun')||I.includes('sticky')))m*=.9;if(S.upg.slicer&&I.some(k=>PROTEINS.includes(k)))m*=.9;if(r.k==='food')m*=1-.05*S.upg.prepst;if(S.upg.teabrew&&r.ing.includes('tea'))m*=.75;if(S.upg.juicer&&r.ing.some(k=>['orange','slmix'].includes(k)))m*=.7;if(S.upg.autophin&&r.ing.includes('phin'))m*=.8;if(r.req==='espresso'&&S.upg.espresso>1)m*=.8;if(S.upg.icemaker>1&&r.ing.includes('ice'))m*=.9;if(S.upg.blender&&r.ing.some(k=>['coconut','mango','straw'].includes(k)))m*=.75;if(S.upg.steamer&&r.ing.some(k=>['bao','ricepaper'].includes(k)))m*=.8;return m};
 const stMul=st=>Math.max(.3,1-.1*(st==='bar'?S.upg.machine:S.upg.grill)-.08*(st==='bar'?S.upg.robotarm:S.upg.robochef))*(R&&R.slow&&R.slow.st===st&&R.t<R.slow.until?1.6:1);
 const brRate=l=>S.brRate[l]??S.rating;
 const ingPrice=k=>{let v=ING[k].p;if(k==='phin')v*=S.upg.farm?Math.max(.1,.65-.15*S.upg.farm):1;if(PROTEINS.includes(k))v*=S.upg.ckit?Math.max(.4,.9-.1*S.upg.ckit):1;if(k==='phin'&&S.upg.roaster2)v*=.7;v*=1-.05*(S.upg.bulkdeal||0);if(S.spike===k)v*=1.5;if(k==='baguette'&&S.upg.oven)v*=.5;if(k==='ice'&&S.upg.icemaker)v=0;return Math.round(v*100)/100};
 const rdCost=r=>Math.round(r.p*10);
-const cap=l=>l==='main'?3+S.upg.station:Math.min(16,4+2*(S.brLvl[l]||0));
+const cap=l=>l==='main'?3+S.upg.station:Math.min(24,4+2*(S.brLvl[l]||0));
 const crewAt=l=>S.staff.filter(x=>x.loc===l);
 const totalWage=()=>S.staff.reduce((a,x)=>a+x.wage,0);
 let R=null, last=0, raf=0, uid=0;
@@ -1498,6 +1567,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 
 const hasReq=r=>!r.req||[].concat(r.req).every(q=>S.upg[q]>0);
 const unlocked=()=>REC.filter(r=>S.known.includes(r.id)&&hasReq(r)&&!(S.lab&&S.lab.off&&S.lab.off.includes(r.id)));
+const onMenu=()=>{const u=unlocked();const off=S.seasonOff||[];const f=u.filter(r=>!off.includes(r.id));return f.length>=6?f:u};
 const needSet=()=>{const st=new Set(unlocked().flatMap(r=>r.ing));(S.lab&&S.lab.src||[]).forEach(k=>st.add(k));if(st.has('bmgreens')){st.add('chili');st.add('friedegg')}if(unlocked().some(r=>r.k==='drink'))st.add('cupL');return st};
 const slotsN=()=>3+S.upg.quay;
 const qCap=()=>2+(S.upg.line||0);
@@ -1644,13 +1714,14 @@ const HELP={
   menu:['💲',['Prices','Giá bán'],[['Set your own price for each item.','Tự đặt giá cho từng món.'],['Higher price = more profit per cup, but fewer customers and smaller tips.','Giá cao lời hơn mỗi ly, nhưng ít khách hơn và tip ít hơn.'],['"Fair" is the sweet spot for most items.','Mức "Hợp lý" là tốt nhất cho đa số món.']]],
   rd:['🔬',['Research & Lab','Nghiên cứu & Lab'],[['Research unlocks real Saigonesee menu items. Each takes 1 day.','Nghiên cứu mở món thật của Saigonesee. Mỗi món mất 1 ngày.'],['In the Lab, mix a base + 1–4 flavors to invent new items.','Trong Lab, trộn 1 nền + 1–4 hương vị để sáng chế món mới.'],['Source ingredients from around the world to try more combos.','Tìm nguyên liệu khắp thế giới để thử nhiều công thức hơn.'],['Hire researchers to invent for you every night.','Thuê nghiên cứu viên để họ tự sáng chế mỗi đêm.']]],
   mkt:['📣',['Marketing','Marketing'],[['Ads bring more customers for a few days.','Quảng cáo giúp thêm khách trong vài ngày.'],['Turn on delivery apps for extra orders (they take 30%).','Bật app giao hàng để có thêm đơn (app lấy 30%).'],['Competitors steal customers. Google ads pull them back.','Đối thủ giành khách. Quảng cáo Google kéo khách lại.']]],
-  fin:['🏦',['Finance','Tài chính'],[['See daily profit, taxes and loans.','Xem lợi nhuận mỗi ngày, thuế và khoản vay.'],['Catering orders pay well. Make the items before the deadline.','Đơn catering trả nhiều tiền. Làm đủ món trước hạn.'],['Loans give cash now but you repay every day.','Vay có tiền ngay nhưng phải trả mỗi ngày.'],['Taxes are paid every 10 days. Keep some cash ready.','Thuế trả mỗi 10 ngày. Nhớ giữ sẵn tiền mặt.']]],
+  fin:['🏦',['Finance','Tài chính'],[['See daily profit, taxes and loans.','Xem lợi nhuận mỗi ngày, thuế và khoản vay.'],['Catering orders pay well. Make the items before the deadline.','Đơn catering trả nhiều tiền. Làm đủ món trước hạn.'],['Loans give cash now but you repay every day.','Vay có tiền ngay nhưng phải trả mỗi ngày.'],['Income tax is paid every quarter (about 3 months). Keep some cash ready.','Thuế thu nhập trả mỗi quý (khoảng 3 tháng). Nhớ giữ sẵn tiền mặt.']]],
   upg:['🔧',['Upgrades','Nâng cấp'],[['Upgrades make the shop better forever.','Nâng cấp giúp tiệm tốt hơn mãi mãi.'],['Some bring more customers, some make them wait longer, some raise tips.','Có mục thêm khách, có mục giúp khách chờ lâu hơn, có mục tăng tip.'],['Start with cheap ones like stools, fans and a neon sign.','Bắt đầu với mục rẻ như thêm ghế, quạt, bảng đèn.']]],
   eq:['🛠️',['Equipment','Thiết bị'],[['Machines make staff faster at every location.','Máy móc giúp nhân viên làm nhanh hơn ở mọi tiệm.'],['Some machines unlock new menu items (espresso machine, fryer…).','Một số máy mở món mới (máy espresso, nồi chiên…).'],['Farm equipment boosts coffee harvests and roasting.','Thiết bị nông trại tăng sản lượng cà phê và rang.']]],
   board:['👔',['Board of directors','Ban giám đốc'],[['Directors run parts of the company for you every night.','Giám đốc tự điều hành công ty giúp bạn mỗi đêm.'],['HR hires staff, Operations opens branches, Finance handles money…','Nhân sự tuyển người, Vận hành mở chi nhánh, Tài chính lo tiền…'],['They only spend money above your cash reserve.','Họ chỉ tiêu phần tiền vượt quỹ dự phòng.'],['Untick any job you want to keep doing yourself.','Bỏ tick việc nào bạn muốn tự làm.']]],
   office:['🏢',['Office teams','Văn phòng'],[['Office teams make each director stronger.','Các phòng ban giúp giám đốc làm việc hiệu quả hơn.'],['A team works at half strength without its director.','Không có giám đốc thì phòng chỉ làm được một nửa.'],['More desks come with the Regional office upgrade.','Thêm chỗ ngồi bằng nâng cấp Văn phòng khu vực.']]],
   invest:['📈',['Investing','Đầu tư'],[['Put spare cash to work. It keeps earning while you sell coffee.','Cho tiền dư sinh lời. Tiền vẫn lời trong lúc bạn bán cà phê.'],['📈 Stocks: prices change every night. Safer ones pay dividends.','📈 Cổ phiếu: giá đổi mỗi đêm. Mã ổn định có trả cổ tức.'],['🏦 Bank: savings are safe. CDs pay more but lock your money.','🏦 Ngân hàng: tiết kiệm an toàn. Sổ có kỳ hạn lãi cao hơn nhưng khoá tiền.'],['🏠 Real estate: collect rent every day.','🏠 Bất động sản: thu tiền thuê mỗi ngày.']]],
   farm:['🌱',['Farm & roastery','Nông trại & nhà máy'],[['1. Buy land and plant a coffee variety.','1. Mua đất và trồng một giống cà phê.'],['2. Hire farmers. They pick ripe cherries 🍒.','2. Thuê nông dân. Họ hái trái chín 🍒.'],['3. Build a roastery to turn cherries into roasted beans.','3. Xây nhà máy rang để biến trái thành cà phê rang.'],['4. Beans go to your cafés first. Pack the rest into bags and sell them.','4. Cà phê gửi về quán trước. Phần còn lại đóng bịch để bán.']]],
+  fun:['🎰',['Leisure','Giải trí'],[['Spend your fortune on fun, sports, giving and luxury.','Tiêu tiền cho giải trí, thể thao, từ thiện và đồ xa xỉ.'],['🎰 Casino: fun but risky. The house wins in the long run.','🎰 Casino: vui nhưng rủi ro. Về lâu dài nhà cái luôn thắng.'],['⚽ Teams earn or lose money every night. Sponsorships boost buzz.','⚽ Đội bóng mỗi đêm có thể lời hoặc lỗ. Tài trợ giúp tăng độ nổi tiếng.'],['🏫 Giving raises your rating and brings more customers.','🏫 Từ thiện tăng đánh giá và thêm khách.'],['🛥️ Luxury is just for you. It costs upkeep every day.','🛥️ Đồ xa xỉ chỉ để hưởng thụ, tốn phí duy trì mỗi ngày.']]],
   rev:['⭐',['Reviews','Đánh giá'],[['What customers say about your shop.','Khách nói gì về tiệm của bạn.'],['Reply if you like. It\'s just for fun.','Muốn trả lời thì trả lời, chỉ để cho vui.']]],
   books:['📒',['Books','Sổ sách'],[['Pick Day, Week, Month, Quarter or Year.','Chọn Ngày, Tuần, Tháng, Quý hoặc Năm.'],['▲ green is good, ▼ red needs attention.','▲ xanh là tốt, ▼ đỏ là cần chú ý.'],['See where your money goes and what to improve.','Xem tiền chi vào đâu và cần cải thiện gì.']]],
   stats:['📊',['Stats','Tổng kết'],[['Your all-time numbers and best sellers.','Số liệu từ đầu tới giờ và món bán chạy.'],['See what unlocks next and how close you are.','Xem sắp mở khoá gì và còn bao xa.']]],
@@ -1681,7 +1752,7 @@ function checkAdvisor(){S.hints=S.hints||{};const a=ADV.find(a=>!S.hints[a.id]&&
 function advisorCard(a){if(!a)return '';return `<div class="advtip notr">💡 <b>${L('Tip:','Gợi ý:')}</b> ${L(a.en,a.vi)}${a.tab?` <button onclick="closeModal();manage('${a.tab}')" style="display:block;margin-top:6px;border:2px solid #4C86B8;background:#fff;border-radius:8px;padding:4px 10px;font:inherit;font-weight:800;font-size:13px">${L('Take me there →','Đi tới đó →')}</button>`:''}</div>`}
 function checkUnlocks(){S.unl=S.unl||{};const out=[];
   Object.keys(GATES).forEach(g=>{if(!S.unl[g]&&gateOk(g)){S.unl[g]=1;out.push(g)}});return out}
-const UNL_TXT={pickup:['📱 Online pickup','📣 Marketing'],uber:['🛵 Uber Eats','📣 Marketing'],door:['🚗 DoorDash','📣 Marketing'],grub:['🥡 Grubhub','📣 Marketing'],branch:['🏪 Your first branch','🏪 Branches'],board:['👔 Board of directors & 🏢 Office','👔 Board'],invest:['📈 Investing','📈 Invest'],farm:['🌱 Coffee farm','🌱 Farm']};
+const UNL_TXT={leisure:['🎰 Leisure & lifestyle','🎰 Leisure'],pickup:['📱 Online pickup','📣 Marketing'],uber:['🛵 Uber Eats','📣 Marketing'],door:['🚗 DoorDash','📣 Marketing'],grub:['🥡 Grubhub','📣 Marketing'],branch:['🏪 Your first branch','🏪 Branches'],board:['👔 Board of directors & 🏢 Office','👔 Board'],invest:['📈 Investing','📈 Invest'],farm:['🌱 Coffee farm','🌱 Farm']};
 function unlockCards(list){return list.map(g=>{const u=UNL_TXT[g]||[GATES[g].n,''];return `<div class="unl notr">🔓 <b>${L('New unlocked:','Mới mở khoá:')} ${u[0]}</b><br><small>${L('Find it in Manage shop →','Xem trong Quản lý tiệm →')} ${u[1]}</small></div>`}).join('')}
 function closeSettings(){if(SETFROM==='play')resume();else if(SETFROM==='pause')pause2();else if(SETBACK)SETBACK();else intro()}
 applySet();
@@ -1702,14 +1773,19 @@ const sfx={tap:()=>beep(660,.05),coin:()=>{beep(880,.08);setTimeout(()=>beep(132
 
 /* HUD */
 function hudMoney(v){const a=Math.abs(v),sg=v<0?'-':'';return a>=1e9?sg+'$'+(a/1e9).toFixed(2)+'B':a>=1e6?sg+'$'+(a/1e6).toFixed(2)+'M':a>=1e5?sg+'$'+(a/1e3).toFixed(1)+'k':fmt(v)}
+const HUDC={};
+function setIf(id,v,html){if(HUDC[id]===v)return;HUDC[id]=v;const e=$(id);if(e){if(html)e.innerHTML=v;else e.textContent=v}}
 function hud(){
-  $('dayN').textContent=(S.day>LASTDAY?'∞ ':'')+'Day '+S.day;
-  $('money').textContent=hudMoney(S.money);
+  setIf('dayN',(S.day>LASTDAY?'∞ ':'')+L('Day ','Ngày ')+S.day);
+  setIf('money',hudMoney(S.money));
   const r=S.rating,full=Math.round(r);
-  $('stars').innerHTML='<span class="fs"><i>'+'★'.repeat(full)+'</i>'+'☆'.repeat(5-full)+'</span><span class="one"><i>★</i></span> '+r.toFixed(1);
+  setIf('stars','<span class="fs"><i>'+'★'.repeat(full)+'</i>'+'☆'.repeat(5-full)+'</span><span class="one"><i>★</i></span> '+r.toFixed(1),1);
   const t=R?R.t:0, mins=7*60+Math.floor(t/DAYLEN*480);
-  $('clock').textContent=Math.floor(mins/60)+':'+String(mins%60).padStart(2,'0')+' '+WX[S.wx.t].e;
+  setIf('clock',Math.floor(mins/60)+':'+String(mins%60).padStart(2,'0')+' '+WX[S.wx.t].e+' '+dateStr(S.day));
 }
+// Buttons marked data-fast run on pointerdown; the follow-up click is swallowed so the action never runs twice
+document.addEventListener('pointerdown',e=>{const el=e.target.closest('[data-fast]');if(!el||el.disabled||e.button>0)return;if(el.onclick)el.onclick.call(el,e);else{el.__bypass=1;el.click();el.__bypass=0}el.__fastAt=performance.now()},{capture:true});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-fast]');if(!el||el.__bypass)return;if(el.__fastAt&&performance.now()-el.__fastAt<800){e.stopPropagation();e.preventDefault();el.__fastAt=0}},{capture:true});
 
 /* station */
 let ST='bar';
@@ -1717,7 +1793,7 @@ function buildStation(){
   const need=needSet();
   const tabs=[['bar','☕ Bar'],['top','🍓 Toppings'],['kit','🥖 Kitchen']].filter(([k])=>ING_ORDER.some(i=>need.has(i)&&ING[i].st===k));
   if(!tabs.some(([k])=>k===ST))ST=tabs[0][0];
-  $('stTabs').innerHTML=tabs.map(([k,n])=>`<button class="${k===ST?'on':''}" onclick="ST='${k}';buildStation();renderTray();$('station').scrollTop=0">${n}</button>`).join('')+`<button class="bk" onclick="book()" aria-label="Recipes">📖</button>`;
+  $('stTabs').innerHTML=tabs.map(([k,n])=>`<button data-fast class="${k===ST?'on':''}" onclick="ST='${k}';buildStation();renderTray();$('station').scrollTop=0">${n}</button>`).join('')+`<button class="bk" onclick="book()" aria-label="Recipes">📖</button>`;
   const list=ING_ORDER.filter(k=>need.has(k)&&ING[k].st===ST);
   $('station').innerHTML='';$('station').classList.toggle('dense',list.length>12);
   list.forEach(k=>{
@@ -1729,7 +1805,7 @@ function buildStation(){
 }
 function stock(){
   document.querySelectorAll('.ing').forEach(b=>{const n=S.inv[b.dataset.k]||0,inTray=R&&R.tray.includes(b.dataset.k);
-    b.querySelector('.cnt').textContent=n;b.classList.toggle('out',n<=0&&!inTray);b.classList.toggle('low',n>0&&n<=3)});
+    if(b.__n!==n){b.__n=n;b.querySelector('.cnt').textContent=n}const o=n<=0&&!inTray,lw=n>0&&n<=3;if(b.__o!==o){b.__o=o;b.classList.toggle('out',o)}if(b.__l!==lw){b.__l=lw;b.classList.toggle('low',lw)}});
 }
 function toggleIng(k){
   if(!R||R.paused)return;
@@ -1759,9 +1835,16 @@ function buildStreet(){
   const st=$('street');st.innerHTML='';const n=slotsN(),cols=n>5?Math.ceil(n/2):n;st.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;st.style.gridTemplateRows=n>5?'repeat(2,minmax(0,1fr))':'minmax(0,1fr)';st.classList.toggle('many',n>3);st.classList.toggle('rows2',n>5);
   for(let i=0;i<slotsN();i++){const d=document.createElement('div');d.className='slot';st.appendChild(d)}
 }
+// How well an item fits the season: >1 featured, <0.5 rests off the menu (seasonal menu only)
+function seasonFit(r,sea){const I=r.ing,n=(r.n||'').toLowerCase(),hot=r.hot||/\bhot\b/.test(n),iced=I.includes('ice'),fruit=I.some(k=>['mango','straw','peach','pineapple','lime','orange','citron','coconut','slmix'].includes(k));
+  if(sea==='Summer'){if(hot)return .3;if(iced&&fruit)return 1.6;if(iced)return 1.2}
+  if(sea==='Winter'){if(hot)return 1.7;if(iced&&fruit&&r.k==='drink')return .4;if(r.k==='food')return 1.2}
+  if(sea==='Fall'){if(I.some(k=>['biscoff','tfoam','cacao','brownsugar'].includes(k))||hot)return 1.4}
+  if(sea==='Spring'){if(I.some(k=>['matcha','mfoam','straw','pandan'].includes(k)))return 1.4}
+  return 1}
 function pickRec(list){
-  const u=list||unlocked(),wx=WX[S.wx.t];const sea=season(S.day)[0],hotW=(wx.hot||1)*(sea==='Winter'?1.5:sea==='Fall'?1.2:sea==='Summer'?.6:1);
-  const w=u.map(r=>(r.k==='drink'?(r.hot?hotW:(wx.drink||1)):(wx.food||1))*(S.newIds.includes(r.id)?2.2:1)*(R&&R.special===r?3:1)*Math.pow(1/pRatio(r),2.5));
+  const u=list||onMenu(),wx=WX[S.wx.t];const sea=season(S.day)[0],hotW=(wx.hot||1)*(sea==='Winter'?1.5:sea==='Fall'?1.2:sea==='Summer'?.6:1);
+  const hol=holiday(S.day),w=u.map(r=>(boardOn('cpo','season')?seasonFit(r,sea)*(hol&&S.newIds.includes(r.id)?1.2:1):1)*(r.k==='drink'?(r.hot?hotW:(wx.drink||1)):(wx.food||1))*(S.newIds.includes(r.id)?2.2:1)*(R&&R.special===r?3:1)*Math.pow(1/pRatio(r),2.5));
   let x=Math.random()*w.reduce((a,b)=>a+b,0);
   for(let i=0;i<u.length;i++){x-=w[i];if(x<=0)return u[i]}return u[0];
 }
@@ -1944,7 +2027,7 @@ function itemEarn(c,it,staff,q){
 }
 function completeItem(c,it,staff,q){
   const earn=itemEarn(c,it,staff,q);if(q==='miss'){rate(2.3);R.missMod=(R.missMod||0)+1}else if(it.rec.mods&&!staff)R.gotMod=(R.gotMod||0)+1;it.done=true;it.by=null;it.el.classList.add('done');it.el.classList.remove('byc');it.byEl.textContent='✓';
-  S.money+=earn;R.earned+=earn;R.items++;S.life.sold[it.rec.id]=(S.life.sold[it.rec.id]||0)+1;if(it.rec.addp&&q!=='miss')S.life.addons++;floatAt(it.el,'+'+fmt(earn));sfx.coin();
+  S.money+=earn;R.earned+=earn;R.items++;S.life.sold[it.rec.id]=(S.life.sold[it.rec.id]||0)+1;R.soldToday=R.soldToday||{};R.soldToday[it.rec.id]=(R.soldToday[it.rec.id]||0)+1;if(it.rec.addp&&q!=='miss')S.life.addons++;floatAt(it.el,'+'+fmt(earn));sfx.coin();
   if(c.items.every(x=>x.done)){
     const ratio=c.left/c.max,pr=c.items.reduce((a,x)=>a+pRatio(x.rec),0)/c.items.length;
     R.served++;rate(3+(staff?1.5:2)*ratio-Math.max(-.5,Math.min(2,(pr-1)*2.5)));
@@ -2105,8 +2188,8 @@ function endDay(){
   S.comps=S.comps.filter(c=>c.str>.05);
   if(S.day>=5&&Math.random()<.2){const fr=['main',...S.branches].filter(l=>!S.comps.some(c=>c.loc===l));
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
-  genReviews();S.buzz*=S.upg.pragency?.88:.8;S.buzz=Math.min(.5,Math.max(S.buzz+.005*dp('mkt'),.05*S.upg.brand+.01*dp('mkt')));
-  finDay();labTeam();farmDay();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
+  genReviews();S.buzz*=S.upg.pragency?.88:.8;S.buzz=Math.min(.5,Math.max(S.buzz+.005*dp('mkt'),.05*S.upg.brand+.01*dp('mkt')+funBuzz()));
+  finDay();labTeam();farmDay();funDay();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
   {const L=S.lab,un=DISCO.filter(d=>!L.found.includes(d.id)&&!L.leads.includes(d.id));
    if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
   if(R.cat){R.news.push('📦 Catering for '+R.cat.client+' was not finished');S.rating=Math.max(1,S.rating-.15);R.cat=null;S.catJob=null}
@@ -2133,9 +2216,9 @@ function endDay(){
     R.qTax={taxable,fed,ma,due,plan:plan<1};T.hist.unshift({d:S.day,taxable:Math.round(taxable),due:Math.round(due)});T.hist=T.hist.slice(0,8);
     T.qProfit=0;T.qInv=0;
   }
-  {const brRev=R.br.reduce((a,b)=>a+(b.rev||0),0),brCost=R.br.reduce((a,b)=>a+((b.rev||0)-b.net),0),farmRev=R.farm?R.farm.rev+R.farm.trader:0,inv=R.fin?(R.fin.div+R.fin.int+R.fin.rent):0,qt=R.qTax?R.qTax.due:0;
-   const net=op+inv-qt-div,rev=R.earned+brRev+farmRev;
-   const cat={ing:R.ingSpend||0,wages:R.wages||0,branch:brCost,elec:R.elec||0,team:(R.boardPay||0)+(R.officePay||0)+(R.labPay||0),farm:R.farm?R.farm.cost:0,tax:(R.payTax||0)+(R.propTax||0)+qt,loan:R.loanPay||0,div:div||0};
+  {const brRev=R.br.reduce((a,b)=>a+(b.rev||0),0),brCost=R.br.reduce((a,b)=>a+((b.rev||0)-b.net),0),farmRev=R.farm?R.farm.rev+R.farm.trader:0,inv=(R.fin?(R.fin.div+R.fin.int+R.fin.rent):0)+(R.funInc||0),qt=R.qTax?R.qTax.due:0;
+   const net=op+inv-qt-div-(R.funCost||0),rev=R.earned+brRev+farmRev;
+   const cat={ing:R.ingSpend||0,wages:R.wages||0,branch:brCost,elec:R.elec||0,team:(R.boardPay||0)+(R.officePay||0)+(R.labPay||0),farm:R.farm?R.farm.cost:0,tax:(R.payTax||0)+(R.propTax||0)+qt,loan:R.loanPay||0,div:div||0,fun:R.funCost||0};
    const exp=rev+inv-net,listed=Object.values(cat).reduce((a,b)=>a+b,0);if(exp-listed>.5)cat.other=exp-listed;
    const served=R.served+R.br.reduce((a,b)=>a+(b.served||0),0),lost=R.lost+R.balked+R.br.reduce((a,b)=>a+(b.lost||0),0);
    R.pl={rev,inv,exp,net,cat,served,lost,parts:{shop:R.earned,branches:brRev,farm:farmRev}};
@@ -2178,7 +2261,7 @@ function brLine(b){
   const warn=b.idle?' <span class="tag">no staff</span>':b.lost>b.dem*.2?' <span class="tag">needs staff</span>':'';
   return `<div class="stat"><span>🏪 ${b.n}${warn}<br><small>${b.served}/${b.dem} customers, ★ ${b.rating.toFixed(1)}</small></span><span>${fmt(b.net)}</span></div>`;
 }
-const CAT_LBL={ing:['🛒','Ingredients','Nguyên liệu'],wages:['👥','Staff wages','Lương nhân viên'],branch:['🏬','Branch costs','Chi phí chi nhánh'],elec:['⚡','Electricity','Tiền điện'],team:['👔','Directors & office','Ban giám đốc & văn phòng'],farm:['🌱','Farm & roastery','Nông trại & nhà máy'],tax:['🧾','Taxes','Thuế'],loan:['🏦','Loan payments','Trả nợ vay'],div:['💸','Shareholder dividends','Cổ tức cổ đông'],other:['📦','Other','Khác']};
+const CAT_LBL={ing:['🛒','Ingredients','Nguyên liệu'],wages:['👥','Staff wages','Lương nhân viên'],branch:['🏬','Branch costs','Chi phí chi nhánh'],elec:['⚡','Electricity','Tiền điện'],team:['👔','Directors & office','Ban giám đốc & văn phòng'],farm:['🌱','Farm & roastery','Nông trại & nhà máy'],tax:['🧾','Taxes','Thuế'],loan:['🏦','Loan payments','Trả nợ vay'],div:['💸','Shareholder dividends','Cổ tức cổ đông'],fun:['🛥️','Teams & luxury','Đội bóng & xa xỉ'],other:['📦','Other','Khác']};
 const pct=(a,b)=>b?((a-b)/Math.abs(b))*100:null;
 function chgTag(a,b,goodUp=true){const c=pct(a,b);if(c==null||!isFinite(c))return '';const up=c>=0,good=goodUp?up:!up;return `<span class="chg ${good?'good':'bad'}">${up?'▲':'▼'} ${Math.abs(c).toFixed(0)}%</span>`}
 function plCard(){
@@ -2228,6 +2311,8 @@ function summary0(){
    ${R.farm.roast?`<div class="stat"><span>Roasted</span><span>${R.farm.roast.toFixed(1)} kg</span></div>`:''}
    ${R.farm.sent?`<div class="stat"><span>Sent to Weymouth</span><span>${R.farm.sent} servings</span></div>`:''}
    ${R.farm.packed?`<div class="stat"><span>Packed</span><span>${R.farm.packed} bags</span></div>`:''}
+   ${R.farm.mkInst||R.farm.soldInst?`<div class="stat notr"><span>📦 ${L('Instant coffee made / sold','Cà phê hoà tan làm / bán')}</span><span>${R.farm.mkInst} / ${R.farm.soldInst}</span></div>`:''}
+   ${R.farm.mkBtl||R.farm.soldBtl?`<div class="stat notr"><span>🍾 ${L('Bottles made / sold','Chai làm / bán')}</span><span>${R.farm.mkBtl} / ${R.farm.soldBtl}</span></div>`:''}
    ${R.farm.sold?`<div class="stat"><span>Bags sold</span><span>${R.farm.sold} · +${fmt(R.farm.rev)}</span></div>`:''}
    ${R.farm.trader?`<div class="stat"><span>Cherries sold to trader</span><span>+${fmt(R.farm.trader)}</span></div>`:''}
    <div class="stat"><span>Farm costs (farmers, trucking, roasting, packing)</span><span>-${fmt(R.farm.cost)}</span></div>
@@ -2257,7 +2342,7 @@ function reapplyFilters(){document.querySelectorAll('#card .lsearch[data-q]').fo
 function manage(tab){
   if(tab)MT=tab;
   const sc=$('card').scrollTop,locs=['main',...S.branches];if(!locs.includes(ML))ML='main';
-  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['office','🏢 Office'],['invest','📈 Invest'],['farm','🌱 Farm'],['rev','⭐ Reviews'],['books','📒 Books'],['stats','📊 Stats']];
+  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['office','🏢 Office'],['invest','📈 Invest'],['farm','🌱 Farm'],['fun','🎰 Leisure'],['rev','⭐ Reviews'],['books','📒 Books'],['stats','📊 Stats']];
   let body='';
   if(MT==='staff'){
     const li=locs.indexOf(ML),mark=l=>{const n=crewAt(l).length,c=cap(l),st=S.brStats[l];return n<c?(n===0?'⚪':'🟡'):(l!=='main'&&st&&st.lost>st.dem*.1?'🔴':'🟢')};
@@ -2285,12 +2370,12 @@ function manage(tab){
       body+=rows.map(({b,st})=>{const lv=S.brLvl[b.id]||0,xc=Math.round(b.cost*.6*(lv+1)),r=st&&st.reviews&&st.reviews[0],n=crewAt(b.id).length,flag=!n?'⚪':st&&st.lost>st.dem*.1?'🔴':'🟢';
         return `<details class="brc" data-key="br:${b.id}"${OPEN.has('br:'+b.id)?' open':''}><summary><span class="bf">${flag}</span><span class="bn"><b>${b.n}</b><small>${n}/${cap(b.id)} staff${st?` · ${st.served}/${st.dem} cust · ★${st.rating.toFixed(1)}`:''}</small></span><span class="bp ${st&&st.net<0?'dnt':'upt'}">${st?fmt(st.net):'—'}</span></summary>
         <div class="bd">${st?`<div class="stat"><span>Customers</span><span>${st.served} served${st.lost?`, <b class="dnt">${st.lost} turned away</b>`:''}</span></div><div class="stat"><span>Can handle</span><span>~${st.cap} customers</span></div><div class="stat"><span>Ingredients</span><span>${fmt(st.ing)}</span></div>`:''}
-        <div class="stat"><span>Rent</span><span>${fmt(b.rent)}/day</span></div><div class="stat"><span>Size</span><span>${lv+1}/7</span></div>
+        <div class="stat"><span>Rent</span><span>${fmt(b.rent)}/day</span></div><div class="stat"><span>Size</span><span>${lv+1}/11</span></div>
         ${r?`<p class="note">“${revT(r)}” ${'★'.repeat(r.st)}</p>`:''}
-        <div class="arow" style="padding-left:0"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<6?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div></details>`}).join('')||'<p class="note">No branches yet.</p>';
+        <div class="arow" style="padding-left:0"><button onclick="ML='${b.id}';manage('staff')">👥 Staff</button>${lv<10?`<button ${S.money<xc?'disabled':''} onclick="expandBr('${b.id}')">Expand ${fmt(xc)}</button>`:''}</div></div></details>`}).join('')||'<p class="note">No branches yet.</p>';
     } else {
       body+=(!S.branches.length&&!gateOk('branch')?gateCard('branch','Grow Weymouth first. Your first branch unlocks when you reach these goals.'):
-        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+['MA','RI','NH','ME','CT','VT'].map(st0=>{const list=avail.filter(b=>(b.st||'MA')===st0).sort((a,b)=>a.cost-b.cost);if(!list.length)return '';const key='new:'+st0;const SN={MA:'Massachusetts',RI:'Rhode Island',NH:'New Hampshire',ME:'Maine',CT:'Connecticut',VT:'Vermont'};return `<details class="srcgrp" data-key="${key}"${OPEN.has(key)||(!OPEN.touched&&st0==='MA')?' open':''}><summary>${SN[st0]} <small>(${list.length})</small></summary>`+list.map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join('')+'</details>'}).join(''));
+        `<p class="note">Bigger towns bring more customers but cost more rent.</p>`+['MA','RI','NH','ME','CT','VT','NY','NJ','PA','DE','MD','DC','VA','NC','SC','GA','FL'].map(st0=>{const list=avail.filter(b=>(b.st||'MA')===st0).sort((a,b)=>a.cost-b.cost);if(!list.length)return '';const key='new:'+st0;const SN={MA:'Massachusetts',RI:'Rhode Island',NH:'New Hampshire',ME:'Maine',CT:'Connecticut',VT:'Vermont',NY:'New York',NJ:'New Jersey',PA:'Pennsylvania',DE:'Delaware',MD:'Maryland',DC:'Washington, D.C.',VA:'Virginia',NC:'North Carolina',SC:'South Carolina',GA:'Georgia',FL:'Florida'};const REG={MA:['🦞','New England','New England'],NY:['🗽','Mid-Atlantic','Trung Đại Tây Dương'],VA:['🌴','South Atlantic','Nam Đại Tây Dương']}[st0];return `${REG?`<p class="regdiv notr">${REG[0]} ${L(REG[1],REG[2])}</p>`:''}<details class="srcgrp" data-key="${key}"${OPEN.has(key)||(!OPEN.touched&&st0==='MA')?' open':''}><summary>${SN[st0]} <small>(${list.length})</small></summary>`+list.map(b=>`<div class="mrow"><span class="mic">📍</span><div class="minfo"><b>${b.n}</b><small>Traffic ×${b.demand} · rent ${fmt(b.rent)}/day</small></div><div class="mbtns"><button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="openBr('${b.id}');BT='mine'"><b>${fmt(b.cost)}</b><span>Open</span></button></div></div>`).join('')+'</details>'}).join(''));
     }
   }
 
@@ -2345,6 +2430,7 @@ function manage(tab){
     `<button class="big alt" onclick="board('manage')">🏆 Leaderboard</button>`;
   }
   if(MT==='farm'){body=gateOk('farm')||(S.farm&&S.farm.plots.length)?farmBody():gateCard('farm','Grow the café business first. The coffee farm unlocks when you hit these goals.')}
+  if(MT==='fun'){body=gateOk('leisure')||Object.keys((S.fun||{}).own||{}).length?funBody():gateCard('leisure',L('Build your fortune first. Leisure unlocks when you hit these goals.','Hãy làm giàu trước đã. Giải trí mở khi đạt các mục tiêu này.'))}
   if(MT==='rev'){body=reviewsBody()}
   if(MT==='books'){body=booksBody()}
   if(MT==='invest'){body=gateOk('invest')||portfolio()>0?investBody():gateCard('invest','Save up first. Investing unlocks when your café hits these goals.')}
@@ -2407,7 +2493,8 @@ function takeName(){const el=$('pname0');const v=(el&&el.value||'').trim().slice
 function upgValue(){return UPG.filter(u=>u.id).reduce((a,u)=>{let v=0;for(let i=0;i<(S.upg[u.id]||0);i++)v+=u.base*Math.pow(1.6,i);return a+v},0)}
 function staffValue(){return S.staff.reduce((a,x)=>a+30*lvl(x),0)}
 function farmValue(){return S.farm?S.farm.plots.reduce((a,p)=>a+REGIONS[p.r].plot+(p.v?VARS[p.v].plant:0),0)+(S.farm.factory?FACT.slice(1,S.farm.factory+1).reduce((a,f)=>a+f.cost,0)*.7:0)+(S.farm.pack?5600:0):0}
-function companyScore(){return farmValue()+portfolio()+valuation()+Math.max(0,S.money)+upgValue()*.9+staffValue()+Object.keys(S.board||{}).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].fee*.5,0)}
+function funValue(){initFun();return TEAMS.filter(x=>x.kind==='team'&&S.fun.own[x.id]).reduce((a,x)=>a+x.price*.9,0)}
+function companyScore(){return funValue()+farmValue()+portfolio()+valuation()+Math.max(0,S.money)+upgValue()*.9+staffValue()+Object.keys(S.board||{}).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].fee*.5,0)}
 function saveScore(reason){
   if(!S.pid){S.pid=Math.random().toString(36).slice(2,10)+Date.now().toString(36);save()}
   const e={pid:S.pid,name:S.player||'Player',day:S.day,value:Math.round(companyScore()),branches:S.branches.length,at:Date.now(),why:reason||''};
@@ -2447,6 +2534,9 @@ const STOCKS=[
   {sym:'FNWY',n:'Fenway Media',e:'⚾',p:64,vol:.03,drift:.0006,div:0,d:'Sports TV and streaming.'},
   {sym:'BRBT',n:'Boston Robotics',e:'🤖',p:120,vol:.045,drift:.0013,div:0,d:'Robots! Big swings up and down.'},
   {sym:'GRNE',n:'Green Wave Energy',e:'🌱',p:18,vol:.05,drift:.001,div:0,d:'Solar and wind. Very bumpy ride.'},
+  {sym:'GOLD',n:'Gold',e:'🥇',p:2400,vol:.008,drift:.0004,div:0,metal:1,d:'The classic safe haven. Holds value when stocks fall.'},
+  {sym:'SILV',n:'Silver',e:'🥈',p:30,vol:.015,drift:.0003,div:0,metal:1,d:'Cheaper than gold, a little bumpier.'},
+  {sym:'PLAT',n:'Platinum',e:'💍',p:1000,vol:.012,drift:.0002,div:0,metal:1,d:'Rare metal used in cars and jewelry.'},
   {sym:'SAI',n:'SaiCoin (crypto)',e:'🪙',p:5,vol:.12,drift:.001,div:0,d:'A meme coin. Could double or crash any day!'},
 ];
 const NEWS_UP=['lands a big new contract','beats earnings expectations','gets a surprise buyout offer','goes viral online','opens a new flagship store'];
@@ -2458,6 +2548,15 @@ const PROPS=[
   {id:'beach',n:'Beach house on Cape Cod',e:'🏖️',price:150000,rent:620,seasonal:1},
   {id:'retail',n:'Retail building in Braintree',e:'🏬',price:300000,rent:1400},
   {id:'tower',n:'Office tower in Downtown Boston',e:'🏙️',price:1500000,rent:7000},
+  {id:'farmland',n:'Blueberry farm in Maine',e:'🫐',price:400000,rent:1700,seasonal:1},
+  {id:'storage',n:'Self-storage units in Braintree',e:'📦',price:700000,rent:3300},
+  {id:'brooklynapt',n:'Apartment building in Brooklyn, NY',e:'🏢',price:900000,rent:4200},
+  {id:'dcrow',n:'Rowhouses in Washington, D.C.',e:'🏛️',price:1000000,rent:4600},
+  {id:'miamicondo',n:'Oceanfront condos in Miami, FL',e:'🌴',price:1200000,rent:5600,seasonal:1},
+  {id:'parking',n:'Parking garage in Boston',e:'🅿️',price:2500000,rent:12500},
+  {id:'hotel',n:'Boutique hotel in Newport, RI',e:'🏨',price:5000000,rent:26000,seasonal:1},
+  {id:'mall',n:'Shopping plaza in Atlanta, GA',e:'🛍️',price:8000000,rent:40000},
+  {id:'skyscraper',n:'Skyscraper in Manhattan, NY',e:'🌆',price:50000000,rent:250000},
 ];
 const BANK={save:.001,cds:[{days:10,rate:.003},{days:30,rate:.0045}]};
 function initFin(){
@@ -2478,6 +2577,7 @@ function finDay(){
     if(Math.random()<.06){const up=Math.random()<.55,j=(t.vol>.08?.25:.08)+Math.random()*(t.vol>.08?.5:.15);r+=up?j:-j;log.push(`📰 ${t.e} ${t.n} ${up?pick(NEWS_UP):pick(NEWS_DN)} (${up?'+':'-'}${Math.round(j*100)}%)`)}
     F.px[t.sym]=Math.max(.05,+(F.px[t.sym]*Math.exp(r)).toFixed(2));F.hist[t.sym].push(F.px[t.sym]);if(F.hist[t.sym].length>30)F.hist[t.sym].shift();
     const h=F.hold[t.sym];if(h&&h.sh&&t.div)div+=h.sh*F.px[t.sym]*t.div*(1+.05*dp('fin'))});
+  {const mk=F.hist.MKT,g=F.px.GOLD;if(mk&&mk.length>1&&g){const d=mk[mk.length-1]/mk[mk.length-2]-1;if(d<-.01){F.px.GOLD=+(g*(1-d*.5)).toFixed(2);F.hist.GOLD[F.hist.GOLD.length-1]=F.px.GOLD}}}
   int=F.save*BANK.save;F.save+=int;
   F.cds.forEach(c=>{const g=c.amt*c.rate;c.amt+=g;int+=g;c.left--});
   F.cds.filter(c=>c.left<=0).forEach(c=>{F.save+=c.amt;log.push(`🏦 A ${c.days}-day CD matured: ${fmt(c.amt)} moved to savings`)});F.cds=F.cds.filter(c=>c.left>0);
@@ -2496,7 +2596,8 @@ let IT='stocks',TS=null;
 function investBody(){
   const F=S.fin;
   let b=`<div class="finsum"><div><small>Investments</small><b>${fmt(portfolio())}</b></div><div><small>Cash</small><b>${fmt(S.money)}</b></div></div>
-  <div class="tabs sm">${[['stocks','📈 Stocks'],['bank','🏦 Bank'],['homes','🏠 Real estate']].map(([k,n])=>`<button class="${IT===k?'on':''}" onclick="IT='${k}';TS=null;manage()">${n}</button>`).join('')}</div>`;
+  <div class="tabs sm">${[['stocks','📈 Stocks'],['gold','🥇 Gold'],['bank','🏦 Bank'],['homes','🏠 Real estate']].map(([k,n])=>`<button class="${IT===k?'on':''}" onclick="IT='${k}';TS=null;manage()">${n}</button>`).join('')}</div>`;
+  if(IT==='gold'&&TS)IT='stocks';
   if(IT==='stocks'&&TS){const t=STOCKS.find(x=>x.sym===TS),h=F.hold[TS],p=px(TS),maxB=Math.floor(S.money/p),own=h?h.sh:0;
     const q=Math.max(1,TQ);
     b+=`<button class="back" onclick="TS=null;manage()">← All stocks</button>
@@ -2512,8 +2613,12 @@ function investBody(){
     return b}
   if(IT==='stocks'){
     b+=`<p class="note">Tap a stock to buy or sell. Prices move every night, so they can go up or down. Spread your money out to be safer.</p>`+
-    STOCKS.map(t=>{const h=F.hold[t.sym];return `<button class="srow" onclick="TS='${t.sym}';TQ=1;manage()"><span class="te">${t.e}</span><span class="sn"><b>${t.n}</b><small>${t.sym}${h?` · you own ${h.sh}`:''}</small></span>${spark(F.hist[t.sym].slice(-14),70,28)}<span class="sp"><b>${fmt(px(t.sym))}</b>${pctTag(chg(t.sym))}</span></button>`}).join('');
+    STOCKS.filter(t=>!t.metal).map(t=>{const h=F.hold[t.sym];return `<button class="srow" onclick="TS='${t.sym}';TQ=1;manage()"><span class="te">${t.e}</span><span class="sn"><b>${t.n}</b><small>${t.sym}${h?` · you own ${h.sh}`:''}</small></span>${spark(F.hist[t.sym].slice(-14),70,28)}<span class="sp"><b>${fmt(px(t.sym))}</b>${pctTag(chg(t.sym))}</span></button>`}).join('');
     if(F.inc.div||F.inc.gain)b+=`<p class="note">Dividends earned: <b>${fmt(F.inc.div)}</b> · Realized gains: <b>${fmt(F.inc.gain)}</b></p>`;
+  }
+  if(IT==='gold'){
+    b+=`<p class="note notr">${L('Gold, silver and platinum. Prices move slowly and often rise when stocks fall — a good way to store wealth. Prices are per ounce.','Vàng, bạc và bạch kim. Giá lên xuống chậm, thường tăng khi cổ phiếu giảm — cách tốt để tích sản. Giá tính theo ounce.')}</p>`+
+    STOCKS.filter(t=>t.metal).map(t=>{const h=F.hold[t.sym];return `<button class="srow" onclick="TS='${t.sym}';TQ=1;IT='stocks';manage()"><span class="te">${t.e}</span><span class="sn"><b>${t.n}</b><small>${t.sym}${h?` · ${L('you own','bạn có')} ${h.sh} oz`:''}</small></span>${spark(F.hist[t.sym].slice(-14),70,28)}<span class="sp"><b>${fmt(px(t.sym))}</b>${pctTag(chg(t.sym))}</span></button>`}).join('');
   }
   if(IT==='bank'){
     b+=`<div class="upg"><span class="fc">🐷</span><div><b>Savings account</b><br><small>${(BANK.save*100).toFixed(1)}% interest every day. Take money out any time.</small><br><small>Balance: <b>${fmt(F.save)}</b></small></div></div>
@@ -2596,7 +2701,18 @@ function farmDay(){
     const brKg=R.br.reduce((a,b)=>a+(b.served||0),0)*.6/50;const gb=brKg?take('phin',brKg*50*.7)+take('espresso',brKg*50*.3):0;F.brCover=brKg?Math.min(1,gb/brKg):0;
   }
   // packaging line: roasted beans → 500 g bags
-  if(F.pack&&F.auto.pack)Object.keys(F.roasted).forEach(v=>{const n=Math.floor(F.roasted[v]*2);if(n<=0)return;F.roasted[v]-=n/2;F.bags[v]=(F.bags[v]||0)+n;packed+=n;cost+=n*(S.upg.packfast?.2:.4)});
+  // Split roasted beans between product lines by the chosen mix: bags, instant coffee, bottled coffee
+  const mix=prodMix(),tot=Object.values(mix).reduce((a,b)=>a+b,0);let mkInst=0,mkBtl=0;
+  if(tot&&F.auto.pack)Object.keys(F.roasted).forEach(v=>{const kg=F.roasted[v];if(kg<.5)return;
+    if(mix.bag){const n=Math.floor(kg*mix.bag/tot*2);F.roasted[v]-=n/2;F.bags[v]=(F.bags[v]||0)+n;packed+=n;cost+=n*(S.upg.packfast?.2:.4)}
+    if(mix.inst){const k=kg*mix.inst/tot,n=Math.floor(k*PROD.inst.per);F.roasted[v]-=n/PROD.inst.per;F.inst=(F.inst||0)+n;mkInst+=n;cost+=n*PROD.inst.cost}
+    if(mix.btl){const k=kg*mix.btl/tot,n=Math.floor(k*PROD.btl.per);F.roasted[v]-=n/PROD.btl.per;F.btl=(F.btl||0)+n;mkBtl+=n;cost+=n*PROD.btl.cost}});
+  // Instant & bottled coffee sell through the same channels
+  let soldInst=0,soldBtl=0;
+  Object.keys(CHANNELS).forEach(c=>{if(!F.ch[c])return;const C=CHANNELS[c];let dem=c==='shelf'?(R.served+R.br.reduce((a,b)=>a+(b.served||0),0))*.03:C.base;dem*=(1+S.buzz);
+    ['inst','btl'].forEach(k=>{const have=F[k]||0;if(!have)return;const P=PROD[k],pr=prodPrice(k),want=Math.round(dem*P.dem*Math.pow(P.price/pr,1.6)*(.8+Math.random()*.4)),n=Math.min(want,have);if(n<=0)return;
+      F[k]-=n;if(k==='inst')soldInst+=n;else soldBtl+=n;rev+=n*(pr*(C.cut||1)-(C.ship||0)*.3)})});
+  F.stats.inst=(F.stats.inst||0)+soldInst;F.stats.btl=(F.stats.btl||0)+soldBtl;
   // retail
   const inStock=Object.keys(F.bags).filter(v=>F.bags[v]>0);
   if(inStock.length)Object.keys(CHANNELS).forEach(c=>{if(!F.ch[c])return;const C=CHANNELS[c];
@@ -2607,8 +2723,14 @@ function farmDay(){
   S.money+=rev+trader-(cost-pay);
   F.stats.harv+=harv;F.stats.roast+=roast;F.stats.bags+=packed;F.stats.sold+=sold;F.stats.rev+=rev+trader;
   if(Math.random()<.5)F.fcands=genFarmers();
-  R.farm={pay,cost,harv,roast,packed,sent,sold,rev,trader,log};F.last={roast,packed,harv};
+  R.farm={pay,cost,harv,roast,packed,sent,sold,rev,trader,log,mkInst,mkBtl,soldInst,soldBtl};F.last={roast,packed,harv,mkInst,mkBtl};
 }
+const PROD={inst:{n:'☕ Instant coffee',vi:'☕ Cà phê hoà tan',unit:'box',uvi:'hộp',per:25,cost:.8,price:9,dem:1.5,line:20000,e:'📦'},
+            btl:{n:'🍾 Bottled cold brew',vi:'🍾 Cà phê đóng chai',unit:'bottle',uvi:'chai',per:40,cost:.6,price:4.5,dem:3,line:30000,e:'🍾'}};
+const prodPrice=k=>(S.farm.price||{})[k]??PROD[k].price;
+function prodMix(){const F=S.farm,m=F.mix||{bag:2,inst:1,btl:1};return {bag:F.pack?m.bag:0,inst:F.instLine?m.inst:0,btl:F.btlLine?m.btl:0}}
+function buyLine(k){const F=S.farm,P=PROD[k];if(S.money<P.line||F[k+'Line'])return;S.money-=P.line;F[k+'Line']=true;F.mix=F.mix||{bag:2,inst:1,btl:1};save();sfx.coin();toast('🏭 '+L(P.n,P.vi)+' '+L('line installed','đã lắp dây chuyền'));manage()}
+function setMix(a,b,c){S.farm.mix={bag:a,inst:b,btl:c};save();manage()}
 function buyPlot(r){const c=REGIONS[r].plot;if(S.money<c)return;S.money-=c;S.farm.plots.push({id:S.farm.nid++,r,v:null});save();sfx.coin();toast('🌱 New plot in '+REGIONS[r].n);manage()}
 function plant(id,v){const p=S.farm.plots.find(x=>x.id===id),c=VARS[v].plant;if(!p||p.v||S.money<c)return;S.money-=c;p.v=v;p.planted=S.day;p.last=null;save();sfx.coin();manage()}
 function plantAll(r,v){let n=0;S.farm.plots.filter(p=>p.r===r&&!p.v).forEach(p=>{if(S.money>=VARS[v].plant){S.money-=VARS[v].plant;p.v=v;p.planted=S.day;p.last=null;n++}});save();if(n){sfx.coin();toast('🌱 Planted '+n+' plot(s) of '+VARS[v].n)}manage()}
@@ -2651,10 +2773,10 @@ function bagSVG(v){const V=VARS[v]||VARS.robusta;return `<svg viewBox="0 0 40 50
 function factoryView(){
   const F=S.farm;if(!F.factory)return '';
   const pk=R_last_farm();const kinds=Object.keys(F.bags).filter(v=>F.bags[v]>0);const flow=kinds.length?kinds:Object.keys(F.roasted).filter(v=>F.roasted[v]>.1);
-  const running=F.pack&&flow.length,list=running?Array.from({length:7},(_,i)=>flow[i%flow.length]):[];
+  const extra=[...(F.instLine&&(F.inst||0)>0?['#inst']:[]),...(F.btlLine&&(F.btl||0)>0?['#btl']:[])],all=[...flow,...extra];const running=(F.pack||F.instLine||F.btlLine)&&all.length,list=running?Array.from({length:7},(_,i)=>all[i%all.length]):[];
   return `<div class="fact">
     <div class="roaster"><svg viewBox="0 0 70 70" class="drum${F.auto.roast&&sumObj(F.cherries)+sumObj(F.roasted)>0?' spin':''}"><circle cx="35" cy="35" r="26" fill="#3A3A3A" stroke="#F3D03E" stroke-width="3"/><path d="M35 9v52M9 35h52M17 17l36 36M53 17L17 53" stroke="#6B6B6B" stroke-width="3"/><circle cx="35" cy="35" r="7" fill="#F3D03E"/></svg><small>🔥 Roaster</small></div>
-    <div class="beltwrap"><div class="belt${running?' run':''}">${list.map((v,i)=>`<div class="bag" style="animation-delay:${-(i*1.1).toFixed(1)}s">${bagSVG(v)}</div>`).join('')}${running?'':`<span class="idle">${F.pack?'Waiting for roasted beans…':'Install a packaging line to see bags here'}</span>`}</div>
+    <div class="beltwrap"><div class="belt${running?' run':''}">${list.map((v,i)=>`<div class="bag" style="animation-delay:${-(i*1.1).toFixed(1)}s">${v==='#inst'?'<span class="prodico">📦</span>':v==='#btl'?'<span class="prodico">🍾</span>':bagSVG(v)}</div>`).join('')}${running?'':`<span class="idle">${F.pack?'Waiting for roasted beans…':'Install a packaging line to see bags here'}</span>`}</div>
     <div class="rollers"></div><small>📦 Packaging line${F.pack?'':' (not installed)'}</small></div>
     <div class="fstat">Last night: <b>${pk.roast.toFixed(1)} kg</b> roasted · <b>${pk.packed}</b> bags packed · <b>${sumObj(F.bags)}</b> bags in the warehouse</div></div>`;
 }
@@ -2683,7 +2805,12 @@ function farmBody(){
       `<p class="note">Without a roastery you can only sell raw cherries to a local trader.</p>`;
     if(nx)b+=`<button class="flyall" ${S.money<nx.cost?'disabled':''} onclick="buyFactory()">${F.factory?'Upgrade to':'Build a'} ${nx.n} · ${fmt(nx.cost)} (${nx.cap.toLocaleString()} kg/day)</button>`;
     b+=F.factory?(F.pack?`<p class="note">📦 Packaging line installed: roasted beans become 500 g bags ($0.40 per bag).</p>`:`<button class="flyall" ${S.money<8000?'disabled':''} onclick="buyPack()">📦 Install a packaging line · $8,000</button>`):'';
+    if(F.factory){const m=F.mix||{bag:2,inst:1,btl:1};
+      b+=`<p style="font-weight:800;margin:12px 0 4px" class="notr">🏭 ${L('Product lines','Dây chuyền sản phẩm')}</p>`+
+      ['inst','btl'].map(k=>{const P=PROD[k];return `<div class="upg notr"><span class="fc">${P.e}</span><div><b>${L(P.n,P.vi)}</b><br><small>${L(`1 kg roasted → ${P.per} ${P.unit}s · sells for about ${fmt(P.price)} each`,`1 kg cà phê rang → ${P.per} ${P.uvi} · bán khoảng ${fmt(P.price)} mỗi ${P.uvi}`)}</small></div>${F[k+'Line']?'<small style="font-weight:800;color:#2E9B6F">✓</small>':`<button ${S.money<P.line?'disabled':''} onclick="buyLine('${k}')">${fmt(P.line)}</button>`}</div>`}).join('')+
+      ((F.instLine||F.btlLine)?`<p style="font-weight:700;margin:8px 0 4px" class="notr">${L('What to make from roasted beans','Làm gì với cà phê rang')}</p><div class="flyg notr">${[[L('Mostly bags','Chủ yếu đóng bịch'),4,1,1],[L('Balanced','Cân bằng'),1,1,1],[L('Mostly instant','Chủ yếu hoà tan'),1,4,1],[L('Mostly bottled','Chủ yếu đóng chai'),1,1,4]].map(([t,a,bb,c])=>`<button class="${m.bag===a&&m.inst===bb&&m.btl===c?'run':''}" onclick="setMix(${a},${bb},${c})"><b>${t}</b></button>`).join('')}</div>`:'');}
     b+=`<p style="font-weight:800;margin:12px 0 4px">⚙️ Every night</p>`+[['roast','🔥 Roast new cherries',F.factory],['supply','☕ Send beans to your cafés first (phin and espresso)',F.factory],['pack','📦 Pack the rest into bags',F.pack],['sell','🧺 Sell leftover cherries to a trader',true]].map(([k,t,ok])=>ok?`<label class="exo" style="padding-left:0"><input type="checkbox" ${F.auto[k]?'checked':''} onchange="S.farm.auto['${k}']=this.checked;save()"><span>${t}</span></label>`:'').join('');
+    b+=`<p class="note notr">${F.instLine?`📦 ${L('Instant coffee','Cà phê hoà tan')}: <b>${F.inst||0}</b> ${L('boxes','hộp')}`:''}${F.btlLine?` · 🍾 ${L('Bottled','Đóng chai')}: <b>${F.btl||0}</b> ${L('bottles','chai')}`:''}</p>`;
     b+=`<p style="font-weight:800;margin:12px 0 4px">📊 Stock</p>`+Object.keys(VARS).map(v=>{const c=Math.round(F.cherries[v]||0),r=(F.roasted[v]||0),g=F.bags[v]||0;return c||r>=.1||g?`<div class="stat"><span>${VARS[v].e} ${VARS[v].n}</span><span>${c} kg cherries · ${r.toFixed(1)} kg roasted · ${g} bags</span></div>`:''}).join('')||'<p class="note">Nothing yet. Plant and harvest first.</p>';
     b+=`<div class="arow" style="padding-left:0;margin-top:8px">${F.factory?`<button onclick="roastNow()">🔥 Roast now</button>`:''}${F.pack?`<button onclick="packNow()">📦 Pack now</button>`:''}<button onclick="sellCherries()">🧺 Sell cherries (${Math.round(F.mkt*100)}% of normal)</button></div>`;
     b+=`<p class="note">Beans sent to your cafés refill Weymouth's phin coffee (and espresso if you have the machine) and cut branch ingredient costs. Branch coverage last night: <b>${Math.round(F.brCover*100)}%</b>.</p>`;
@@ -2692,11 +2819,67 @@ function farmBody(){
     b+=`<p class="note">Sell your own roasted coffee in 500 g bags. Needs a roastery and packaging line.</p>`+
     Object.entries(CHANNELS).map(([c,C])=>{const own=!C.fee||F.chOwned?.[c];return `<div class="upg"><div><b>${C.n}</b><br><small>${C.d}${!own?` · setup ${fmt(C.fee)}`:''}</small></div><button ${!own&&S.money<C.fee?'disabled':''} onclick="toggleCh('${c}')">${own?(F.ch[c]?'On ✓':'Off'):'Set up'}</button></div>`}).join('')+
     `<p style="font-weight:800;margin:12px 0 4px">💲 Bag prices</p>`+Object.entries(VARS).map(([v,V])=>`<div class="upg"><span class="fc">${V.e}</span><div><b>${V.n}</b><br><small>${F.bags[v]||0} bags in stock · suggested ${fmt(V.bag)}</small></div><div class="pr"><button onclick="setBag('${v}',-.5)">−</button><b>${fmt(bagPrice(v))}</b><button onclick="setBag('${v}',.5)">+</button></div></div>`).join('')+
+    ['inst','btl'].filter(k=>F[k+'Line']).map(k=>{const P=PROD[k];return `<div class="upg notr"><span class="fc">${P.e}</span><div><b>${L(P.n,P.vi)}</b><br><small>${F[k]||0} ${L(P.unit+'s in stock',P.uvi+' trong kho')} · ${L('suggested','giá gợi ý')} ${fmt(P.price)}</small></div><div class="pr"><button onclick="S.farm.price=S.farm.price||{};S.farm.price['${k}']=Math.max(1,Math.round((prodPrice('${k}')-.25)*4)/4);save();manage()">−</button><b>${fmt(prodPrice(k))}</b><button onclick="S.farm.price=S.farm.price||{};S.farm.price['${k}']=Math.round((prodPrice('${k}')+.25)*4)/4;save();manage()">+</button></div></div>`}).join('')+
     `<p class="note">All-time: ${Math.round(F.stats.harv).toLocaleString()} kg harvested · ${Math.round(F.stats.roast).toLocaleString()} kg roasted · ${F.stats.sold.toLocaleString()} bags sold · ${fmt(F.stats.rev)} revenue.</p>`;
   }
   return b;
 }
+// ================= LEISURE: casino, sports, giving, luxury =================
+const TEAMS=[
+  {id:'youth',e:'⚽',n:'Youth soccer league sponsor',vi:'Tài trợ giải bóng đá thiếu niên',price:20000,kind:'sponsor',buzz:.04,d:['A small buzz boost that never fades.','Tăng nhẹ độ nổi tiếng, không bao giờ mất.']},
+  {id:'minor',e:'🥅',n:'Minor league soccer team',vi:'Đội bóng đá hạng dưới',price:2000000,kind:'team',yield:.0012,risk:.9,d:['Game-day income. Win and the town loves you; lose and you pay the bills.','Có thu nhập mỗi trận. Thắng thì cả thành phố yêu, thua thì phải bù tiền.']},
+  {id:'hockey',e:'🏒',n:'Minor league hockey team',vi:'Đội khúc côn cầu hạng dưới',price:6000000,kind:'team',yield:.0011,risk:.8,d:['Big crowds in winter.','Đông khán giả vào mùa đông.']},
+  {id:'baseball',e:'⚾',n:'Pro baseball franchise',vi:'Đội bóng chày chuyên nghiệp',price:80000000,kind:'team',yield:.001,risk:.6,d:['A huge brand. Steady income and a big buzz boost.','Thương hiệu lớn. Thu nhập đều và tăng mạnh độ nổi tiếng.'],buzz:.06},
+  {id:'stadium',e:'🏟️',n:'Stadium naming rights',vi:'Quyền đặt tên sân vận động',price:5000000,kind:'sponsor',boost:.05,d:['"Saigonesee Field" — +5% customers everywhere.','"Sân Saigonesee" — +5% khách ở mọi nơi.']},
+];
+const GIVES=[
+  {id:'garden',e:'🌻',n:'Community garden',vi:'Vườn cộng đồng',price:50000,rating:.05,d:['Neighbors love it. Small rating boost.','Hàng xóm rất thích. Tăng nhẹ đánh giá.']},
+  {id:'scholar',e:'🎓',n:'Scholarship fund',vi:'Quỹ học bổng',price:250000,rating:.1,boost:.02,d:['Scholarships for local students. +2% customers.','Học bổng cho học sinh địa phương. +2% khách.']},
+  {id:'school',e:'🏫',n:'Build a school in Vietnam',vi:'Xây trường học ở Việt Nam',price:1000000,rating:.2,boost:.03,buzz:.05,d:['Your name on a school in the coffee highlands.','Tên bạn gắn trên một ngôi trường ở cao nguyên cà phê.']},
+  {id:'hospital',e:'🏥',n:'Children\'s hospital wing',vi:'Khu bệnh viện nhi',price:10000000,rating:.3,boost:.05,buzz:.08,d:['A legacy gift. Big boost to reputation.','Món quà để đời. Tăng mạnh danh tiếng.']},
+];
+const LUX=[
+  {id:'watch',e:'⌚',n:'Luxury watch',vi:'Đồng hồ hiệu',price:50000,up:0},
+  {id:'car',e:'🏎️',n:'Sports car',vi:'Siêu xe',price:350000,up:150},
+  {id:'boat',e:'🛥️',n:'Yacht',vi:'Du thuyền',price:3000000,up:1500},
+  {id:'villa',e:'🏖️',n:'Vacation villa in Phú Quốc',vi:'Biệt thự nghỉ dưỡng Phú Quốc',price:5000000,up:2000},
+  {id:'jet',e:'🛩️',n:'Private jet',vi:'Máy bay riêng',price:25000000,up:10000},
+  {id:'island',e:'🏝️',n:'Private island',vi:'Đảo riêng',price:100000000,up:30000},
+];
+const SLOT=['☕','🥖','🍋','🍒','⭐','💎'],SLOTPAY={'☕':5,'🥖':5,'🍋':8,'🍒':10,'⭐':20,'💎':50};
+function initFun(){S.fun=S.fun||{own:{},cas:{bet:0,won:0,spins:0},last:null}}
+const funBoost=()=>{initFun();let b=0;[...TEAMS,...GIVES].forEach(x=>{if(S.fun.own[x.id]&&x.boost)b+=x.boost});return b};
+const funBuzz=()=>{initFun();let b=0;[...TEAMS,...GIVES].forEach(x=>{if(S.fun.own[x.id]&&x.buzz)b+=x.buzz});return b};
+function buyFun(list,id){initFun();const x=[...TEAMS,...GIVES,...LUX].find(z=>z.id===id);if(!x||S.money<x.price||S.fun.own[id])return;S.money-=x.price;S.fun.own[id]={day:S.day};
+  if(x.rating)S.rating=Math.min(5,S.rating+x.rating);S.fun.spent=(S.fun.spent||0)+x.price;save();sfx.coin();funPop(x.e,L(x.n,x.vi)+' — '+L('it\'s yours!','đã thuộc về bạn!'),0);manage()}
+function sellFun(id){const x=[...TEAMS,...LUX].find(z=>z.id===id);if(!x||!S.fun.own[id])return;const back=Math.round(x.price*(x.kind==='team'?.9:.5));S.money+=back;delete S.fun.own[id];save();toast(L('Sold for ','Đã bán được ')+fmt(back));manage()}
+let SLOTRES=null;
+function spin(bet){initFun();if(S.money<bet||SLOTRES==='spin')return;S.money-=bet;SLOTRES='spin';manage();
+  const r=[0,0,0].map(()=>pick(SLOT));const c={};r.forEach(x=>c[x]=(c[x]||0)+1);const mx=Math.max(...Object.values(c));
+  const win=mx===3?bet*SLOTPAY[r[0]]:mx===2?Math.round(bet*1.2):0;
+  setTimeout(()=>{S.money+=win;S.fun.cas.bet+=bet;S.fun.cas.won+=win;S.fun.cas.spins++;SLOTRES={r,win,bet};save();win>bet?sfx.coin():sfx.bad();if(win>=bet*10)funPop('🎰',L('JACKPOT! ','NỔ HŨ! ')+r.join(' '),win);manage()},700)}
+let FUNT='casino';
+function funBody(){initFun();const F=S.fun,own=id=>F.own[id];
+  let b=`<div class="tabs sm notr">${[['casino','🎰 Casino'],['sports','⚽ '+L('Sports','Thể thao')],['give','🏫 '+L('Giving','Từ thiện')],['lux','🛥️ '+L('Luxury','Xa xỉ')]].map(([k,n])=>`<button class="${FUNT===k?'on':''}" onclick="FUNT='${k}';SLOTRES=null;manage()">${n}</button>`).join('')}</div>`;
+  if(FUNT==='casino'){const R0=SLOTRES&&SLOTRES!=='spin'?SLOTRES:null,net=F.cas.won-F.cas.bet;
+    b+=`<div class="casino notr"><div class="reels ${SLOTRES==='spin'?'spinning':''}">${(R0?R0.r:['🎰','🎰','🎰']).map(x=>`<span>${SLOTRES==='spin'?'❔':x}</span>`).join('')}</div>
+    <p class="slotmsg">${SLOTRES==='spin'?L('Spinning…','Đang quay…'):R0?(R0.win?L(`You won ${fmt(R0.win)}!`,`Bạn thắng ${fmt(R0.win)}!`):L('No luck this time.','Lần này chưa may.')):L('Pick a bet and spin!','Chọn mức cược rồi quay!')}</p>
+    <div class="flyg">${[100,1000,10000,100000].map(v=>`<button ${S.money<v||SLOTRES==='spin'?'disabled':''} onclick="spin(${v})"><b>🎰 ${fmt(v)}</b><span>${L('Spin','Quay')}</span></button>`).join('')}</div>
+    <p class="note">${L('3 of a kind: ☕🥖 ×5 · 🍋 ×8 · 🍒 ×10 · ⭐ ×20 · 💎 ×50. Any pair: ×1.2. The house always wins in the end 😉','3 hình giống nhau: ☕🥖 ×5 · 🍋 ×8 · 🍒 ×10 · ⭐ ×20 · 💎 ×50. Có 1 cặp: ×1.2. Nhà cái luôn thắng về lâu dài 😉')}</p>
+    <p class="note">${L('Your casino record','Thành tích casino')}: ${F.cas.spins} ${L('spins','lượt')} · <b class="${net>=0?'upt':'dnt'}">${net>=0?'+':'−'}${fmt(Math.abs(net))}</b></p></div>`}
+  const card=(x,extra)=>{const o=own(x.id);return `<div class="upg notr"><span class="fc">${x.e}</span><div><b>${L(x.n,x.vi)}</b>${x.d?`<br><small>${L(x.d[0],x.d[1])}</small>`:''}${extra?`<br><small>${extra}</small>`:''}</div>${o?(x.kind==='team'||x.up!=null?`<button class="fire" onclick="sellFun('${x.id}')">${L('Sell','Bán')}</button>`:'<small style="font-weight:800;color:#2E9B6F">✓</small>'):`<button ${S.money<x.price?'disabled':''} onclick="buyFun('','${x.id}')">${fmt(x.price)}</button>`}</div>`};
+  if(FUNT==='sports')b+=`<p class="note notr">${L('Own a team or sponsor sports. Teams earn or lose money each night depending on how they play.','Sở hữu đội bóng hoặc tài trợ thể thao. Đội bóng mỗi đêm có thể lời hoặc lỗ tuỳ phong độ.')}</p>`+TEAMS.map(x=>card(x,own(x.id)&&F.last&&F.last[x.id]!=null?L('Last night: ','Tối qua: ')+(F.last[x.id]>=0?'+':'−')+fmt(Math.abs(F.last[x.id])):'')).join('');
+  if(FUNT==='give')b+=`<p class="note notr">${L('Give back to the community. Donations raise your rating and bring in more customers.','Đóng góp cho cộng đồng. Làm từ thiện giúp tăng đánh giá và thêm khách.')}</p>`+GIVES.map(x=>card(x)).join('');
+  if(FUNT==='lux')b+=`<p class="note notr">${L('Treat yourself! Luxury items cost upkeep every day and sell back for half.','Tự thưởng cho mình! Đồ xa xỉ tốn phí duy trì mỗi ngày và bán lại chỉ được một nửa.')}</p>`+LUX.map(x=>card(x,x.up?L(`Upkeep ${fmt(x.up)}/day`,`Phí duy trì ${fmt(x.up)}/ngày`):'')).join('')+
+    `<p class="note notr">${L('Total spent on the good life','Tổng tiền đã tiêu cho cuộc sống')}: <b>${fmt(F.spent||0)}</b></p>`;
+  return b}
+function funDay(){initFun();const F=S.fun;let inc=0,cost=0;F.last={};
+  TEAMS.filter(x=>x.kind==='team'&&F.own[x.id]).forEach(x=>{const win=Math.random()<.5+.1*(S.rating-4);const v=Math.round(x.price*x.yield*(win?1.8:-x.risk)*(.6+Math.random()*.8));F.last[x.id]=v;if(v>=0)inc+=v;else cost-=v;
+    if(Math.random()<.25)R.news.push(`${x.e} ${L(x.n,x.vi)} ${win?L('won last night!','thắng trận tối qua!'):L('lost last night.','thua trận tối qua.')}`)});
+  LUX.filter(x=>F.own[x.id]&&x.up).forEach(x=>cost+=x.up);
+  S.money+=inc-cost;R.funInc=inc;R.funCost=cost}
 const GATES={
+  leisure:{day:20,profit:50000,rating:4.0,n:'Leisure & lifestyle'},
   invest:{day:8,profit:3000,rating:3.8,n:'Investing'},
   farm:{day:12,profit:8000,rating:4.0,n:'Coffee farm'},
   pickup:{day:4,profit:300,rating:3.8,n:'Online pickup'},
@@ -2811,7 +2994,7 @@ function copyNotebook(){const t=[...S.lab.found.map(id=>DISCO.find(x=>x.id===id)
 function research(id){const r=REC.find(x=>x.id===id);if(S.money<rdCost(r)||S.rd.length>=1+S.upg.lab)return;
   S.money-=rdCost(r);S.rd.push({id,left:1});save();sfx.coin();toast('Researching '+r.n);manage()}
 function flyersAll(){const k=CAMP.find(z=>z.id==='flyer');['main',...S.branches].filter(l=>!campOn('flyer',l)).forEach(l=>{if(S.money>=campCost(k)){S.money-=campCost(k);S.camps.push({id:'flyer',left:k.days,loc:l})}});save();sfx.coin();toast('📄 Flyers are out everywhere');manage()}
-function expandBr(id){const b=LOC[id],lv=S.brLvl[id]||0,c=Math.round(b.cost*.6*(lv+1));if(S.money<c||lv>=6)return;S.money-=c;S.brLvl[id]=lv+1;save();sfx.coin();toast(b.n+' expanded: more staff room and traffic');manage()}
+function expandBr(id){const b=LOC[id],lv=S.brLvl[id]||0,c=Math.round(b.cost*.6*(lv+1));if(S.money<c||lv>=10)return;S.money-=c;S.brLvl[id]=lv+1;save();sfx.coin();toast(b.n+' expanded: more staff room and traffic');manage()}
 function campCost(k){return Math.round(k.cost*Math.max(.6,1-.05*dp('mkt')))}
 function runCamp(id,l){const k0=CAMP.find(z=>z.id===id),k={...k0,cost:campCost(k0)};if(S.money<k.cost||campOn(id,k.local?l:null))return;
   S.money-=k.cost;S.camps.push({id,left:k.days,loc:k.local?l:null});if(k.buzz)S.buzz=Math.min(.5,S.buzz+k.buzz);save();sfx.coin();toast(k.n+' is running');manage()}
@@ -2847,7 +3030,7 @@ function runBoard(){
   if(boardOn('coo','open')){const nb=Object.values(LOC).filter(b=>!S.branches.includes(b.id)).sort((a,b)=>a.cost-b.cost)[0];
     const lp=S.hist.length?S.hist[S.hist.length-1].p:0;
     if(nb&&lp>0&&spendable()>nb.cost*1.5&&S.branches.every(id=>crewAt(id).length>0)){S.money-=nb.cost;S.branches.push(nb.id);log.push('👨‍💼 Opened a new branch in '+nb.n)}}
-  if(boardOn('coo','expand')){const bs=S.branches.map(id=>({id,st:S.brStats[id]})).filter(x=>x.st&&x.st.lost>x.st.dem*.2&&crewAt(x.id).length>=cap(x.id)&&(S.brLvl[x.id]||0)<6);
+  if(boardOn('coo','expand')){const bs=S.branches.map(id=>({id,st:S.brStats[id]})).filter(x=>x.st&&x.st.lost>x.st.dem*.2&&crewAt(x.id).length>=cap(x.id)&&(S.brLvl[x.id]||0)<10);
     const x=bs[0];if(x){const lv=S.brLvl[x.id]||0,c=Math.round(LOC[x.id].cost*.6*(lv+1));if(spendable()>c){S.money-=c;S.brLvl[x.id]=lv+1;log.push('👨‍💼 Expanded '+LOC[x.id].n+' (was turning customers away)')}}}
   // HR: fill open spots, care, schedule
   if(boardOn('hr','hire')){
@@ -2878,6 +3061,20 @@ function runBoard(){
   if(boardOn('cmo','ads')){const want=S.comps.length?'google':S.buzz<.05?'rednote':null;if(want&&!campOn(want)){const k=CAMP.find(z=>z.id===want);if(spendable()>k.cost){S.money-=k.cost;S.camps.push({id:want,left:k.days,loc:null});log.push('👩‍🎤 Started '+k.n)}}}
   if(boardOn('cmo','cater')&&!S.catJob&&S.catOffers.length){const o=S.catOffers.shift();S.catJob=o;log.push('👩‍🎤 Booked catering for '+o.client+' today ('+fmt(o.pay)+')')}
   // Product
+  // Product Director: sales review & seasonal menu
+  S.salesHist=S.salesHist||[];S.salesHist.push((R&&R.soldToday)||{});if(S.salesHist.length>14)S.salesHist.shift();
+  S.itemSince=S.itemSince||{};S.known.forEach(id=>{if(S.itemSince[id]==null)S.itemSince[id]=S.day});
+  if(boardOn('cpo','cut')&&S.day%7===0&&S.salesHist.length>=7){
+    const tot={};S.salesHist.forEach(h=>Object.entries(h).forEach(([k,v])=>tot[k]=(tot[k]||0)+v));
+    const menu=unlocked().filter(r=>S.day-(S.itemSince[r.id]||0)>=10);
+    if(unlocked().length>24){const weak=menu.map(r=>[r,tot[r.id]||0]).sort((a,b)=>a[1]-b[1]).slice(0,2).filter(x=>x[1]<3);
+      weak.forEach(([r,n])=>{S.lab.off.push(r.id);log.push(`👨‍🍳 Took ${r.e} ${r.n} off the menu (only ${n} sold in 2 weeks)`)})}}
+  if(boardOn('cpo','season')){const sea=season(S.day)[0],h=holiday(S.day);
+    const fit=seasonFit;S.seasonOff=unlocked().filter(r=>fit(r,sea)<.5).map(r=>r.id);
+    const feat=REC.filter(r=>S.known.includes(r.id)&&fit(r,sea)>=1.4).slice(0,3).map(r=>r.e+' '+r.n);
+    if(S.lastSea!==sea){S.lastSea=sea;log.push(`👨‍🍳 ${season(S.day)[1]} ${sea} menu is live${feat.length?': featuring '+feat.join(', '):''}${S.seasonOff.length?'. '+S.seasonOff.length+' off-season items resting':''}`)}
+    if(h&&S.lastHol!==h[0]){S.lastHol=h[0];log.push(`👨‍🍳 Holiday specials ready for ${h[0]}`)}}
+  else S.seasonOff=[];
   if(boardOn('cpo','rd')){const avail=REC.filter(r=>r.d<=S.day&&hasReq(r)&&!S.known.includes(r.id)&&!S.rd.some(x=>x.id===r.id)).sort((a,b)=>rdCost(a)-rdCost(b));
     while(S.rd.length<1+S.upg.lab&&avail.length&&spendable()>rdCost(avail[0])){const r=avail.shift();S.money-=rdCost(r);S.rd.push({id:r.id,left:1});log.push('👨‍🍳 Started researching '+r.n)}}
 }
@@ -3019,7 +3216,9 @@ const VI_FN=[
  [/^Federal 21% (.+) \+ MA 8% (.+)$/,(m,a,b)=>`Liên bang 21% ${a} + MA 8% ${b}`],
  [/^(\S+) (.+) reached level (\d+)$/,(m,f,n,l)=>`${f} ${n} lên cấp ${l}`],
 ];
-function trStr(t){const k=t.trim();if(!k)return null;
+const TRC=new Map();
+function trStr(t){if(TRC.has(t))return TRC.get(t);const r=trStr0(t);if(TRC.size>4000)TRC.clear();TRC.set(t,r);return r}
+function trStr0(t){const k=t.trim();if(!k)return null;
   let v=VI_EXACT.get(k);
   if(v===undefined){for(const [rx,r] of VI_RX){if(rx.test(k)){v=k.replace(rx,r);break}}}
   if(v===undefined){for(const [rx,f] of VI_FN){const m=k.match(rx);if(m){const r=f(...m);if(r!==k){v=r;break}}}}
@@ -3045,7 +3244,7 @@ VI_FN.push([/^(.+) ×(\d+)$/,(m,a,n)=>{const e=a.match(/^(\S+) (.+)$/);const nm=
 VI_FN.push([/^(\S+) (.+)$/,(m,e,n)=>VI_EXACT.has(n)&&!/^[A-Za-z]/.test(e)?e+' '+VI_EXACT.get(n):m]);
 VI_FN.unshift([/^(.*)(☕ Bar|🥖 Kitchen) ([\d.]+)s(.*)$/,(m)=>m.replace(/☕ Bar/g,'☕ Quầy bar').replace(/🥖 Kitchen/g,'🥖 Bếp')]);
 VI_RX.unshift([/^📓 Recipe notebook \((\d+)\)$/,"📓 Sổ công thức ($1)"]);
-VI_EXACT.set("📒 Books","📒 Sổ sách");VI_EXACT.set("⭐ Reviews","⭐ Đánh giá");
+VI_EXACT.set("📒 Books","📒 Sổ sách");VI_EXACT.set("🎰 Leisure","🎰 Giải trí");VI_EXACT.set("🥇 Gold","🥇 Vàng");VI_EXACT.set("⭐ Reviews","⭐ Đánh giá");
 function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';
   const card=$('card'),sc=card?card.scrollTop:0;if(RERENDER&&$('modal').classList.contains('show')){try{RERENDER()}catch(e){}if(card)card.scrollTop=sc}
   document.querySelectorAll('.tutov').forEach(e=>{if(TI>=0&&e.querySelector('.tutdots'))tutShow()});
@@ -3053,7 +3252,7 @@ function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e
   if(l==='vi')trTree(document.body);else untrTree(document.body);document.querySelectorAll('.langsw button').forEach(b=>b.classList.toggle('on',b.dataset.l===l))}
 function langSwitch(){return `<div class="langsw notr"><button data-l="en" class="${LANG==='en'?'on':''}" onclick="setLang('en')">🇺🇸 English</button><button data-l="vi" class="${LANG==='vi'?'on':''}" onclick="setLang('vi')">🇻🇳 Tiếng Việt</button></div>`}
 
-initFin();initLab();initTax();initFarm();initOffice();
+initFin();initLab();initTax();initFarm();initOffice();initFun();
 if(!S.unl){S.unl={};Object.keys(GATES).forEach(g=>{if(gateOk(g))S.unl[g]=1});if(S.day>3){S.tut=1;S.tips=S.tips||{};Object.keys(TAB_TIPS).forEach(t=>S.tips[t]=1)}save()}
 if(LANG==='vi')setTimeout(()=>setLang('vi'),0);
 intro();
