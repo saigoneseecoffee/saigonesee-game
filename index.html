@@ -858,6 +858,13 @@ button,summary,.ing,.cust,.chip{touch-action:manipulation;-webkit-tap-highlight-
 .regwrap{margin:8px 0}.regsum{font-weight:800;font-size:16px;padding:10px 12px;background:var(--k);color:var(--y);border-radius:12px;cursor:pointer;list-style:none}
 .regsum::-webkit-details-marker{display:none}.regsum small{color:#ddd}
 .regwrap[open]>.regsum{margin-bottom:6px}
+.credit{background:#fff;border:1px solid #E7E0CC;border-radius:14px;padding:10px 12px;margin:12px 0 6px}
+.crtop{display:flex;justify-content:space-between;font-weight:800}
+.crbar{position:relative;height:10px;border-radius:6px;margin:8px 0;background:linear-gradient(90deg,#C0392B,#E08A32,#C9A200,#5AA469,#2E9B6F)}
+.crbar i{position:absolute;top:-4px;width:6px;height:18px;border-radius:3px;background:#111;transform:translateX(-50%)}
+.gtag{font-size:12px;color:#888;font-weight:700}
+.gd summary{font-size:16px}
+.gd .helpul{margin:6px 0 8px}
 </style>
 </head>
 <body>
@@ -1189,18 +1196,18 @@ const UPG=[
   {id:'autofryer',eq:1,n:'🍳 Auto fryer',d:'Fried items 15% faster',base:1500,max:1},
   {id:'robochef',eq:1,n:'🤖 Robot line cook',d:'Kitchen orders 8% faster per level',base:6000,max:3},
   {g:'Storage & power',eq:1},
-  {id:'tu',eq:1,n:'❄️ Walk-in fridge',d:'Level 1: baguettes and milk keep overnight. Level 2: greens, foams and fruit too',base:90,max:2},
+  {id:'tu',eq:1,n:'❄️ Walk-in fridge',d:'Fresh food keeps up to 4 days (5 with a vacuum sealer). Level 1: baguettes and milk. Level 2: all fresh items',base:90,max:2},
   {id:'freezer',eq:1,n:'🧊 Freezer',d:'Proteins bought in bulk cost 10% less',base:400,max:1},
   {id:'maint',eq:1,n:'🔧 Maintenance contract',d:'Machines break down half as often per level',base:250,max:3},
   {id:'generator',eq:1,n:'🔋 Backup generator',d:'Power outages no longer stop work',base:600,max:1},
   {id:'solar',eq:1,n:'☀️ Solar panels',d:'Cuts the daily electric bill for all your machines by 50%',base:1500,max:1},
   {id:'cams',eq:1,n:'📹 Security cameras',d:'Stops cash register theft',base:350,max:1},
-  {id:'vacuum',eq:1,n:'🫙 Vacuum sealer',d:'Only half of the fresh stock spoils overnight',base:350,max:1},
+  {id:'vacuum',eq:1,n:'🫙 Vacuum sealer',d:'Chilled food keeps 5 days instead of 4',base:350,max:1},
   {id:'shelving',eq:1,n:'📦 Storage shelving',d:'Bulk ×5 purchases save 20% instead of 15%',base:300,max:1},
   {id:'tap',eq:1,n:'💳 Tap-to-pay terminals',d:'Faster checkout: customers wait 5% longer',base:250,max:1},
   {id:'hvac',eq:1,n:'🌡️ HVAC system',d:'Heat waves and freezing days hurt traffic half as much',base:900,max:1},
   {id:'firesup',eq:1,n:'🧯 Fire suppression',d:'Machine breakdowns last half as long',base:500,max:1},
-  {id:'smartfridge',eq:1,n:'📡 Smart fridge',d:'Nothing spoils overnight',base:5000,max:1},
+  {id:'smartfridge',eq:1,n:'📡 Smart fridge',d:'All fresh food keeps the full 5 days',base:5000,max:1},
   {id:'battery',eq:1,n:'🔋 Battery storage',d:'Another 25% off the electric bill',base:3000,max:1},
   {id:'evvans',eq:1,n:'🚐 Electric delivery vans',d:'Delivery apps take 5% less',base:4000,max:1},
   {g:'Coffee farm & roastery',eq:1},
@@ -1606,6 +1613,14 @@ function officeBody(){initOffice();const O=S.office,used=officeCount(),seats=off
     ${used>=seats?'<p class="note">Office is full. Upgrade the 🏢 Regional office for more desks.</p>':''}</details>`}).join('');
 }
 const boardOn=(k,o)=>{const b=S.board&&S.board[k];return !!(b&&b.on&&(!o||b.opts[o]))};
+// ---------- Labor rules ----------
+// Minimum wage rises 5% every Jan 1. Holiday pay is 1.5x. Each location with 6+ staff must be at least 30% women and 30% men,
+// and managers must be balanced once you have 4+. Staff sometimes call in sick (paid, but they don't work that day).
+const minWage=()=>{const yrs=Math.floor((S.day+58)/365);return Math.round(34*Math.pow(1.05,yrs))};
+const genderOf=x=>x.g||(x.g=Math.random()<.5?'f':'m');
+function compliance(){const out=[];['main',...S.branches].forEach(l=>{const c=crewAt(l);if(c.length<6)return;const f=c.filter(x=>genderOf(x)==='f').length/c.length;if(f<.3||f>.7)out.push({l,f})});
+  const mg=S.staff.filter(x=>x.mgr);let mgBad=false;if(mg.length>=4){const f=mg.filter(x=>genderOf(x)==='f').length/mg.length;mgBad=f<.3||f>.7}
+  const low=S.staff.filter(x=>x.wage<minWage());return {loc:out,mgBad,low}}
 function genCands(){
   let nC=3;try{if(S.board&&S.board.hr&&S.board.hr.on)nC=6;nC+=2*Math.round(dp('hr'))}catch(e){}
   const out=[];for(let i=0;i<nC;i++){
@@ -1616,7 +1631,7 @@ function genCands(){
     else{skills={bar:r1(base+.4),kit:r1(base+.4)};extra=18}
     const wage=Math.round(22+(8-base)*6+extra+Math.random()*6);
     out.push({id:Math.floor(Math.random()*1e9),name:(()=>{const used=new Set([...(()=>{try{return S.staff||[]}catch(e){return []}})().map(x=>x.name),...out.map(x=>x.name)]);const free=NAMES.filter(n=>!used.has(n));return pick(free.length?free:NAMES)})(),face:pick(SFACES),skills,pos:Object.keys(skills).length>1?'flex':main,wage})}
-  return out;
+  let mw=34;try{mw=minWage()}catch(e){}out.forEach(c=>{c.g=Math.random()<.5?'f':'m';c.wage=Math.max(c.wage,mw)});return out;
 }
 const $=id=>document.getElementById(id);
 
@@ -1693,13 +1708,26 @@ function wavBlob(buf){const d=buf.getChannelData(0),n=d.length,b=new ArrayBuffer
   w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,buf.sampleRate,true);v.setUint32(28,buf.sampleRate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
   for(let i=0;i<n;i++){const x=Math.max(-1,Math.min(1,d[i]));v.setInt16(44+i*2,x*32767,true)}return new Blob([b],{type:'audio/wav'})}
 function renderMusic(vol){const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!OAC)return Promise.reject();
-  const sr=22050,dur=28,ac=new OAC(1,sr*dur,sr),master=ac.createGain();master.gain.value=vol;master.connect(ac.destination);
-  MCHORDS.forEach((ch,k)=>{const t0=k*7,g=ac.createGain();g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.16,t0+1.5);g.gain.setValueAtTime(.16,t0+5.5);g.gain.linearRampToValueAtTime(0,t0+7);g.connect(master);
-    ch.forEach(f=>{[f/2,f].forEach((ff,oi)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=ff;const og=ac.createGain();og.gain.value=oi?.5:1;o.connect(og);og.connect(g);o.start(t0);o.stop(t0+7.05)})});
-    const bass=ac.createOscillator(),bg=ac.createGain();bass.type='triangle';bass.frequency.value=ch[0]/2;bg.gain.setValueAtTime(0,t0);bg.gain.linearRampToValueAtTime(.18,t0+.1);bg.gain.exponentialRampToValueAtTime(.01,t0+3.4);bg.gain.linearRampToValueAtTime(.12,t0+3.6);bg.gain.exponentialRampToValueAtTime(.001,t0+6.9);bass.connect(bg);bg.connect(master);bass.start(t0);bass.stop(t0+7);
-    MMEL[k].forEach((f,i)=>{if((k+i)%5===4)return;const tt=t0+.3+i*.8,o=ac.createOscillator(),ng=ac.createGain();o.type='triangle';o.frequency.value=f;ng.gain.setValueAtTime(0,tt);ng.gain.linearRampToValueAtTime(.2,tt+.02);ng.gain.exponentialRampToValueAtTime(.0005,tt+1.3);o.connect(ng);ng.connect(master);o.start(tt);o.stop(tt+1.35)})});
+  // Upbeat café pop: 120 BPM, C–G–Am–F, 16-second loop with drums, bouncy bass, chord stabs and a catchy lead.
+  const sr=22050,dur=16,ac=new OAC(1,sr*dur,sr),M=ac.createGain();M.gain.value=vol;M.connect(ac.destination);
+  const E=.25,noise=ac.createBuffer(1,sr,sr),nd=noise.getChannelData(0);for(let i=0;i<sr;i++)nd[i]=Math.random()*2-1;
+  const env=(g,t,a,peak,d)=>{g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d)};
+  const tone=(type,f,t,a,peak,d,dest)=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;env(g,t,a,peak,d);o.connect(g);g.connect(dest||M);o.start(t);o.stop(t+a+d+.02)};
+  const kick=t=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.setValueAtTime(130,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);env(g,t,.003,.9,.18);o.connect(g);g.connect(M);o.start(t);o.stop(t+.22)};
+  const hiss=(t,hp,peak,d)=>{const b=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();b.buffer=noise;f.type='highpass';f.frequency.value=hp;env(g,t,.002,peak,d);b.connect(f);f.connect(g);g.connect(M);b.start(t,Math.random()*.5,d+.05)};
+  const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;lp.connect(M);
+  const CH=[[261.63,329.63,392],[196,246.94,293.66],[220,261.63,329.63],[174.61,220,261.63]];
+  const n={G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880,B5:987.77,C6:1046.5};
+  const MEL=[['E5',0,'G5','A5','G5',0,'E5','D5','C5',0,'D5','E5','G5',0,0,0],['D5',0,'D5','E5','G5',0,'A5','G5','B5',0,'A5','G5','D5',0,0,0],
+             ['C5',0,'E5','A5','E5',0,'C5','A4','C5',0,'D5','E5','A5',0,0,0],['A5',0,'A5','C6','A5','G5','F5',0,'E5',0,'D5','C5','D5',0,'G5',0]];
+  for(let bar=0;bar<8;bar++){const t0=bar*2,ci=Math.floor(bar/2),ch=CH[ci];
+    for(let b=0;b<4;b++){const t=t0+b*.5;if(b%2===0)kick(t);else{hiss(t,1800,.35,.12);tone('triangle',180,t,.002,.15,.08)}}
+    for(let e=0;e<8;e++){const t=t0+e*E;hiss(t,7000,e%2?.08:.13,.04);
+      tone('triangle',(e%4===2?ch[0]:ch[0]/2),t,.005,.34,.2);
+      if(e%2===1)ch.forEach(f=>tone('square',f,t,.004,.035,.16,lp))}}
+  MEL.forEach((row,ci)=>row.forEach((nm,i)=>{if(!nm)return;const t=ci*4+i*E;tone('square',n[nm],t,.006,.07,.22,lp);tone('sine',n[nm]*2,t,.004,.03,.15)}));
   return ac.startRendering().then(wavBlob)}
-function musicLoad(){const vol=.55*SET.volume;if(MUS&&Math.abs(MUSvol-vol)<.02)return Promise.resolve(MUS);if(MUSbusy)return Promise.resolve(MUS);MUSbusy=true;
+function musicLoad(){const vol=.85*SET.volume;if(MUS&&Math.abs(MUSvol-vol)<.02)return Promise.resolve(MUS);if(MUSbusy)return Promise.resolve(MUS);MUSbusy=true;
   return renderMusic(vol).then(bl=>{const was=MUS&&!MUS.paused,pos=MUS?MUS.currentTime:0;if(MUS){MUS.pause();URL.revokeObjectURL(MUS.src)}MUS=new Audio(URL.createObjectURL(bl));MUS.loop=true;MUS.setAttribute('playsinline','');MUSvol=vol;MUSbusy=false;if(was){MUS.currentTime=pos;MUS.play().catch(()=>{})}return MUS}).catch(()=>{MUSbusy=false;return null})}
 function musicSet(on){if(on){MTimer=1;musicLoad().then(a=>{if(a&&SET.music)a.play().catch(()=>{})})}else{MTimer=null;if(MUS)MUS.pause()}}
 function musicVolume(){if(SET.music)musicLoad()}
@@ -1712,6 +1740,67 @@ function buzz(p){if(SET.vibe&&navigator.vibrate)try{navigator.vibrate(p)}catch(e
 function setSet(k,v){SET[k]=v;saveSet();applySet();if(k==='sound'&&v)beep(880,.08);if(k==='vibe'&&v)buzz(40);if(k==='theme')buzz(15);settings(true)}
 let SETFROM=null;
 let SETBACK=null;
+
+// ================= FULL GAME GUIDE =================
+const GUIDE=[
+ {id:'basics',e:'☕',t:['Serving customers','Phục vụ khách'],b:[
+  ['Customers appear with a ticket. The small icons under each item are the recipe.','Khách xuất hiện kèm phiếu order. Các icon nhỏ dưới mỗi món là công thức.'],
+  ['Tap the ingredients (switch Bar / Toppings / Kitchen tabs), then tap the customer to serve.','Chạm nguyên liệu (đổi tab Quầy bar / Topping / Bếp), rồi chạm vào khách để giao.'],
+  ['Red notes like "Extra sweet" or "No ice" are requests: tap an ingredient twice for extra, leave it out for none. Getting it right earns bigger tips.','Chữ đỏ như "Thêm ngọt" hay "Không đá" là lời dặn: chạm 2 lần để thêm, bỏ đi để không có. Làm đúng được tip nhiều hơn.'],
+  ['The colored bar under each customer is their patience. When it runs out they leave and your rating drops.','Thanh màu dưới mỗi khách là độ kiên nhẫn. Hết thanh là khách bỏ về và bị trừ sao.'],
+  ['The shop opens 7am–3pm. When the Kingston train arrives, expect a rush.','Tiệm mở 7 giờ sáng – 3 giờ chiều. Khi tàu Kingston tới, khách sẽ ùa vào.']]},
+ {id:'market',e:'🛒',t:['Market & expiry dates','Đi chợ & hạn sử dụng'],b:[
+  ['Buy ingredients before opening. "Restock everything" buys what you used yesterday + 40% + 20, plus 30 extra.','Mua nguyên liệu trước khi mở cửa. "Mua đủ tất cả" nhập theo lượng dùng hôm qua + 40% + 20, dư thêm 30.'],
+  ['Every batch has an expiry date. Older batches are used first.','Mỗi lô hàng có hạn sử dụng. Lô cũ được dùng trước.'],
+  ['Fresh food without a fridge lasts only 1 day. A walk-in fridge keeps it 4 days, up to 5 with a vacuum sealer or smart fridge. Dry goods last 60 days.','Đồ tươi không có tủ lạnh chỉ giữ 1 ngày. Kho lạnh giữ 4 ngày, tối đa 5 ngày nếu có máy hút chân không hoặc tủ lạnh thông minh. Đồ khô giữ 60 ngày.'],
+  ['"⏳ expire tonight" in red means that stock will be thrown away after today. Don\'t overbuy fresh food.','"⏳ hết hạn tối nay" màu đỏ nghĩa là số hàng đó sẽ bị bỏ sau hôm nay. Đừng mua quá nhiều đồ tươi.']]},
+ {id:'rush',e:'📞',t:['Running out during the day','Hết hàng giữa ngày'],b:[
+  ['Tap an ingredient that says 0 to call a rush delivery.','Chạm vào nguyên liệu đã hết (số 0) để gọi giao hàng gấp.'],
+  ['🛵 Instacart: fastest (~30 min) but ×2 the price. 🚚 Restaurant Depot: ~1 hour, ×1.6. 📦 Amazon Fresh: ~2 hours, ×1.35.','🛵 Instacart: nhanh nhất (~30 phút) nhưng giá ×2. 🚚 Restaurant Depot: ~1 tiếng, ×1.6. 📦 Amazon Fresh: ~2 tiếng, ×1.35.'],
+  ['It\'s cheaper to stock up at the market, so use rush orders only in an emergency.','Mua ở chợ rẻ hơn nhiều, chỉ gọi hàng gấp khi thật cần.']]},
+ {id:'staff',e:'👥',t:['Staff','Nhân viên'],b:[
+  ['Hire staff in Manage shop → Staff. They make orders on their own.','Thuê nhân viên trong Quản lý tiệm → Nhân viên. Họ tự làm món.'],
+  ['Lower seconds = faster. Staff level up over time and get faster.','Số giây càng thấp càng nhanh. Nhân viên lên cấp theo thời gian và làm nhanh hơn.'],
+  ['🙈 New, tired or unhappy staff make mistakes and have to remake orders, wasting ingredients. Keep morale up with bonuses and raises.','🙈 Nhân viên mới, mệt hoặc buồn sẽ làm sai và phải làm lại món, gây hao hụt nguyên liệu. Giữ tinh thần bằng thưởng và tăng lương.'],
+  ['🤒 Sometimes staff call in sick. They are still paid but don\'t work that day, so keep a little extra help.','🤒 Thỉnh thoảng nhân viên nghỉ ốm. Vẫn phải trả lương nhưng họ không làm hôm đó, nên hãy có thêm người dự phòng.'],
+  ['If you can\'t pay wages, staff quit.','Không đủ tiền trả lương thì nhân viên sẽ nghỉ việc.']]},
+ {id:'law',e:'⚖️',t:['Labor rules','Luật lao động'],b:[
+  ['💵 Minimum wage: starts at $34/day and rises 5% every January 1. Paying anyone below it = $100 fine per person per night.','💵 Lương tối thiểu: bắt đầu $34/ngày và tăng 5% mỗi ngày 1/1. Trả thấp hơn bị phạt $100 mỗi người mỗi đêm.'],
+  ['🎉 Holiday pay: on national holidays wages are 1.5x.','🎉 Lương ngày lễ: ngày lễ quốc gia trả lương gấp 1.5.'],
+  ['👩‍🤝‍👨 Gender balance: every location with 6+ staff needs at least 30% women and 30% men. Otherwise $150 fine per location per night.','👩‍🤝‍👨 Cân bằng giới tính: mỗi tiệm từ 6 nhân viên phải có ít nhất 30% nữ và 30% nam. Nếu không bị phạt $150 mỗi tiệm mỗi đêm.'],
+  ['👑 Managers: once you have 4+ managers, they must be balanced too ($300 fine).','👑 Quản lý: từ 4 quản lý trở lên cũng phải cân bằng (phạt $300).'],
+  ['Check the ⚖️ Labor rules box at the top of the Staff tab. ♀/♂ next to each name helps you balance.','Xem khung ⚖️ Luật lao động đầu tab Nhân viên. Ký hiệu ♀/♂ cạnh tên giúp bạn cân bằng.']]},
+ {id:'money',e:'💰',t:['Money, loans & credit','Tiền, vay & điểm tín dụng'],b:[
+  ['Daily costs: ingredients, wages, rent (Weymouth and every branch), electricity and payroll tax.','Chi phí mỗi ngày: nguyên liệu, lương, tiền thuê mặt bằng (Weymouth và các chi nhánh), tiền điện và thuế lương.'],
+  ['💸 Quick cash: borrow from day 1, no questions, but 3%+ interest a day and it lowers your credit.','💸 Vay nóng: vay được từ ngày 1, không cần điều kiện, nhưng lãi 3%+ mỗi ngày và làm giảm điểm tín dụng.'],
+  ['🏦 Bank loans open from day 5. They need a good credit score (and branches for big loans), but interest is much lower.','🏦 Vay ngân hàng mở từ ngày 5. Cần điểm tín dụng tốt (và đủ chi nhánh với khoản lớn), nhưng lãi thấp hơn nhiều.'],
+  ['📊 Credit score (300–850) rises with profitable days, good ratings and on-time payments. Missed payments and negative cash pull it down.','📊 Điểm tín dụng (300–850) tăng khi có lời, được đánh giá tốt và trả nợ đúng hạn. Trễ hạn và âm tiền làm giảm điểm.'],
+  ['🧾 Income tax is paid every quarter (~3 months). Keep some cash ready.','🧾 Thuế thu nhập nộp mỗi quý (~3 tháng). Nhớ giữ sẵn tiền mặt.'],
+  ['📒 Books shows profit by day, week, month, quarter and year with % changes.','📒 Sổ sách cho xem lợi nhuận theo ngày, tuần, tháng, quý, năm kèm % tăng giảm.']]},
+ {id:'grow',e:'📈',t:['Growing the business','Phát triển công ty'],b:[
+  ['🔧 Upgrades and 🛠️ equipment make the shop faster and busier. Each level costs more than the last.','🔧 Nâng cấp và 🛠️ thiết bị giúp tiệm nhanh và đông khách hơn. Mỗi cấp đắt hơn cấp trước.'],
+  ['🏪 Branches sell on their own if they have staff. Open them across North America as you grow.','🏪 Chi nhánh tự bán nếu có nhân viên. Mở rộng khắp Bắc Mỹ khi công ty lớn dần.'],
+  ['🔬 Research unlocks real Saigonesee items. The Lab lets you invent new ones from 200+ world ingredients.','🔬 Nghiên cứu mở món thật của Saigonesee. Phòng Lab cho sáng chế món mới từ hơn 200 nguyên liệu thế giới.'],
+  ['📣 Marketing and delivery apps bring more customers. Watch out for competitors opening nearby.','📣 Marketing và app giao hàng giúp thêm khách. Coi chừng đối thủ mở gần tiệm.']]},
+ {id:'big',e:'🏢',t:['Running a big company','Điều hành công ty lớn'],b:[
+  ['👔 Directors and 🏢 office teams handle hiring, branches, money and research for you each night.','👔 Ban giám đốc và 🏢 các phòng ban lo tuyển người, chi nhánh, tiền và nghiên cứu giúp bạn mỗi đêm.'],
+  ['🌱 Farm: buy land, plant coffee, hire farmers, roast beans, then sell bags, instant coffee and bottles.','🌱 Nông trại: mua đất, trồng cà phê, thuê nông dân, rang cà phê, rồi bán bịch, cà phê hoà tan và đóng chai.'],
+  ['📈 Invest spare cash in stocks, gold, bank savings and real estate.','📈 Đầu tư tiền dư vào cổ phiếu, vàng, gửi tiết kiệm và bất động sản.'],
+  ['🎰 Leisure: casino, sports teams, giving back and luxury items for when you\'re rich.','🎰 Giải trí: casino, đội bóng, từ thiện và đồ xa xỉ khi đã giàu.']]},
+ {id:'tips',e:'💡',t:['Tips for new players','Mẹo cho người mới'],b:[
+  ['Hire 1–2 staff in the first days so you\'re not doing everything alone.','Thuê 1–2 nhân viên ngay mấy ngày đầu để không phải làm hết một mình.'],
+  ['Don\'t overbuy fresh food: without a fridge it spoils overnight.','Đừng mua quá nhiều đồ tươi: không có tủ lạnh sẽ hỏng qua đêm.'],
+  ['Keep prices "Fair". Too expensive = customers walk out.','Giữ giá ở mức "Hợp lý". Quá đắt thì khách bỏ về.'],
+  ['Avoid quick-cash loans unless you must. Wait for the bank on day 5.','Tránh vay nóng nếu không thật cần. Đợi vay ngân hàng từ ngày 5.'],
+  ['Open your first branch when it unlocks. It\'s the fastest way to grow income.','Mở chi nhánh đầu tiên ngay khi được. Đây là cách nhanh nhất để tăng thu nhập.'],
+  ['Stuck? Tap ❓ How it works at the top of any tab.','Bí quá? Chạm ❓ Cách hoạt động ở đầu mỗi tab.']]},
+];
+let GFROM=null;
+function guide(open){if(!GFROM){GFROM=R&&!R.paused?'play':R?'pause':$('modal').classList.contains('show')?RERENDER:'menu';if(R&&!R.paused)R.paused=true}
+  showModal(`<div class="mhead"><h2 class="notr">📖 ${L('Game guide','Hướng dẫn chi tiết')}</h2></div><p class="note notr">${L('Everything you need to know. Tap a topic to open it.','Mọi thứ bạn cần biết. Chạm vào từng mục để mở.')}</p>`+
+   GUIDE.map(g=>`<details class="srcgrp gd notr" data-key="g:${g.id}"${OPEN.has('g:'+g.id)||open===g.id?' open':''}><summary>${g.e} ${L(g.t[0],g.t[1])}</summary><ul class="helpul">${g.b.map(x=>`<li>${L(x[0],x[1])}</li>`).join('')}</ul></details>`).join('')+
+   `<button class="big notr" onclick="closeGuide()">${L('Got it','Đã hiểu')}</button>`,()=>guide())}
+function closeGuide(){const f=GFROM;GFROM=null;if(f==='play')resume();else if(f==='pause')pause2();else if(typeof f==='function')f();else intro()}
 function settings(keep){
   if(!keep){SETFROM=R&&!R.paused?'play':R?'pause':'menu';SETBACK=$('modal').classList.contains('show')?RERENDER:null;if(R&&!R.paused)R.paused=true}
   const tg=(k,on,t,d)=>`<div class="setrow"><div><b>${t}</b>${d?`<br><small>${d}</small>`:''}</div><button class="sw${on?' on':''}" role="switch" aria-checked="${on}" onclick="setSet('${k}',${!on})"><i></i></button></div>`;
@@ -1735,6 +1824,7 @@ function settings(keep){
   <div class="arow notr" style="padding-left:0"><button onclick="exportSave()">💾 ${L('Save to file','Lưu ra file')}</button><button onclick="document.getElementById('loadfile').click()">📂 ${L('Open a file','Mở file')}</button></div>
   <div class="arow notr" style="padding-left:0;margin-top:6px"><button onclick="copyCode()">📋 ${L('Copy save code','Chép mã lưu')}</button><button onclick="pasteCode()">📥 ${L('Paste save code','Dán mã lưu')}</button></div>
   <input type="file" id="loadfile" accept=".json,.txt,application/json" style="display:none" onchange="importFile(this)">
+  <button class="big alt notr" onclick="GFROM=SETBACK||SETFROM;guide()">📖 ${L('Game guide','Hướng dẫn chi tiết')}</button>
   <button class="big alt notr" onclick="S.tut=0;S.tips={};save();closeSettings();toast(L('Tips will show again','Hướng dẫn sẽ hiện lại'));if(R)setTimeout(tutStart,300)">🎓 ${L('Show the tutorial again','Xem lại hướng dẫn')}</button>
   <button class="big notr" onclick="closeSettings()">${L('Done','Xong')}</button>
   <button class="big alt notr" onclick="confirmReset()">${L('Start over','Chơi lại từ đầu')}</button>`,()=>settings(true));
@@ -1803,14 +1893,14 @@ const TAB_TIPS={
   stats:['Your all-time numbers and what unlocks next.','Số liệu từ đầu tới giờ và những gì sắp mở khoá.'],
 };
 const HELP={
-  staff:['👥',['Staff','Nhân viên'],[['Hire people so they make orders for you.','Thuê người để họ tự làm món giúp bạn.'],['Each person has a speed for Bar and Kitchen. Lower seconds = faster.','Mỗi người có tốc độ ở Quầy bar và Bếp. Số giây càng thấp càng nhanh.'],['Tap a name to raise pay, give a bonus or move them to a branch.','Chạm vào tên để tăng lương, thưởng hoặc chuyển qua chi nhánh.'],['Unhappy staff (low morale) may quit. Bonuses help.','Nhân viên buồn (tinh thần thấp) có thể nghỉ việc. Thưởng sẽ giúp.']]],
+  staff:['👥',['Staff','Nhân viên'],[['⚖️ Follow the labor rules: minimum wage, holiday pay and gender balance (30%+ women and men at locations with 6+ staff). Breaking them means nightly fines.','⚖️ Tuân thủ luật lao động: lương tối thiểu, lương ngày lễ và cân bằng giới tính (từ 30% nữ và nam ở tiệm có 6+ người). Vi phạm bị phạt mỗi đêm.'],['🙈 Tired or unhappy staff make mistakes that waste ingredients.','🙈 Nhân viên mệt hoặc buồn dễ làm sai, gây hao hụt nguyên liệu.'],['Hire people so they make orders for you.','Thuê người để họ tự làm món giúp bạn.'],['Each person has a speed for Bar and Kitchen. Lower seconds = faster.','Mỗi người có tốc độ ở Quầy bar và Bếp. Số giây càng thấp càng nhanh.'],['Tap a name to raise pay, give a bonus or move them to a branch.','Chạm vào tên để tăng lương, thưởng hoặc chuyển qua chi nhánh.'],['Unhappy staff (low morale) may quit. Bonuses help.','Nhân viên buồn (tinh thần thấp) có thể nghỉ việc. Thưởng sẽ giúp.']]],
   branch:['🏪',['Branches','Chi nhánh'],[['Open a shop in another town. It sells on its own every day.','Mở tiệm ở town khác. Chi nhánh tự bán mỗi ngày.'],['A branch needs staff. No staff = no sales.','Chi nhánh cần nhân viên. Không có người thì không bán được.'],['🔴 means it turns customers away. Hire more or expand it.','🔴 nghĩa là đang từ chối khách. Thuê thêm người hoặc mở rộng.'],['Big towns earn more but cost more rent.','Town lớn lời nhiều hơn nhưng tiền thuê cao hơn.']]],
   menu:['💲',['Prices','Giá bán'],[['Set your own price for each item.','Tự đặt giá cho từng món.'],['Higher price = more profit per cup, but fewer customers and smaller tips.','Giá cao lời hơn mỗi ly, nhưng ít khách hơn và tip ít hơn.'],['"Fair" is the sweet spot for most items.','Mức "Hợp lý" là tốt nhất cho đa số món.']]],
   rd:['🔬',['Research & Lab','Nghiên cứu & Lab'],[['Research unlocks real Saigonesee menu items. Each takes 1 day.','Nghiên cứu mở món thật của Saigonesee. Mỗi món mất 1 ngày.'],['In the Lab, mix a base + 1–4 flavors to invent new items.','Trong Lab, trộn 1 nền + 1–4 hương vị để sáng chế món mới.'],['Source ingredients from around the world to try more combos.','Tìm nguyên liệu khắp thế giới để thử nhiều công thức hơn.'],['Hire researchers to invent for you every night.','Thuê nghiên cứu viên để họ tự sáng chế mỗi đêm.']]],
   mkt:['📣',['Marketing','Marketing'],[['Ads bring more customers for a few days.','Quảng cáo giúp thêm khách trong vài ngày.'],['Turn on delivery apps for extra orders (they take 30%).','Bật app giao hàng để có thêm đơn (app lấy 30%).'],['Competitors steal customers. Google ads pull them back.','Đối thủ giành khách. Quảng cáo Google kéo khách lại.']]],
-  fin:['🏦',['Finance','Tài chính'],[['See daily profit, taxes and loans.','Xem lợi nhuận mỗi ngày, thuế và khoản vay.'],['Catering orders pay well. Make the items before the deadline.','Đơn catering trả nhiều tiền. Làm đủ món trước hạn.'],['Loans give cash now but you repay every day.','Vay có tiền ngay nhưng phải trả mỗi ngày.'],['Income tax is paid every quarter (about 3 months). Keep some cash ready.','Thuế thu nhập trả mỗi quý (khoảng 3 tháng). Nhớ giữ sẵn tiền mặt.']]],
+  fin:['🏦',['Finance','Tài chính'],[['💸 Quick cash works from day 1 but is very expensive. 🏦 Bank loans open from day 5 and need a good credit score.','💸 Vay nóng dùng được từ ngày 1 nhưng lãi rất cao. 🏦 Vay ngân hàng mở từ ngày 5 và cần điểm tín dụng tốt.'],['📊 Pay on time and stay profitable to raise your credit score.','📊 Trả nợ đúng hạn và kinh doanh có lời để tăng điểm tín dụng.'],['See daily profit, taxes and loans.','Xem lợi nhuận mỗi ngày, thuế và khoản vay.'],['Catering orders pay well. Make the items before the deadline.','Đơn catering trả nhiều tiền. Làm đủ món trước hạn.'],['Loans give cash now but you repay every day.','Vay có tiền ngay nhưng phải trả mỗi ngày.'],['Income tax is paid every quarter (about 3 months). Keep some cash ready.','Thuế thu nhập trả mỗi quý (khoảng 3 tháng). Nhớ giữ sẵn tiền mặt.']]],
   upg:['🔧',['Upgrades','Nâng cấp'],[['Upgrades make the shop better forever.','Nâng cấp giúp tiệm tốt hơn mãi mãi.'],['Some bring more customers, some make them wait longer, some raise tips.','Có mục thêm khách, có mục giúp khách chờ lâu hơn, có mục tăng tip.'],['Start with cheap ones like stools, fans and a neon sign.','Bắt đầu với mục rẻ như thêm ghế, quạt, bảng đèn.']]],
-  eq:['🛠️',['Equipment','Thiết bị'],[['Machines make staff faster at every location.','Máy móc giúp nhân viên làm nhanh hơn ở mọi tiệm.'],['Some machines unlock new menu items (espresso machine, fryer…).','Một số máy mở món mới (máy espresso, nồi chiên…).'],['Farm equipment boosts coffee harvests and roasting.','Thiết bị nông trại tăng sản lượng cà phê và rang.']]],
+  eq:['🛠️',['Equipment','Thiết bị'],[['❄️ A walk-in fridge keeps fresh food up to 4–5 days instead of 1.','❄️ Kho lạnh giữ đồ tươi 4–5 ngày thay vì 1 ngày.'],['Machines make staff faster at every location.','Máy móc giúp nhân viên làm nhanh hơn ở mọi tiệm.'],['Some machines unlock new menu items (espresso machine, fryer…).','Một số máy mở món mới (máy espresso, nồi chiên…).'],['Farm equipment boosts coffee harvests and roasting.','Thiết bị nông trại tăng sản lượng cà phê và rang.']]],
   board:['👔',['Board of directors','Ban giám đốc'],[['Directors run parts of the company for you every night.','Giám đốc tự điều hành công ty giúp bạn mỗi đêm.'],['HR hires staff, Operations opens branches, Finance handles money…','Nhân sự tuyển người, Vận hành mở chi nhánh, Tài chính lo tiền…'],['They only spend money above your cash reserve.','Họ chỉ tiêu phần tiền vượt quỹ dự phòng.'],['Untick any job you want to keep doing yourself.','Bỏ tick việc nào bạn muốn tự làm.']]],
   office:['🏢',['Office teams','Văn phòng'],[['Office teams make each director stronger.','Các phòng ban giúp giám đốc làm việc hiệu quả hơn.'],['A team works at half strength without its director.','Không có giám đốc thì phòng chỉ làm được một nửa.'],['More desks come with the Regional office upgrade.','Thêm chỗ ngồi bằng nâng cấp Văn phòng khu vực.']]],
   invest:['📈',['Investing','Đầu tư'],[['Put spare cash to work. It keeps earning while you sell coffee.','Cho tiền dư sinh lời. Tiền vẫn lời trong lúc bạn bán cà phê.'],['📈 Stocks: prices change every night. Safer ones pay dividends.','📈 Cổ phiếu: giá đổi mỗi đêm. Mã ổn định có trả cổ tức.'],['🏦 Bank: savings are safe. CDs pay more but lock your money.','🏦 Ngân hàng: tiết kiệm an toàn. Sổ có kỳ hạn lãi cao hơn nhưng khoá tiền.'],['🏠 Real estate: collect rent every day.','🏠 Bất động sản: thu tiền thuê mỗi ngày.']]],
@@ -1830,6 +1920,10 @@ function tabTip_old(t){S.tips=S.tips||{};const tip=TAB_TIPS[t];if(!tip||S.tips[t
 // ================= BEGINNER ADVISOR =================
 // One-time contextual nudges for new players. Each fires once (S.hints), earliest match first.
 const ADV=[
+  {id:'spoil',when:()=>S.day>=2&&S.lastSpoil,en:'Some fresh food expired last night. Buy less fresh stock, or get a walk-in fridge so it keeps 4–5 days.',vi:'Một ít đồ tươi đã hết hạn tối qua. Mua ít đồ tươi hơn, hoặc mua kho lạnh để giữ 4–5 ngày.',tab:'eq'},
+  {id:'law',when:()=>S.lastFine>0,en:'You were fined for breaking a labor rule. Check ⚖️ Labor rules at the top of the Staff tab.',vi:'Bạn bị phạt vì vi phạm luật lao động. Xem khung ⚖️ Luật lao động đầu tab Nhân viên.',tab:'staff'},
+  {id:'bank',when:()=>S.day>=5&&credit()>=620&&!S.loans.some(l=>l.kind!=='quick'),en:'Bank loans are open now. They are much cheaper than quick cash. See Finance.',vi:'Vay ngân hàng đã mở. Lãi rẻ hơn vay nóng nhiều. Xem tab Tài chính.',tab:'fin'},
+  {id:'mistake',when:()=>S.lastMist>2,en:'Your staff remade several orders today. Bonuses and raises keep morale up and cut mistakes.',vi:'Hôm nay nhân viên phải làm lại nhiều món. Thưởng và tăng lương giúp giữ tinh thần và giảm làm sai.',tab:'staff'},
   {id:'hire1',when:()=>S.day>=2&&S.staff.length===0&&S.money>=100,en:'Running the whole counter alone? Hire a staff member — they make orders for you automatically.',vi:'Đang một mình lo cả quầy à? Thuê nhân viên đi — họ tự làm món giúp bạn.',tab:'staff'},
   {id:'wages',when:()=>S.day>=3&&S.staff.length>0&&S.money<S.staff.reduce((a,x)=>a+x.wage,0)*2,en:'Cash is getting tight against your daily wages. Sell more, or let someone go if it\'s too much.',vi:'Tiền mặt đang sát với tiền lương mỗi ngày. Bán thêm, hoặc cho nghỉ bớt người nếu quá tải.',tab:'staff'},
   {id:'restock',when:()=>S.day>=2&&Object.keys(S.inv||{}).some(k=>(S.inv[k]||0)<3)&&unlocked().some(r=>r.ing.some(k=>(S.inv[k]||0)<2)),en:'Running low on some ingredients. Visit the Market before you open tomorrow.',vi:'Sắp hết vài nguyên liệu rồi. Ghé Chợ trước khi mở cửa ngày mai nhé.',tab:null},
@@ -1904,10 +1998,31 @@ function stock(){
 function toggleIng(k){
   if(!R||R.paused)return;
   if(R.tray.length>=8){toast('Tray is full');return}
-  if((S.inv[k]||0)<=0){sfx.bad();toast('Out of '+ING[k].n+'. Restock at the market');return}
+  if((S.inv[k]||0)<=0){sfx.bad();rushOffer(k);return}
   S.inv[k]--;R.used[k]=(R.used[k]||0)+1;R.tray.push(k);
   sfx.tap();renderTray();
 }
+// ---------- Shelf life ----------
+// Fresh items without cold storage last 1 day. With a walk-in fridge they last up to 5 days. Dry goods last 60 days.
+function shelfLife(k){const g=ING[k];if(!g)return 60;if(!g.per)return 60;
+  const cold=S.upg.smartfridge||S.upg.tu>=2||(S.upg.tu>=1&&['baguette','milk'].includes(k))||(S.upg.oven&&k==='baguette')||(S.upg.teabrew&&k==='tea');
+  return cold?(S.upg.vacuum||S.upg.smartfridge?5:4):1}
+function lotAdd(k,n){if(n<=0)return;S.lots=S.lots||{};(S.lots[k]=S.lots[k]||[]).push({n,exp:S.day+shelfLife(k)-1})}
+function lotsNight(k){S.lots=S.lots||{};const L0=S.lots[k]=S.lots[k]||[];let tot=L0.reduce((a,x)=>a+x.n,0),have=Math.max(0,S.inv[k]||0);
+  if(have>tot)L0.push({n:have-tot,exp:S.day+shelfLife(k)-1});
+  else{let use=tot-have;while(use>0&&L0.length){const t=Math.min(use,L0[0].n);L0[0].n-=t;use-=t;if(!L0[0].n)L0.shift()}}
+  let lost=0;S.lots[k]=L0.filter(x=>{if(x.exp<=S.day){lost+=x.n;return false}return true});
+  // batches expiring tonight are thrown away
+  S.inv[k]=Math.max(0,(S.inv[k]||0)-lost);return lost}
+const nextExp=k=>{const L0=(S.lots||{})[k]||[];return L0.length?L0.reduce((a,x)=>x.exp<a.exp?x:a):null};
+const RUSH=[{id:'depot',e:'🚚',n:'Restaurant Depot',mark:1.6,mins:60},{id:'amazon',e:'📦',n:'Amazon Fresh',mark:1.35,mins:120},{id:'insta',e:'🛵',n:'Instacart',mark:2,mins:30}];
+function rushOffer(k){if(!R)return;R.paused=true;const g=ING[k],base=ingPrice(k);
+  showModal(`<h2 class="notr">📞 ${L('Out of','Hết')} ${g.e} ${g.n}</h2><p class="note notr">${L('Order a rush delivery. It costs more because of shipping and the seller\'s markup.','Gọi giao hàng gấp. Giá cao hơn vì tốn phí ship và tiền lời của bên bán.')}</p>`+
+   RUSH.map(r=>{const t=Math.round(base*r.mark*100)/100;return `<div class="upg notr"><span class="fc">${r.e}</span><div><b>${r.n}</b><br><small>${L(`Arrives in about ${r.mins} min`,`Tới trong khoảng ${r.mins} phút`)} · ${fmt(t)} ${L('per','mỗi')} ${g.u} (${g.q} ${L('servings','phần')})</small></div><div class="acts"><button ${S.money<t?'disabled':''} onclick="rushBuy('${k}','${r.id}',1)">×1 ${fmt(t)}</button><button ${S.money<t*3?'disabled':''} onclick="rushBuy('${k}','${r.id}',3)">×3 ${fmt(t*3)}</button></div></div>`}).join('')+
+   `<button class="big alt notr" onclick="resume()">${L('Not now','Để sau')}</button>`)}
+function rushBuy(k,rid,n){const r=RUSH.find(x=>x.id===rid),c=Math.round(ingPrice(k)*r.mark*100)/100*n;if(S.money<c||!R)return;S.money-=c;S.spend+=c;R.rushes2=R.rushes2||[];R.rushes2.push({k,n,at:R.t+DAYLEN*r.mins/480,e:r.e});
+  toast(r.e+' '+L(`${r.n} is on the way (${r.mins} min)`,`${r.n} đang giao tới (${r.mins} phút)`));save();resume()}
+function rushTick(){if(!R||!R.rushes2)return;R.rushes2=R.rushes2.filter(x=>{if(R.t>=x.at){const q=ING[x.k].q*x.n;S.inv[x.k]=(S.inv[x.k]||0)+q;lotAdd(x.k,q);stock();sfx.coin();toast(x.e+' '+L(`${ING[x.k].n} delivered (+${q})`,`Đã giao ${ING[x.k].n} (+${q})`));return false}return true})}
 function hasStock(ing){const n={};ing.forEach(k=>n[k]=(n[k]||0)+1);return Object.keys(n).every(k=>(S.inv[k]||0)>=n[k])}
 function removeAt(i){if(!R||R.paused)return;const k=R.tray.splice(i,1)[0];if(!k)return;S.inv[k]++;R.used[k]--;sfx.tap();renderTray()}
 function renderTray(){
@@ -2167,7 +2282,12 @@ function crewTick(dt){
       if(w.c.cater){if(!R.cat){w.c=null;w.it=null;w.bar.style.width='0';return}}
       else if(R.cust[w.c.slot]!==w.c||w.it.done){w.c=null;w.it=null;w.bar.style.width='0';return}
       w.t-=dt;w.bar.style.width=(100*(1-w.t/w.sp))+'%';
-      if(w.t<=0){const c=w.c,it=w.it;w.c=null;w.it=null;w.cool=.3;w.bar.style.width='0';if(c.cater){it.got++;caterCheck()}else completeItem(c,it,true)}
+      if(w.t<=0){const c=w.c,it=w.it;
+        // Mistake chance: new, tired or unhappy staff get orders wrong and have to remake them
+        const pm=Math.max(.01,.07-.012*lvl(w.s))+(w.s.mo<40?.04:0)+(w.s.mo<20?.04:0);
+        if(Math.random()<pm&&hasStock(it.rec.ing)){it.rec.ing.forEach(k=>{S.inv[k]--;R.used[k]=(R.used[k]||0)+1});const lossV=it.rec.ing.reduce((a,k)=>a+ingPrice(k)/ING[k].q,0);R.mist=(R.mist||0)+1;R.mistV=(R.mistV||0)+lossV;
+          w.t=w.sp*.6;floatAt(w.el||c.el,'🙈',false);stock();return}
+        w.c=null;w.it=null;w.cool=.3;w.bar.style.width='0';if(c.cater){it.got++;caterCheck()}else completeItem(c,it,true)}
     }else{
       w.cool-=dt;if(w.cool>0)return;
       // Catering first when it's behind schedule; one in three staff always helps with catering
@@ -2201,18 +2321,19 @@ function branchDay(b){
   const dem=Math.round((1+.12*appsOn)*base*b.demand*(1+.15*lv)*demand(b.id)*(brRate(b.id)/5)*Math.pow(avgRatio(),-1.5)*(.85+Math.random()*.3));
   const capO=(1+.02*dp('ops'))*crew.reduce((a,x)=>a+(DAYLEN/(bestSp(x)*spMul(x)))*.9*(x.pos==='flex'?1.15:1),0)*(crew.some(x=>x.mgr)?1.2:1)*(1+.05*(S.upg.machine+S.upg.grill))*(1+.1*S.upg.hq);
   const capC=Math.floor(capO/1.6),served=Math.min(dem,capC),lost=dem-served;
-  const ic=Math.max(.08,.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet-.06*(S.farm?S.farm.brCover:0)-.02*(S.upg.bulkdeal||0)-.005*dp('ops')),rev=served*1.6*avgPrice()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic,net=rev-ing-b.rent;
+  const ic=Math.max(.08,.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet-.06*(S.farm?S.farm.brCover:0)-.02*(S.upg.bulkdeal||0)-.005*dp('ops')),rev=served*1.6*avgPrice()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic,rentD=Math.round(b.rent*1.3*(1+.03*Math.floor((S.day+58)/365))),net=rev-ing-rentD;
   const good=dem?served/dem:0;
   if(crew.length)S.brRate[b.id]=Math.max(1,Math.min(5,brRate(b.id)*.8+(1+4*good-Math.max(0,(avgRatio()-1)*2.5))*.2));
   const reviews=crew.length?makeReviews(good,1+(Math.random()<.4?1:0),b.id):[];
   reviews.forEach(v=>S.buzz=Math.max(-.3,Math.min(.5,S.buzz+(v.st-3)*.01)));
-  return {dem,served,lost,cap:capC,rev,ing,rent:b.rent,net,idle:!crew.length,staff:crew.length,rating:brRate(b.id),reviews};
+  return {dem,served,lost,cap:capC,rev,ing,rent:rentD,net,idle:!crew.length,staff:crew.length,rating:brRate(b.id),reviews};
 }
 /* loop */
 function startDay(){
   closeModal();buildStreet();buildStation();
-  R={crew:[],t:0,spawnT:1,cust:new Array(slotsN()).fill(null),tray:[],queue:[],used:{},items:0,wrong:0,news:[],done:[],reviews:[],balked:0,served:0,lost:0,earned:0,wasted:0,spent:0,paused:false,rushUntil:0,rushes:S.day%7===0?[DAYLEN*.15,DAYLEN*.45,DAYLEN*.75]:[DAYLEN*.18,DAYLEN*.62]};
+  R={sickToday:S.staff.filter(x=>x.loc==='main'&&Math.random()<.03).map(x=>x.id),crew:[],t:0,spawnT:1,cust:new Array(slotsN()).fill(null),tray:[],queue:[],used:{},items:0,wrong:0,news:[],done:[],reviews:[],balked:0,served:0,lost:0,earned:0,wasted:0,spent:0,paused:false,rushUntil:0,rushes:S.day%7===0?[DAYLEN*.15,DAYLEN*.45,DAYLEN*.75]:[DAYLEN*.18,DAYLEN*.62]};
   R.special=S.day>=6?pick(unlocked()):null;
+  R.sickToday=R.sickToday||[];if(R.sickToday.length)setTimeout(()=>R&&toast('🤒 '+L(`${R.sickToday.length} staff called in sick today`,`${R.sickToday.length} nhân viên xin nghỉ ốm hôm nay`)),2600);
   if(S.upg.farm)S.inv.phin=(S.inv.phin||0)+10*S.upg.farm;if(S.upg.icemaker)S.inv.ice=Math.max(S.inv.ice||0,999);
   S.spike=S.spikeNext||null;
   if(S.upg.supplier||boardOn('coo','stock')){let sp=0;ING_ORDER.filter(k=>needSet().has(k)).forEach(k=>{while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c)break;S.money-=c;sp+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q}});if(sp)setTimeout(()=>R&&toast('📦 Supplier restocked for '+fmt(sp)),6500)}
@@ -2220,7 +2341,7 @@ function startDay(){
   R.cat=S.catJob?{...S.catJob,items:S.catJob.items.map(i=>({...i,got:0,wip:0}))}:null;renderCater();
   const h=holiday(S.day);
   renderQueue();
-  R.crew=crewAt('main').map(x=>({s:x,t:0,cool:1+Math.random(),c:null,it:null}));buildCrew();
+  R.crew=crewAt('main').filter(x=>!(R.sickToday||[]).includes(x.id)).map(x=>({s:x,t:0,cool:1+Math.random(),c:null,it:null}));buildCrew();
   renderTray();hud();last=performance.now();cancelAnimationFrame(raf);
   setTimeout(()=>{if(!R)return;toast(WX[S.wx.t].e+' '+WX[S.wx.t].n+(h?' and it\'s '+h[0]+'!':' today'));if(R.special)setTimeout(()=>R&&toast('⭐ Today\'s special: '+R.special.n),2200);if(S.day%7===0)setTimeout(()=>R&&toast('🎉 Weekend! Three train rushes today'),4400)},400);raf=requestAnimationFrame(loop);
   if(!S.tut)setTimeout(()=>{if(R&&!R.paused&&R.cust.some(Boolean))tutStart();else if(R)setTimeout(()=>R&&!S.tut&&tutStart(),1500)},1600);
@@ -2236,7 +2357,7 @@ function loop(now){
     R.cust.forEach(c=>{if(!c)return;c.left-=dt;const p=Math.max(0,c.left/c.max);
       c.bar.style.width=(p*100)+'%';c.bar.classList.toggle('low',p<.3);
       if(c.left<=0){c.items.forEach(it=>it.by=null);removeCust(c,'😤');regMiss(c);if(c.inf){S.buzz=Math.max(-.3,S.buzz-.1);R.news.push('📸 The influencer posted about a long wait');toast('📸 The influencer walked out. Buzz is down')}R.lost++;rate(1);sfx.bad();hud()}});
-    queueTick(dt);eventsTick();
+    queueTick(dt);eventsTick();rushTick();
     if(R.cat&&Math.floor(R.t)!==R.catSec){R.catSec=Math.floor(R.t);renderCater()}
     if(Math.floor(R.t)%4===0&&Math.floor(R.t)!==R.unlSec){R.unlSec=Math.floor(R.t);const unl=checkUnlocks();unl.forEach((g,i)=>setTimeout(()=>{if(R)funPop('🔓',(UNL_TXT[g]||[GATES[g].n])[0],0)},i*1600))}
     if(R.cat&&R.t>R.cat.due){S.rating=Math.max(1,S.rating-.15);S.buzz=Math.max(-.3,S.buzz-.05);R.news.push('📦 Catering for '+R.cat.client+' was late and got cancelled');toast('📦 Catering order missed its deadline');R.cat=null;S.catJob=null;renderCater()}
@@ -2253,13 +2374,13 @@ function endDay(){
   R.crew.forEach(w=>{if(w.it&&!w.it.done)w.it.rec.ing.forEach(k=>{S.inv[k]++;R.used[k]--});w.c=null;w.it=null});
   S.lastUsed=R.used;
   R.spoiled=[];
-  Object.keys(ING).forEach(k=>{const keep=S.upg.smartfridge||(S.upg.tu>=1&&['baguette','milk'].includes(k))||(S.upg.tu>=2)||(S.upg.oven&&k==='baguette')||(S.upg.teabrew&&k==='tea');if(ING[k].per&&!keep&&S.inv[k]>0){const lost=S.upg.vacuum?Math.ceil(S.inv[k]/2):S.inv[k];R.spoiled.push(ING[k].e+'×'+lost);S.inv[k]-=lost}});
+  Object.keys(ING).forEach(k=>{const lost=lotsNight(k);if(lost>0)R.spoiled.push(ING[k].e+'×'+lost)});
   R.br=[];
   S.branches.forEach(id=>{const r=branchDay(LOC[id]);S.money+=r.net;r.id=id;r.n=LOC[id].n;R.br.push(r);S.brStats[id]=r});
   const eqLv=UPG.filter(u=>u.eq&&u.id!=='solar').reduce((a,u)=>a+(S.upg[u.id]||0),0);R.elec=Math.round(eqLv*3*(S.upg.solar?.5:1)*(S.upg.battery?.75:1));S.money-=R.elec;
-  R.wages=0;R.quit=[];
+  R.wages=0;R.quit=[];const holPay=holiday(S.day)?1.5:1;R.holPay=holPay>1;R.sick=[];
   const busy=R.served/Math.max(1,R.crew.length)>12,mDecay=(S.upg.dish?.75:1)*(S.upg.hr?.5:1)*(S.upg.uniform?.9:1);
-  S.staff.slice().forEach(x=>{if(S.money>=x.wage){S.money-=x.wage;R.wages+=x.wage;x.days++;
+  S.staff.slice().forEach(x=>{const wg=x.wage*holPay;if(S.money>=wg){S.money-=wg;R.wages+=wg;x.days++;
       if(x.days%Math.max(2,5-S.upg.train)===0&&lvl(x)<=5+S.upg.train&&x.days/Math.max(2,5-S.upg.train)<5+S.upg.train){x.mo=Math.min(100,x.mo+10);R.news.push('⬆️ '+x.face+' '+x.name+' reached level '+lvl(x))}
       const mg=x.loc!=='main'&&crewAt(x.loc).some(y=>y.mgr);
       x.mo+=S.upg.profitshare?5:0;x.mo-=Math.max(.6,1-.05*dp('hr'))*(1-.1*S.upg.benefits)*((mg?1.5:3)+(x.pos==='flex'&&x.loc==='main'?1:0)+(x.loc==='main'&&busy?3:0))*mDecay;
@@ -2268,6 +2389,15 @@ function endDay(){
     else{R.quit.push(x.name);S.staff=S.staff.filter(y=>y!==x)}});
   initOffice();R.officePay=Object.values(S.office.team).flat().reduce((a,x)=>a+x.wage,0)+officeCount()*15;S.money-=R.officePay;
   Object.keys(DEPTS).forEach(d=>{if(Math.random()<.5)S.office.cands[d]=genOffice(d)});
+  {const C=compliance();let fine=0;C.loc.forEach(v=>{fine+=150;R.news.push(L(`⚖️ Diversity rule broken at ${locName(v.l)} (${Math.round(v.f*100)}% women). Fine $150`,`⚖️ Vi phạm quy định cân bằng giới tính ở ${locName(v.l)} (${Math.round(v.f*100)}% nữ). Phạt $150`))});
+   if(C.mgBad){fine+=300;R.news.push(L('⚖️ Manager team is not gender-balanced. Fine $300','⚖️ Đội quản lý chưa cân bằng giới tính. Phạt $300'))}
+   if(C.low.length){fine+=100*C.low.length;R.news.push(L(`⚖️ ${C.low.length} staff paid below minimum wage (${fmt(minWage())}/day). Fine`,`⚖️ ${C.low.length} nhân viên bị trả dưới lương tối thiểu (${fmt(minWage())}/ngày). Bị phạt`))}
+   if(fine){S.money-=fine;R.fines=fine}}
+  S.lastMist=R.mist||0;S.lastFine=R.fines||0;S.lastSpoil=(R.spoiled||[]).length>0;
+  if(R.mist)R.news.push(L(`🙈 Staff mistakes: ${R.mist} orders remade (${fmt(R.mistV)} of ingredients wasted)`,`🙈 Nhân viên làm sai: ${R.mist} món phải làm lại (hao hụt ${fmt(R.mistV)} nguyên liệu)`));
+  if(R.holPay)R.news.push(L('🎉 Holiday pay: wages were 1.5x today','🎉 Lương ngày lễ: hôm nay trả lương gấp 1.5'));
+  if((R.sickToday||[]).length)R.news.push(L(`🤒 ${R.sickToday.length} staff were out sick (still paid)`,`🤒 ${R.sickToday.length} nhân viên nghỉ ốm (vẫn trả lương)`));
+  R.mainRent=Math.round((45+4*S.upg.quay+3*S.upg.ghe)*(1+.03*Math.floor((S.day+58)/365)));S.money-=R.mainRent;
   R.boardPay=0;Object.keys(S.board).forEach(k=>{const b=S.board[k];if(!b.on)return;const sal=EXECS[k].sal;
     if(S.money>=sal){S.money-=sal;R.boardPay+=sal}else{b.on=false;R.news.push('👔 '+EXECS[k].n+' resigned: not enough cash for their salary')}});
   // research
@@ -2288,7 +2418,7 @@ function endDay(){
    if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
   if(R.cat){R.news.push('📦 Catering for '+R.cat.client+' was not finished');S.rating=Math.max(1,S.rating-.15);R.cat=null;S.catJob=null}
   // finance
-  let loanPay=0;S.loans.forEach(l=>{const lp=l.pay*Math.max(.9,1-.01*dp('fin'));if(S.money>=lp){S.money-=lp;loanPay+=lp;l.left--}else{S.rating=Math.max(1,S.rating-.1);l.pay*=1.05;R.news.push('🏦 Missed a loan payment. Late fee added')}});
+  let loanPay=0,missed=false;S.loans.forEach(l=>{const lp=l.pay*Math.max(.9,1-.01*dp('fin'));if(S.money>=lp){S.money-=lp;loanPay+=lp;l.left--}else{missed=true;S.rating=Math.max(1,S.rating-.1);l.pay*=l.kind==='quick'?1.15:1.05;R.news.push(L('🏦 Missed a loan payment. Late fee added and credit score dropped','🏦 Trễ hạn trả nợ. Bị phạt phí và giảm điểm tín dụng'))}});R.missedLoan=missed;
   S.loans.filter(l=>l.left<=0).forEach(l=>R.news.push('🏦 Paid off a '+fmt(l.amt)+' loan'));S.loans=S.loans.filter(l=>l.left>0);
   // daily taxes
   initTax();const T=S.tax;
@@ -2296,7 +2426,7 @@ function endDay(){
   R.payTax=(R.wages+(R.boardPay||0)+(R.labPay||0)+(R.officePay||0))*payRate();S.money-=R.payTax;T.paid.payroll+=R.payTax;
   R.propTax=Object.keys(S.fin.props).reduce((a,k)=>a+S.fin.pval[k]*(COMMERCIAL.includes(k)?TAX.comProp:TAX.resProp)/TAX.year,0);S.money-=R.propTax;T.paid.property+=R.propTax;
   if(T.owed>0){const pay=Math.min(T.owed,Math.max(0,S.money));S.money-=pay;T.owed-=pay;T.paid.income+=pay;if(pay)R.news.push('🧾 Paid '+fmt(pay)+' of overdue income tax')}
-  const op=(R.farm?R.farm.rev+R.farm.trader-R.farm.cost:0)+R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-(R.labPay||0)-(R.officePay||0)-R.payTax-R.propTax;
+  const op=(R.farm?R.farm.rev+R.farm.trader-R.farm.cost:0)+R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-(R.labPay||0)-(R.officePay||0)-R.payTax-R.propTax-(R.mainRent||0)-(R.fines||0);
   let div=0;if(S.ipo.sold&&op>0){div=op*S.ipo.sold*.5;S.money-=div}
   R.op=op;R.div=div;R.loanPay=loanPay;R.ingSpend=S.spend;S.spend=0;
   S.life.profit+=op;S.life.rev+=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);S.life.served+=R.served+R.br.reduce((a,b)=>a+(b.served||0),0);if(op>S.life.best.p)S.life.best={d:S.day,p:Math.round(op)};
@@ -2312,12 +2442,13 @@ function endDay(){
   }
   {const brRev=R.br.reduce((a,b)=>a+(b.rev||0),0),brCost=R.br.reduce((a,b)=>a+((b.rev||0)-b.net),0),farmRev=R.farm?R.farm.rev+R.farm.trader:0,inv=(R.fin?(R.fin.div+R.fin.int+R.fin.rent):0)+(R.funInc||0),qt=R.qTax?R.qTax.due:0;
    const net=op+inv-qt-div-(R.funCost||0),rev=R.earned+brRev+farmRev;
-   const cat={ing:R.ingSpend||0,wages:R.wages||0,branch:brCost,elec:R.elec||0,team:(R.boardPay||0)+(R.officePay||0)+(R.labPay||0),farm:R.farm?R.farm.cost:0,tax:(R.payTax||0)+(R.propTax||0)+qt,loan:R.loanPay||0,div:div||0,fun:R.funCost||0};
+   const cat={ing:R.ingSpend||0,wages:R.wages||0,branch:brCost,elec:R.elec||0,team:(R.boardPay||0)+(R.officePay||0)+(R.labPay||0),farm:R.farm?R.farm.cost:0,tax:(R.payTax||0)+(R.propTax||0)+qt,loan:R.loanPay||0,div:div||0,fun:R.funCost||0,rent:R.mainRent||0,fines:R.fines||0,waste:0};
    const exp=rev+inv-net,listed=Object.values(cat).reduce((a,b)=>a+b,0);if(exp-listed>.5)cat.other=exp-listed;
    const served=R.served+R.br.reduce((a,b)=>a+(b.served||0),0),lost=R.lost+R.balked+R.br.reduce((a,b)=>a+(b.lost||0),0);
    R.pl={rev,inv,exp,net,cat,served,lost,parts:{shop:R.earned,branches:brRev,farm:farmRev}};
    S.ledger=S.ledger||[];S.ledger.push({d:S.day,rev:Math.round(rev*100)/100,inv:Math.round(inv*100)/100,exp:Math.round(exp*100)/100,net:Math.round(net*100)/100,cust:served,lost,rating:+S.rating.toFixed(2),cash:Math.round(S.money),cat:Object.fromEntries(Object.entries(cat).map(([k,v])=>[k,Math.round(v*100)/100]))});
    if(S.ledger.length>400)S.ledger=S.ledger.slice(-400)}
+  creditDay(op,R.missedLoan);
   S.hist.push({d:S.day,p:Math.round(op)});if(S.hist.length>30)S.hist.shift();
   const h3=S.hist.slice(-3);if(S.ipo.sold&&h3.length===3&&h3[0].p>h3[1].p&&h3[1].p>h3[2].p){S.buzz=Math.max(-.3,S.buzz-.03);R.news.push('📉 Shareholders are unhappy about falling profits')}
   // weather and supplies for tomorrow
@@ -2355,7 +2486,7 @@ function brLine(b){
   const warn=b.idle?' <span class="tag">no staff</span>':b.lost>b.dem*.2?' <span class="tag">needs staff</span>':'';
   return `<div class="stat"><span>🏪 ${b.n}${warn}<br><small>${b.served}/${b.dem} customers, ★ ${b.rating.toFixed(1)}</small></span><span>${fmt(b.net)}</span></div>`;
 }
-const CAT_LBL={ing:['🛒','Ingredients','Nguyên liệu'],wages:['👥','Staff wages','Lương nhân viên'],branch:['🏬','Branch costs','Chi phí chi nhánh'],elec:['⚡','Electricity','Tiền điện'],team:['👔','Directors & office','Ban giám đốc & văn phòng'],farm:['🌱','Farm & roastery','Nông trại & nhà máy'],tax:['🧾','Taxes','Thuế'],loan:['🏦','Loan payments','Trả nợ vay'],div:['💸','Shareholder dividends','Cổ tức cổ đông'],fun:['🛥️','Teams & luxury','Đội bóng & xa xỉ'],other:['📦','Other','Khác']};
+const CAT_LBL={ing:['🛒','Ingredients','Nguyên liệu'],wages:['👥','Staff wages','Lương nhân viên'],branch:['🏬','Branch costs','Chi phí chi nhánh'],elec:['⚡','Electricity','Tiền điện'],team:['👔','Directors & office','Ban giám đốc & văn phòng'],farm:['🌱','Farm & roastery','Nông trại & nhà máy'],tax:['🧾','Taxes','Thuế'],loan:['🏦','Loan payments','Trả nợ vay'],div:['💸','Shareholder dividends','Cổ tức cổ đông'],fun:['🛥️','Teams & luxury','Đội bóng & xa xỉ'],rent:['🏠','Weymouth rent','Tiền thuê mặt bằng Weymouth'],fines:['⚖️','Fines','Tiền phạt'],waste:['🙈','Staff mistakes','Nhân viên làm hỏng'],other:['📦','Other','Khác']};
 const pct=(a,b)=>b?((a-b)/Math.abs(b))*100:null;
 function chgTag(a,b,goodUp=true){const c=pct(a,b);if(c==null||!isFinite(c))return '';const up=c>=0,good=goodUp?up:!up;return `<span class="chg ${good?'good':'bad'}">${up?'▲':'▼'} ${Math.abs(c).toFixed(0)}%</span>`}
 function plCard(){
@@ -2443,12 +2574,13 @@ function manage(tab){
     body=`<div class="locpick"><button aria-label="Previous location" ${locs.length<2?'disabled':''} onclick="ML='${locs[(li-1+locs.length)%locs.length]}';manage()">◀</button>
       <select aria-label="Location" onchange="ML=this.value;manage()">${locs.map(l=>`<option value="${l}" ${l===ML?'selected':''}>${mark(l)} ${locName(l)} · ${crewAt(l).length}/${cap(l)}</option>`).join('')}</select>
       <button aria-label="Next location" ${locs.length<2?'disabled':''} onclick="ML='${locs[(li+1)%locs.length]}';manage()">▶</button></div>
+      ${complianceCard()}
       ${locs.length>1?`<p class="note" style="margin:0 0 6px">${locs.filter(l=>crewAt(l).length<cap(l)).length?`🟡 ${locs.filter(l=>crewAt(l).length<cap(l)).length} location(s) have open spots.`:'🟢 Every location is fully staffed.'} Total staff: ${S.staff.length}</p>`:''}`;
     const crew=crewAt(ML);
     body+=schedTable(crew);
     body+=crew.length?crew.map(staffRow).join(''):`<p class="note">${locName(ML)} has no staff yet.${ML==='main'?' Staff here make orders for customers on their own.':' A branch needs at least 1 person to make sales.'}</p>`;
     const full=crew.length>=cap(ML);
-    body+=`<p style="margin-top:12px;font-weight:800">Today's applicants</p>`+(S.cands.length?S.cands.map((c,i)=>`<div class="upg"><span class="fc">${c.face}</span><div><b>${c.name}</b> ${Object.keys(c.skills).length>1?'<small class="tag" style="color:var(--tile)">🔀 can flex</small>':''}<br><small>${skillText(c)}</small><br><small>${fmt(c.wage)}/day</small></div><button ${full?'disabled':''} onclick="hire(${i})">Hire</button></div>`).join(''):'<p class="note">No applicants left. New ones tomorrow.</p>');
+    body+=`<p style="margin-top:12px;font-weight:800">Today's applicants</p>`+(S.cands.length?S.cands.map((c,i)=>`<div class="upg"><span class="fc">${c.face}</span><div><b>${c.name}</b> <small class="gtag">${genderOf(c)==='f'?'♀':'♂'}</small> ${Object.keys(c.skills).length>1?'<small class="tag" style="color:var(--tile)">🔀 can flex</small>':''}<br><small>${skillText(c)}</small><br><small>${fmt(c.wage)}/day</small></div><button ${full?'disabled':''} onclick="hire(${i})">Hire</button></div>`).join(''):'<p class="note">No applicants left. New ones tomorrow.</p>');
     if(full)body+=`<p class="note">${locName(ML)} is fully staffed.</p>`;
   }
   if(MT==='branch'){
@@ -2517,9 +2649,12 @@ function manage(tab){
     (S.catJob?`<div class="upg"><div><b>${S.catJob.client}</b> <small>booked for today</small><br><small>${S.catJob.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return r.e+' '+r.n+' ×'+x.qty}).join(', ')}</small></div></div>`:'')+
     (S.catOffers.length?S.catOffers.map(o=>{const due=7*60+Math.floor(o.due/DAYLEN*480);return `<div class="upg"><div><b>${o.client}</b><br><small>${o.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return r.e+' '+r.n+' ×'+x.qty}).join(', ')}</small><br><small>Due by ${Math.floor(due/60)}:${String(due%60).padStart(2,'0')}, pays ${fmt(o.pay)}</small></div><button ${S.catJob?'disabled':''} onclick="acceptCat(${o.id})">Accept</button></div>`}).join('')+'<p class="note">An accepted order runs during your next day. Make each item and tap the 📦 banner. Staff help when they are free. Missing the deadline costs rating.</p>':'<p class="note">No requests right now. They come in every few days.</p>')+
     taxSection()+
-    `<p style="margin-top:12px;font-weight:800">🏦 Bank loans</p>`+
-    S.loans.map((l,i)=>`<div class="upg"><div><b>${fmt(l.amt)} loan</b><br><small>${fmt(l.pay)}/day, ${l.left} days left</small></div><button ${S.money<payoff(l)?'disabled':''} onclick="payOff(${i})">Pay off ${fmt(payoff(l))}</button></div>`).join('')+
-    LOANS.map((o,i)=>{const lock=o.req&&S.branches.length<o.req;return `<div class="upg"><div><b>Borrow ${fmt(o.amt)}</b><br><small>${(o.rate*100).toFixed(1)}% a day for ${o.days} days: ${fmt(o.amt*(1+o.rate*o.days)/o.days)}/day${lock?`. Needs ${o.req} branches`:''}</small></div><button ${lock||S.loans.length>=2?'disabled':''} onclick="takeLoan(${i})">Borrow</button></div>`}).join('')+
+    creditCard()+
+    S.loans.map((l,i)=>`<div class="upg"><div><b>${l.kind==='quick'?'💸':'🏦'} ${fmt(l.amt)} ${L('loan','khoản vay')}</b><br><small>${fmt(l.pay)}/${L('day','ngày')}, ${l.left} ${L('days left','ngày còn lại')}</small></div><button ${S.money<payoff(l)?'disabled':''} onclick="payOff(${i})">${L('Pay off','Trả hết')} ${fmt(payoff(l))}</button></div>`).join('')+
+    `<p style="margin:10px 0 2px;font-weight:800" class="notr">💸 ${L('Quick cash (social lending)','Vay nóng (vay xã hội)')}</p><p class="note notr">${L('Anyone can borrow, no questions asked. Very high interest, and it hurts your credit a little.','Ai cũng vay được, không cần giấy tờ. Lãi rất cao và làm giảm nhẹ điểm tín dụng.')}</p>`+
+    LOANS.map((o,i)=>o.kind!=='quick'?'':loanRow(o,i)).join('')+
+    `<p style="margin:12px 0 2px;font-weight:800" class="notr">🏦 ${L('Bank loans','Vay ngân hàng')}</p><p class="note notr">${L('Cheaper interest, but the bank checks your credit score, how long you have been open and how many branches you run. Better credit = lower rate.','Lãi thấp hơn, nhưng ngân hàng xét điểm tín dụng, thời gian kinh doanh và số chi nhánh. Điểm càng cao lãi càng thấp.')}</p>`+
+    LOANS.map((o,i)=>o.kind!=='bank'?'':loanRow(o,i)).join('')+
     `<p style="margin-top:12px;font-weight:800">📈 Company shares</p><p class="note">Company value: <b>${fmt(v)}</b>. Share price: <b>${fmt(v/100000)}</b>. You own <b>${Math.round((1-S.ipo.sold)*100)}%</b>.</p>`+
     (!S.ipo.sold?`<div class="upg"><div><b>Go public (IPO)</b><br><small>Sell 20% of the company for ${fmt(v*.2)}. Shareholders get half your share of daily profit and dislike falling profits. Needs a value of $25,000.</small></div><button ${v<25000?'disabled':''} onclick="ipo()">IPO</button></div>`:
      `<div class="upg"><div><b>Sell 10% more</b><br><small>Raise ${fmt(v*.095)}. You can sell up to 49%.</small></div><button ${S.ipo.sold>=.49?'disabled':''} onclick="shares(1)">Sell</button></div><div class="upg"><div><b>Buy back 10%</b><br><small>Costs ${fmt(v*.105)}</small></div><button ${S.money<v*.105?'disabled':''} onclick="shares(-1)">Buy</button></div>`)+
@@ -2552,13 +2687,25 @@ function manage(tab){
       return head+`<button class="mbulk" onclick="fireExec('${k}')">Let go</button></div>${Object.entries(e.opts).map(([o,t])=>`<label class="exo"><input type="checkbox" ${b.opts[o]?'checked':''} onchange="toggleOpt('${k}','${o}')"><span>${t}</span></label>`).join('')}</div>`}).join('');
   }
   if(MT==='upg'||MT==='eq')body=(MT==='eq'?'<p class="note">Equipment works at every location. Some machines unlock new menu items in 🔬 R&D.</p>':'')+'<div id="upgs"></div>';
-  showModal(`<div class="mhead"><h2>Manage shop</h2><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></div><p>Cash: <b>${fmt(S.money)}</b><br>Daily wages: <b>${fmt(totalWage())}</b></p>
+  showModal(`<div class="mhead"><h2>Manage shop</h2><span><button class="hgear notr" aria-label="Guide" onclick="guide()" style="margin-right:6px">📖</button><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></span></div><p>Cash: <b>${fmt(S.money)}</b><br>Daily wages: <b>${fmt(totalWage())}</b></p>
   <div class="tabs">${tabs.map(([k,n])=>`<button class="${k===MT?'on':''}" onclick="manage('${k}')">${n}</button>`).join('')}</div>${tabTip(MT)}${body}
   <button class="big" onclick="preDay()">Go to market</button>`,()=>manage());
   if(MT==='upg'||MT==='eq')renderUpg();
   reapplyFilters();$('card').scrollTop=sc;
 }
-const LOANS=[{amt:1000,rate:.01,days:15},{amt:5000,rate:.012,days:20},{amt:20000,rate:.015,days:30,req:3}];
+// Quick cash (social lending): available from day 1, no checks, very expensive.
+// Bank loans: need day 5+, a good credit score and sometimes branches, but much cheaper. Better credit = lower rate.
+const LOANS=[
+  {id:'q1',kind:'quick',amt:200,rate:.03,days:7},{id:'q2',kind:'quick',amt:500,rate:.03,days:10},{id:'q3',kind:'quick',amt:1500,rate:.035,days:14},
+  {id:'b1',kind:'bank',amt:1000,rate:.008,days:15,day:5,credit:620},{id:'b2',kind:'bank',amt:5000,rate:.009,days:20,day:8,credit:660},
+  {id:'b3',kind:'bank',amt:20000,rate:.01,days:30,day:12,credit:700,req:3},{id:'b4',kind:'bank',amt:100000,rate:.011,days:45,day:30,credit:750,req:8},
+  {id:'b5',kind:'bank',amt:1000000,rate:.012,days:60,day:60,credit:790,req:20}];
+const credit=()=>Math.round(S.credit??640);
+const creditLbl=c=>c>=780?['Excellent','Xuất sắc','#2E9B6F']:c>=720?['Very good','Rất tốt','#5AA469']:c>=660?['Good','Tốt','#C9A200']:c>=600?['Fair','Trung bình','#E08A32']:['Poor','Kém','#C0392B'];
+const loanRate=o=>o.kind==='bank'?Math.max(o.rate*.6,o.rate-(credit()-o.credit)*.00002):o.rate;
+const loanLock=o=>o.kind!=='bank'?'':S.day<o.day?L(`Opens on day ${o.day}`,`Mở từ ngày ${o.day}`):credit()<o.credit?L(`Needs credit ${o.credit}+`,`Cần điểm tín dụng ${o.credit}+`):o.req&&S.branches.length<o.req?L(`Needs ${o.req} branches`,`Cần ${o.req} chi nhánh`):'';
+function creditDay(prof,missed){let c=S.credit??640;c+=missed?-25:0;c+=prof>0?2:-3;if(S.money<0)c-=5;if(S.rating>=4.3)c+=1;if(S.rating<3)c-=2;
+  c+=S.loans.some(l=>l.kind==='quick')?-1:0;S.credit=Math.max(300,Math.min(850,c))}
 const avgProfit=()=>{const h=S.hist.slice(-7);return h.length?h.reduce((a,x)=>a+x.p,0)/h.length:0};
 function valuation(){return Math.round(Math.max(0,avgProfit())*30+2000+S.branches.reduce((a,id)=>a+LOC[id].cost*(1+.6*(S.brLvl[id]||0))*.5,0)+S.known.length*40)}
 const payoff=l=>Math.round(l.amt*l.left/l.days);
@@ -2576,7 +2723,9 @@ function taxSection(){initTax();const T=S.tax,left=TAX.quarter-((S.day-1)%TAX.qu
   ${r('Property: ~1.1% homes, ~2.2% commercial per year',fmt(T.paid.property))}
   ${T.hist.length?'<p class="note" style="margin-top:6px">Recent quarters: '+T.hist.map(h=>`day ${h.d}: ${fmt(h.due)}`).join(' · ')+'</p>':''}
   <p class="note">Meals tax is paid by customers on top of menu prices, so it doesn't cut your profit. Rates are simplified for the game; real taxes depend on your business type.</p></details>`}
-function takeLoan(i){const o=LOANS[i];if(S.loans.length>=2)return;S.money+=o.amt;S.loans.push({amt:o.amt,days:o.days,left:o.days,pay:Math.round(o.amt*(1+o.rate*o.days)/o.days*100)/100});save();sfx.coin();toast('🏦 Borrowed '+fmt(o.amt));manage()}
+function loanRow(o,i){const lock=loanLock(o),r=loanRate(o);return `<div class="upg notr"><div><b>${L('Borrow','Vay')} ${fmt(o.amt)}</b><br><small>${(r*100).toFixed(2)}% ${L('a day for','mỗi ngày trong')} ${o.days} ${L('days','ngày')}: ${fmt(o.amt*(1+r*o.days)/o.days)}/${L('day','ngày')}</small>${lock?`<br><small style="color:#C0392B;font-weight:800">🔒 ${lock}</small>`:''}</div><button ${lock||S.loans.length>=3?'disabled':''} onclick="takeLoan(${i})">${L('Borrow','Vay')}</button></div>`}
+function creditCard(){const c=credit(),lb=creditLbl(c),pct=(c-300)/550*100;return `<div class="credit notr"><div class="crtop"><span>📊 ${L('Credit score','Điểm tín dụng')}</span><b style="color:${lb[2]}">${c} · ${L(lb[0],lb[1])}</b></div><div class="crbar"><i style="left:${pct}%"></i></div><small>${L('Goes up with profitable days, good ratings and on-time payments. Missed payments and quick-cash loans pull it down.','Tăng khi có lời, được đánh giá tốt và trả nợ đúng hạn. Trễ hạn và vay nóng làm giảm điểm.')}</small></div>`}
+function takeLoan(i){const o=LOANS[i];if(S.loans.length>=3||loanLock(o))return;const r=loanRate(o);S.money+=o.amt;S.loans.push({amt:o.amt,kind:o.kind,days:o.days,left:o.days,pay:Math.round(o.amt*(1+r*o.days)/o.days*100)/100});if(o.kind==='quick')S.credit=Math.max(300,(S.credit??640)-8);save();sfx.coin();toast((o.kind==='quick'?'💸 ':'🏦 ')+L('Borrowed ','Đã vay ')+fmt(o.amt));manage()}
 function payOff(i){const l=S.loans[i],c=payoff(l);if(S.money<c)return;S.money-=c;S.loans.splice(i,1);save();toast('🏦 Loan paid off');manage()}
 function ipo(){const v=valuation();if(v<25000||S.ipo.sold)return;S.money+=v*.2;S.ipo.sold=.2;save();sfx.coin();toast('🔔 Saigonesee is now a public company!');manage()}
 function shares(d){const v=valuation();if(d>0){if(S.ipo.sold>=.49)return;S.money+=v*.095;S.ipo.sold=Math.min(.49,S.ipo.sold+.1)}else{if(S.money<v*.105)return;S.money-=v*.105;S.ipo.sold=Math.max(0,Math.round((S.ipo.sold-.1)*100)/100)}save();manage()}
@@ -2586,7 +2735,7 @@ function takeName(){const el=$('pname0');const v=(el&&el.value||'').trim().slice
   if(!v){el.classList.add('need');el.focus();toast('Please type your name first');return false}
   S.player=v;save();return true}
 // Money invested in upgrades and equipment still counts toward the score
-function upgValue(){return UPG.filter(u=>u.id).reduce((a,u)=>{let v=0;for(let i=0;i<(S.upg[u.id]||0);i++)v+=u.base*Math.pow(1.6,i);return a+v},0)}
+function upgValue(){return UPG.filter(u=>u.id).reduce((a,u)=>{let v=0;for(let i=0;i<(S.upg[u.id]||0);i++)v+=u.base*1.5*Math.pow(1.7,i);return a+v},0)}
 function staffValue(){return S.staff.reduce((a,x)=>a+30*lvl(x),0)}
 function farmValue(){return S.farm?S.farm.plots.reduce((a,p)=>a+REGIONS[p.r].plot+(p.v?VARS[p.v].plant:0),0)+(S.farm.factory?FACT.slice(1,S.farm.factory+1).reduce((a,f)=>a+f.cost,0)*.7:0)+(S.farm.pack?5600:0):0}
 function funValue(){initFun();return TEAMS.filter(x=>x.kind==='team'&&S.fun.own[x.id]).reduce((a,x)=>a+x.price*.9,0)}
@@ -3135,10 +3284,17 @@ function setPrice(id,d){const r=REC.find(x=>x.id===id);
 function posBtns(x){
   return `<div class="posb">${Object.keys(POS).map(p=>`<button class="${x.pos===p?'on':''}" ${canPos(x,p)?'':'disabled'} onclick="setPos(${x.id},'${p}')">${POS[p].e} ${POS[p].n}</button>`).join('')}</div>`;
 }
+function complianceCard(){const C=compliance(),ok=!C.loc.length&&!C.mgBad&&!C.low.length;
+  return `<details class="srcgrp notr" data-key="law"${OPEN.has('law')?' open':''}><summary>⚖️ ${L('Labor rules','Luật lao động')} ${ok?'<small style="color:#2E9B6F">✓ '+L('All good','Đạt hết')+'</small>':'<small style="color:#C0392B">⚠️ '+L('Needs attention','Cần xử lý')+'</small>'}</summary>
+  <div class="stat"><span>💵 ${L('Minimum wage','Lương tối thiểu')}</span><span>${fmt(minWage())}/${L('day','ngày')}${C.low.length?` · <b class="dnt">${C.low.length} ${L('below','dưới mức')}</b>`:''}</span></div>
+  <div class="stat"><span>🎉 ${L('Holiday pay','Lương ngày lễ')}</span><span>×1.5</span></div>
+  <div class="stat"><span>👩‍🤝‍👨 ${L('Gender balance (6+ staff)','Cân bằng giới tính (từ 6 người)')}</span><span>${C.loc.length?`<b class="dnt">${C.loc.map(v=>locName(v.l)).join(', ')}</b>`:'✓'}</span></div>
+  <div class="stat"><span>👑 ${L('Balanced managers (4+)','Quản lý cân bằng (từ 4 người)')}</span><span>${C.mgBad?`<b class="dnt">✗</b>`:'✓'}</span></div>
+  <p class="note">${L('Each location with 6+ staff needs at least 30% women and 30% men. Breaking a rule means a fine every night. Minimum wage rises 5% every January 1.','Mỗi tiệm từ 6 nhân viên cần ít nhất 30% nữ và 30% nam. Vi phạm sẽ bị phạt mỗi đêm. Lương tối thiểu tăng 5% mỗi ngày 1/1.')}</p></details>`}
 function staffRow(x){
   const opts=['main',...S.branches].map(l=>`<option value="${l}" ${l===x.loc?'selected':''}>${locName(l)}</option>`).join('');
   const k='stf:'+x.id;
-  return `<details class="stf" data-key="${k}"${OPEN.has(k)?' open':''}><summary><span class="fc">${x.face}</span><span class="si"><b>${x.name}${x.mgr?' 👑':''}</b> <small>Lv ${lvl(x)}${x.loc==='main'?' · '+POS[x.pos].e+' '+POS[x.pos].n:''}</small><small>${skillText(x)}</small><small>${fmt(x.wage)}/day · morale ${moFace(x.mo)} ${Math.round(x.mo)}</small></span><span class="chev">▾</span></summary>
+  return `<details class="stf" data-key="${k}"${OPEN.has(k)?' open':''}><summary><span class="fc">${x.face}</span><span class="si"><b>${x.name}${x.mgr?' 👑':''} <small class="gtag">${genderOf(x)==='f'?'♀':'♂'}</small></b> <small>Lv ${lvl(x)}${x.loc==='main'?' · '+POS[x.pos].e+' '+POS[x.pos].n:''}</small><small>${skillText(x)}</small><small>${fmt(x.wage)}/day · morale ${moFace(x.mo)} ${Math.round(x.mo)}</small></span><span class="chev">▾</span></summary>
   <div class="sd"><div class="arow" style="padding-left:0"><button onclick="raise(${x.id})">Raise +${fmt(Math.round(x.wage*.1))}</button><button ${S.money<25?'disabled':''} onclick="bonus(${x.id})">Bonus $25</button>${x.loc!=='main'&&!x.mgr?`<button onclick="promote(${x.id})">Make manager</button>`:''}${S.branches.length?`<select aria-label="Location" onchange="moveStaff(${x.id},this.value)">${opts}</select>`:''}<button onclick="fire(${x.id})">Let go</button></div>${x.loc==='main'?posBtns(x):''}</div></details>`;
 }
 function schedTable(crew){
@@ -3218,7 +3374,7 @@ function moveStaff(id,l){const x=S.staff.find(y=>y.id===id);
   x.loc=l;x.mgr=false;save();toast('Moved '+x.name+' to '+locName(l));manage()}
 function openBr(id){const b=LOC[id];if(S.money<b.cost||(!S.branches.length&&!gateOk('branch')))return;S.money-=b.cost;S.branches.push(id);save();sfx.coin();
   ML=id;toast('Opened '+b.n+'. Hire staff for it next');manage('staff')}
-function cost(u){return Math.round(u.base*Math.pow(1.6,S.upg[u.id]||0))}
+function cost(u){return Math.round(u.base*1.5*Math.pow(1.7,S.upg[u.id]||0))}
 function renderUpg(){
   const box=$('upgs');if(!box)return;box.innerHTML='';const eqTab=MT==='eq';
   UPG.filter(u=>!!u.eq===eqTab).forEach(u=>{
@@ -3241,25 +3397,25 @@ function restockTo(k){const u=S.lastUsed[k]||0;return needFor(k)+(u>0?30:0)}
 function restock(){S.spike=S.spikeNext;
   let spent=0,miss=0;
   ING_ORDER.filter(k=>needSet().has(k)).forEach(k=>{
-    while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c){miss++;break}S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q}});
+    while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c){miss++;break}S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q,lotAdd(k,ING[k].q)}});
   save();sfx.coin();toast(miss?'Ran out of cash before restocking everything':'Restocked for '+fmt(spent));market();
 }
 const MGROUPS=[['bar','☕ Bar'],['top','🍓 Toppings'],['kit','🥖 Kitchen'],['world','🌏 Sourced from the Lab']];
 const mgOf=k=>ING[k].world||(ING[k].src&&!['bar','top','kit'].includes(ING[k].st))?'world':ING[k].src?'world':ING[k].st;
-function restockGroup(g){const need=needSet();let spent=0;ING_ORDER.filter(k=>need.has(k)&&mgOf(k)===g).forEach(k=>{while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c)break;S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q}});save();sfx.coin();toast('Restocked for '+fmt(spent));const sc=$('card').scrollTop;market();$('card').scrollTop=sc}
+function restockGroup(g){const need=needSet();let spent=0;ING_ORDER.filter(k=>need.has(k)&&mgOf(k)===g).forEach(k=>{while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c)break;S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q;lotAdd(k,ING[k].q)}});save();sfx.coin();toast('Restocked for '+fmt(spent));const sc=$('card').scrollTop;market();$('card').scrollTop=sc}
 function market(){
   R=null;S.spike=S.spikeNext||null;hud();buildStation();
   const need=needSet(),keys=ING_ORDER.filter(k=>need.has(k));
   const cost=k=>{let h=S.inv[k]||0,e=0;while(h<restockTo(k)){h+=ING[k].q;e+=ingPrice(k)}return e};
   const est=keys.reduce((a,k)=>a+cost(k),0);
   const row=k=>{const g=ING[k],have=S.inv[k]||0,nd=needFor(k),low=have<nd;
-    return `<div class="mrow"><span class="mic">${g.e}</span><div class="minfo"><b>${g.n}</b><small class="${low?'lowtxt':''}">📦 ${have} left · need ~${nd} · restock to ${restockTo(k)}</small><small>1 ${g.u} = ${g.q} servings${g.per&&!S.upg.tu&&!S.upg.smartfridge?' · <span class="tag">spoils overnight</span>':''}</small></div><div class="mbtns"><button class="mbuy" data-k="${k}" data-n="1" ${S.money<ingPrice(k)?'disabled':''}><b>${fmt(ingPrice(k))}</b><span>Buy</span></button><button class="mbulk" data-k="${k}" data-n="5" ${S.money<ingPrice(k)*4.25?'disabled':''}>×5 · ${fmt(ingPrice(k)*4.25)}</button></div></div>`};
+    return `<div class="mrow"><span class="mic">${g.e}</span><div class="minfo"><b>${g.n}</b><small class="${low?'lowtxt':''}">📦 ${have} left · need ~${nd} · restock to ${restockTo(k)}</small>${(()=>{const e=nextExp(k);if(!e||!have)return '';const dl=e.exp-S.day;return `<small class="notr" style="color:${dl<=0?'#C0392B':'#8a6d00'};font-weight:700">⏳ ${dl<=0?L(`${Math.min(e.n,have)} expire tonight`,`${Math.min(e.n,have)} hết hạn tối nay`):L(`${Math.min(e.n,have)} expire in ${dl} days`,`${Math.min(e.n,have)} hết hạn sau ${dl} ngày`)}</small>`})()}<small>1 ${g.u} = ${g.q} servings${g.per&&!S.upg.tu&&!S.upg.smartfridge?' · <span class="tag">spoils overnight</span>':''}</small></div><div class="mbtns"><button class="mbuy" data-k="${k}" data-n="1" ${S.money<ingPrice(k)?'disabled':''}><b>${fmt(ingPrice(k))}</b><span>Buy</span></button><button class="mbulk" data-k="${k}" data-n="5" ${S.money<ingPrice(k)*4.25?'disabled':''}>×5 · ${fmt(ingPrice(k)*4.25)}</button></div></div>`};
   const groups=MGROUPS.map(([g,n])=>{const ks=keys.filter(k=>mgOf(k)===g);if(!ks.length)return '';
     const low=ks.filter(k=>(S.inv[k]||0)<needFor(k)).length,gc=ks.reduce((a,k)=>a+cost(k),0),key='mkt:'+g;
     return `<details class="srcgrp mgrp" data-key="${key}"${OPEN.has(key)?' open':''}><summary><span class="mgn">${n} <small>(${ks.length})</small></span>${low?`<span class="mlow">⚠️ ${low} low</span>`:'<span class="mok">✓ OK</span>'}</summary>
       ${gc?`<button class="flyall" onclick="restockGroup('${g}')">🛒 Restock ${n.replace(/^\S+\s/,'')} · ${fmt(gc)}</button>`:''}${ks.map(row).join('')}</details>`}).join('');
   const miss=unlocked().filter(r=>r.ing.some(k=>!(S.inv[k]>0))).map(r=>r.n);
-  showModal(`<div class="mhead"><h2>Market</h2><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></div><p class="notr">${L('Cash on hand','Tiền mặt')}: <b>${fmt(S.money)}</b><br>${L('Today','Hôm nay')}: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${L(ING[S.spikeNext].n+' costs 50% more today','Hôm nay '+ING[S.spikeNext].n+' đắt hơn 50%')}</div>`:''}
+  showModal(`<div class="mhead"><h2>Market</h2><span><button class="hgear notr" aria-label="Guide" onclick="guide('market')" style="margin-right:6px">❓</button><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></span></div><p class="notr">${L('Cash on hand','Tiền mặt')}: <b>${fmt(S.money)}</b><br>${L('Today','Hôm nay')}: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${L(ING[S.spikeNext].n+' costs 50% more today','Hôm nay '+ING[S.spikeNext].n+' đắt hơn 50%')}</div>`:''}
   <div class="mtop">${est?`<button class="big alt" onclick="restock()">🛒 Restock everything · ${fmt(est)}</button>`:'<p class="note" style="text-align:center">✓ Everything is stocked for a day like the last one.</p>'}
   <button class="big" onclick="startDay()">Open day ${S.day}</button></div>
   ${miss.length?`<div class="warn">Not enough ingredients for: ${miss.slice(0,6).join(', ')}${miss.length>6?' and '+(miss.length-6)+' more':''}</div>`:''}
@@ -3267,7 +3423,7 @@ function market(){
   ${groups}
   <button class="big alt" onclick="manage()">Manage shop</button>`,()=>market());
   document.querySelectorAll('#card button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,g=ING[k],n=+b.dataset.n,c=n===5?ingPrice(k)*(S.upg.freezer&&PROTEINS.includes(k)?3.75:S.upg.shelving?4:4.25):ingPrice(k);
-    if(S.money<c)return;S.money-=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+g.q*n;save();sfx.coin();
+    if(S.money<c)return;S.money-=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+g.q*n;lotAdd(k,g.q*n);save();sfx.coin();
     const sc=$('card').scrollTop;market();$('card').scrollTop=sc});
 }
 /* modals */
@@ -3278,7 +3434,7 @@ function addonMenu(){return `<div class="addons"><b>Add-ons</b><div>🥤 Size L 
 function recRow(r){return `<div class="rec"><span class="e">${r.e}</span><div><b>${r.n}</b>${r.vi?` <span class="vi">${r.vi}</span>`:''}${S.newIds.includes(r.id)?'<span class="new">new</span>':''}<br><span class="m">${r.ing.map(k=>ING[k].e).join(' ')}</span>${r.ing.includes('pate')&&r.ing.includes('butter')?'<br><small>Comes with pâté and butter. Some customers ask for no pâté or no butter.</small>':''}</div><b>${fmt(price(r))}</b></div>`}
 function pause(){
   if(!R||R.paused)return;R.paused=true;
-  showModal(`<h2>Paused</h2><button class="big alt" onclick="settings()">⚙️ Settings</button><p>${S.player?'👤 '+String(S.player).replace(/[<>&]/g,'')+'<br>':''}Day ${S.day}, ${fmt(S.money)}</p><button class="big" onclick="resume()">Resume</button><button class="big alt" onclick="schedLive()">📅 Schedule</button><button class="big alt" onclick="book(true)">📖 Recipes</button><button class="big alt" onclick="board('pause')">🏆 Leaderboard</button><button class="big alt" onclick="confirmReset()">Start over</button>`,()=>{if(R){R.paused=false;pause()}});
+  showModal(`<h2>Paused</h2><button class="big alt" onclick="settings()">⚙️ Settings</button><button class="big alt notr" onclick="guide()">📖 ${L('Game guide','Hướng dẫn chi tiết')}</button><p>${S.player?'👤 '+String(S.player).replace(/[<>&]/g,'')+'<br>':''}Day ${S.day}, ${fmt(S.money)}</p><button class="big" onclick="resume()">Resume</button><button class="big alt" onclick="schedLive()">📅 Schedule</button><button class="big alt" onclick="book(true)">📖 Recipes</button><button class="big alt" onclick="board('pause')">🏆 Leaderboard</button><button class="big alt" onclick="confirmReset()">Start over</button>`,()=>{if(R){R.paused=false;pause()}});
 }
 function resume(){closeModal();if(R){R.paused=false;last=performance.now()}}
 function book(fromPause){
@@ -3309,6 +3465,7 @@ function intro(){
   <label class="nmlab" for="pname0">Your name</label>
   <input id="pname0" class="nmin" maxlength="16" autocomplete="nickname" placeholder="Type your name" value="${(S.player||'').replace(/"/g,'')}">
   <button class="big" onclick="if(!takeName())return;${cont?'preDay()':'market();if(!S.tut)setTimeout(()=>{if(!S.tut)tutStart()},250)'}">${cont?'Continue day '+S.day:'Start'}</button>
+  <button class="big alt notr" onclick="guide()">📖 ${L('Game guide','Hướng dẫn chi tiết')}</button>
   <button class="big alt" onclick="board('intro')">🏆 Leaderboard</button>
   ${cont?'<button class="big alt" onclick="confirmReset()">Start over</button>':''}`,()=>intro());
 }
@@ -3375,6 +3532,7 @@ VI_FN.push([/^(\S+) (.+)$/,(m,e,n)=>VI_EXACT.has(n)&&!/^[A-Za-z]/.test(e)?e+' '+
 VI_FN.unshift([/^(.*)(☕ Bar|🥖 Kitchen) ([\d.]+)s(.*)$/,(m)=>m.replace(/☕ Bar/g,'☕ Quầy bar').replace(/🥖 Kitchen/g,'🥖 Bếp')]);
 VI_RX.unshift([/^📓 Recipe notebook \((\d+)\)$/,"📓 Sổ công thức ($1)"]);
 VI_EXACT.set("📒 Books","📒 Sổ sách");VI_EXACT.set("🎰 Leisure","🎰 Giải trí");VI_EXACT.set("🥇 Gold","🥇 Vàng");VI_EXACT.set("⭐ Reviews","⭐ Đánh giá");
+Object.entries({"Fresh food keeps up to 4 days (5 with a vacuum sealer). Level 1: baguettes and milk. Level 2: all fresh items": "Đồ tươi giữ được tối đa 4 ngày (5 ngày nếu có máy hút chân không). Cấp 1: bánh mì và sữa. Cấp 2: mọi đồ tươi", "All fresh food keeps the full 5 days": "Mọi đồ tươi giữ đủ 5 ngày", "Chilled food keeps 5 days instead of 4": "Đồ trong tủ lạnh giữ 5 ngày thay vì 4", "Room for 1 more staff member at Weymouth (up to 24)": "Thêm 1 chỗ làm ở Weymouth (tối đa 24 người)", "Cut items that don't sell and research replacements": "Cắt món bán ế và nghiên cứu món thay thế", "Build a seasonal menu (feature items that fit the season and holidays)": "Làm menu theo mùa (đẩy món hợp mùa và ngày lễ)"}).forEach(([k,v])=>VI_EXACT.set(k,v));
 function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';
   const card=$('card'),sc=card?card.scrollTop:0;if(RERENDER&&$('modal').classList.contains('show')){try{RERENDER()}catch(e){}if(card)card.scrollTop=sc}
   document.querySelectorAll('.tutov').forEach(e=>{if(TI>=0&&e.querySelector('.tutdots'))tutShow()});
