@@ -763,6 +763,7 @@ body{background-color:#0E0E0E;background-image:
 .setrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #E7E0CC}
 .setrow small{color:#666;font-size:13px}
 .setrow input[type=range]{width:45%;accent-color:var(--k)}
+.setrow{}.setrow .sw{}
 .sw{flex:0 0 56px;height:32px;border-radius:999px;border:2px solid var(--k);background:#ddd;position:relative;padding:0}
 .sw i{position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:left .15s}
 .sw.on{background:var(--y)}.sw.on i{left:26px}
@@ -840,6 +841,8 @@ html.nomotion *,html.nomotion *::before,html.nomotion *::after{animation:none!im
 .helpbtn{border:2px solid var(--k);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-weight:800;font-size:13px;margin:6px 0}
 .helpicon{font-size:48px;text-align:center;line-height:1}.helph{text-align:center;margin:6px 0 8px;font-size:20px}
 .helpul{margin:0 0 14px;padding-left:20px;font-size:15.5px;line-height:1.5;font-weight:600;color:#222}.helpul li{margin:6px 0}
+.mhead{display:flex;align-items:center;justify-content:space-between;gap:8px}.mhead h2{margin:0}
+.hgear{flex:0 0 44px;width:44px;height:44px;border-radius:50%;border:2px solid var(--k);background:var(--y);font-size:20px;box-shadow:0 2px 0 var(--k)}
 </style>
 </head>
 <body>
@@ -1289,7 +1292,9 @@ const season=d=>SEASONS[Math.floor((d-1)/10)%4];
 const holiday=d=>HOLI[(d-1)%40+1]||null;
 function rollWx(d){const t=WXP[season(d)[0]],tot=Object.values(t).reduce((a,b)=>a+b,0);let x=Math.random()*tot;for(const k in t){x-=t[k];if(x<=0)return k}return 'cloudy'}
 const wxMul=()=>{const w=WX[S.wx.t],h=holiday(S.day);const wm=S.upg&&S.upg.hvac&&(S.wx.t==='heat'||S.wx.t==='cold')?(w.m+1)/2:w.m;return wm*(w.patio?1+.1*S.upg.patio:1)*(h?h[1]:1)};
-const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `${se[1]} ${se[0]}, ${w.e} ${w.n}${h?`, <b>${h[0]}</b>`:''}`};
+const SEA_VI={Spring:'Xuân',Summer:'Hè',Fall:'Thu',Winter:'Đông'},WX_VI={sunny:'Nắng',cloudy:'Nhiều mây',rain:'Mưa',storm:'Giông bão',heat:'Nắng nóng',snow:'Tuyết',cold:'Lạnh buốt'};
+const HOLI_VI={"🎆 4th of July":"🎆 Quốc khánh Mỹ 4/7","🎃 Halloween":"🎃 Halloween","🎄 Christmas week":"🎄 Tuần lễ Giáng sinh","🧧 Lunar New Year":"🧧 Tết Nguyên Đán","💐 Mother's Day":"💐 Ngày của Mẹ"};
+const wxLine=(d,k)=>{const w=WX[k],h=holiday(d),se=season(d);return `<span class="notr">${se[1]} ${L(se[0],SEA_VI[se[0]])}, ${w.e} ${L(w.n,WX_VI[k])}${h?`, <b>${L(h[0],HOLI_VI[h[0]]||h[0])}</b>`:''}</span>`};
 // Online leaderboard: paste your Google Apps Script web app URL here (see leaderboard-apps-script.gs). Leave empty for on-device only.
 // ================= TAXES (simplified Massachusetts small business) =================
 // Meals tax: 6.25% MA sales tax on meals + 0.75% Weymouth local option = 7%, collected from customers and sent to MA DOR.
@@ -1514,31 +1519,40 @@ const L=(en,vi)=>(typeof LANG!=='undefined'&&LANG==='vi')?vi:en;
 const SET=(()=>{try{return Object.assign({sound:true,vibe:true,big:false,motion:true,volume:.8,theme:'vang',music:true},JSON.parse(localStorage.getItem('saigonesee-settings')||'{}'))}catch(e){return {sound:true,vibe:true,big:false,motion:true,volume:.8}}})();
 if(SET.musicV2==null){SET.music=true;SET.musicV2=1;try{localStorage.setItem('saigonesee-settings',JSON.stringify(SET))}catch(e){}}
 function saveSet(){try{localStorage.setItem('saigonesee-settings',JSON.stringify(SET))}catch(e){}}
-// Gentle ambient loop generated in-browser. No audio files, so it always loads instantly.
-let MAC=null,MGain=null,MNodes=[],MTimer=null;
-function musicCtx(){if(!MAC){try{MAC=new (window.AudioContext||window.webkitAudioContext)();MGain=MAC.createGain();MGain.gain.value=0;MGain.connect(MAC.destination)}catch(e){return null}}return MAC}
-function musicPad(freqs,dur){const ac=musicCtx();if(!ac)return;const t=ac.currentTime,g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.5,t+dur*.3);g.gain.linearRampToValueAtTime(0,t+dur);g.connect(MGain);
-  freqs.forEach(f=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+dur+.2);MNodes.push(o)})}
-const MCHORDS=[[261.6,329.6,392],[293.7,349.2,440],[220,277.2,329.6],[246.9,311.1,392]];
-let mci=0;
-const MMEL=[[523.3,659.3,784,659.3,587.3,523.3,440,523.3],[587.3,698.5,880,698.5,659.3,587.3,523.3,587.3],[440,554.4,659.3,554.4,493.9,440,392,440],[493.9,622.3,784,622.3,587.3,493.9,440,493.9]];
-function musicNote(f,t0,dur,vol){const ac=MAC,o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol,t0+.03);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);o.connect(g);g.connect(MGain);o.start(t0);o.stop(t0+dur+.05)}
-function musicTick(){const ac=musicCtx();if(!ac)return;const k=mci%MCHORDS.length;musicPad(MCHORDS[k].map(f=>f/2),7.5);
-  const t=ac.currentTime+.2;MMEL[k].forEach((f,i)=>{if(Math.random()<.85)musicNote(f,t+i*.875,1.4,.22)});mci++;MTimer=setTimeout(musicTick,7000)}
-function musicSet(on){const ac=musicCtx();if(!ac)return;
-  if(on){MGain.gain.setTargetAtTime(.05,ac.currentTime,1.2);ac.resume&&ac.resume();if(!MTimer)musicTick()}
-  else{MGain.gain.setTargetAtTime(0,ac.currentTime,.8);clearTimeout(MTimer);MTimer=null}}
-['click','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(SET.music){const ac=musicCtx();if(ac&&ac.state==='suspended')ac.resume();if(!MTimer)musicSet(true)}},{once:true,passive:true}));
+// Background music: a 28-second lo-fi loop rendered once in the browser, then played through an <audio> element.
+// An <audio> element keeps playing on iPhone even when the silent switch is on (Web Audio alone would be muted).
+let MTimer=null,MUS=null,MUSvol=-1,MUSbusy=false;
+try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+const MCHORDS=[[261.6,329.6,392],[220,261.6,329.6],[174.6,220,261.6],[196,246.9,293.7]];
+const MMEL=[[523.3,659.3,784,659.3,587.3,523.3,392,523.3],[440,523.3,659.3,523.3,493.9,440,392,440],[349.2,440,523.3,440,392,349.2,329.6,349.2],[392,493.9,587.3,493.9,440,392,329.6,392]];
+function wavBlob(buf){const d=buf.getChannelData(0),n=d.length,b=new ArrayBuffer(44+n*2),v=new DataView(b),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+  w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,buf.sampleRate,true);v.setUint32(28,buf.sampleRate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++){const x=Math.max(-1,Math.min(1,d[i]));v.setInt16(44+i*2,x*32767,true)}return new Blob([b],{type:'audio/wav'})}
+function renderMusic(vol){const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!OAC)return Promise.reject();
+  const sr=22050,dur=28,ac=new OAC(1,sr*dur,sr),master=ac.createGain();master.gain.value=vol;master.connect(ac.destination);
+  MCHORDS.forEach((ch,k)=>{const t0=k*7,g=ac.createGain();g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.16,t0+1.5);g.gain.setValueAtTime(.16,t0+5.5);g.gain.linearRampToValueAtTime(0,t0+7);g.connect(master);
+    ch.forEach(f=>{[f/2,f].forEach((ff,oi)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=ff;const og=ac.createGain();og.gain.value=oi?.5:1;o.connect(og);og.connect(g);o.start(t0);o.stop(t0+7.05)})});
+    const bass=ac.createOscillator(),bg=ac.createGain();bass.type='triangle';bass.frequency.value=ch[0]/2;bg.gain.setValueAtTime(0,t0);bg.gain.linearRampToValueAtTime(.18,t0+.1);bg.gain.exponentialRampToValueAtTime(.01,t0+3.4);bg.gain.linearRampToValueAtTime(.12,t0+3.6);bg.gain.exponentialRampToValueAtTime(.001,t0+6.9);bass.connect(bg);bg.connect(master);bass.start(t0);bass.stop(t0+7);
+    MMEL[k].forEach((f,i)=>{if((k+i)%5===4)return;const tt=t0+.3+i*.8,o=ac.createOscillator(),ng=ac.createGain();o.type='triangle';o.frequency.value=f;ng.gain.setValueAtTime(0,tt);ng.gain.linearRampToValueAtTime(.2,tt+.02);ng.gain.exponentialRampToValueAtTime(.0005,tt+1.3);o.connect(ng);ng.connect(master);o.start(tt);o.stop(tt+1.35)})});
+  return ac.startRendering().then(wavBlob)}
+function musicLoad(){const vol=.55*SET.volume;if(MUS&&Math.abs(MUSvol-vol)<.02)return Promise.resolve(MUS);if(MUSbusy)return Promise.resolve(MUS);MUSbusy=true;
+  return renderMusic(vol).then(bl=>{const was=MUS&&!MUS.paused,pos=MUS?MUS.currentTime:0;if(MUS){MUS.pause();URL.revokeObjectURL(MUS.src)}MUS=new Audio(URL.createObjectURL(bl));MUS.loop=true;MUS.setAttribute('playsinline','');MUSvol=vol;MUSbusy=false;if(was){MUS.currentTime=pos;MUS.play().catch(()=>{})}return MUS}).catch(()=>{MUSbusy=false;return null})}
+function musicSet(on){if(on){MTimer=1;musicLoad().then(a=>{if(a&&SET.music)a.play().catch(()=>{})})}else{MTimer=null;if(MUS)MUS.pause()}}
+function musicVolume(){if(SET.music)musicLoad()}
+// Browsers only allow sound after the first tap, so start music on the first touch
+['pointerdown','touchstart','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(SET.music&&(!MUS||MUS.paused))musicSet(true);try{const ac=sfxCtx&&sfxCtx();ac&&ac.state==='suspended'&&ac.resume()}catch(e){}},{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(!MUS)return;if(document.hidden)MUS.pause();else if(SET.music)MUS.play().catch(()=>{})});
 const THEMES=[{id:'vang',en:'Sunshine Yellow',vi:'Vàng Sài Gòn',y:'#F3D03E',k:'#111'},{id:'nau',en:'Coffee Brown',vi:'Nâu Cà Phê',y:'#C08552',k:'#3A2414'},{id:'hong',en:'Strawberry Pink',vi:'Hồng Dâu',y:'#F2A6C0',k:'#5A2334'},{id:'cam',en:'Peach Orange',vi:'Cam Đào',y:'#F2A65A',k:'#5A2E12'},{id:'xanhla',en:'Matcha Green',vi:'Xanh Matcha',y:'#8FC17A',k:'#1F3A22'},{id:'xanhbien',en:'Ocean Blue',vi:'Xanh Biển',y:'#7FB8E0',k:'#123047'}];
 function applySet(){document.documentElement.classList.toggle('bigtext',!!SET.big);document.documentElement.classList.toggle('nomotion',!SET.motion);document.documentElement.setAttribute('data-theme',SET.theme||'vang');musicSet(!!SET.music)}
 function buzz(p){if(SET.vibe&&navigator.vibrate)try{navigator.vibrate(p)}catch(e){}}
 function setSet(k,v){SET[k]=v;saveSet();applySet();if(k==='sound'&&v)beep(880,.08);if(k==='vibe'&&v)buzz(40);if(k==='theme')buzz(15);settings(true)}
 let SETFROM=null;
+let SETBACK=null;
 function settings(keep){
-  if(!keep){SETFROM=R&&!R.paused?'play':R?'pause':'menu';if(R&&!R.paused)R.paused=true}
+  if(!keep){SETFROM=R&&!R.paused?'play':R?'pause':'menu';SETBACK=$('modal').classList.contains('show')?RERENDER:null;if(R&&!R.paused)R.paused=true}
   const tg=(k,on,t,d)=>`<div class="setrow"><div><b>${t}</b>${d?`<br><small>${d}</small>`:''}</div><button class="sw${on?' on':''}" role="switch" aria-checked="${on}" onclick="setSet('${k}',${!on})"><i></i></button></div>`;
   const canVibe=!!navigator.vibrate;
-  showModal(`<h2>⚙️ Settings</h2>
+  showModal(`<h2 class="notr">⚙️ ${L('Settings','Cài đặt')}</h2>
   <p style="font-weight:800;margin:8px 0 2px" class="notr">${L('🌐 Language','🌐 Ngôn ngữ')}</p>${langSwitch()}
   <p style="font-weight:800;margin:14px 0 4px" class="notr">${L('🎨 Color theme','🎨 Màu giao diện')}</p>
   <p class="note notr">${L('Pick a look you like. Change it any time.','Chọn màu bạn thích, đổi lúc nào cũng được.')}</p>
@@ -1546,11 +1560,11 @@ function settings(keep){
   <p style="font-weight:800;margin:14px 0 4px" class="notr">${L('🎵 Background music','🎵 Nhạc nền')}</p>
   ${tg('music',SET.music,L('🎵 Soft background music','🎵 Nhạc nền nhẹ'),L('A calm instrumental loop while you play','Giai điệu nhẹ nhàng phát trong lúc chơi'))}
   ${tg('sound',SET.sound,L('🔊 Sound effects','🔊 Âm thanh'),L('Coins, taps and alerts','Tiếng tiền, tiếng chạm và cảnh báo'))}
-  ${SET.sound?`<div class="setrow"><div><b>🔉 Volume</b></div><input type="range" min="0" max="1" step="0.1" value="${SET.volume}" oninput="SET.volume=+this.value;saveSet()" onchange="beep(880,.08)" aria-label="Volume"></div>`:''}
-  ${tg('vibe',SET.vibe,'📳 Vibration',canVibe?'Short buzz when you earn money or make a mistake':'Your phone or browser does not support vibration (iPhone Safari)')}
-  ${tg('big',SET.big,'🔠 Large text','Bigger text in menus and orders')}
-  ${tg('motion',SET.motion,'✨ Animations','Turn off to reduce motion')}
-  <p style="font-weight:800;margin:12px 0 4px">👤 Player name</p>
+  ${SET.sound?`<div class="setrow notr"><div><b>${L('🔉 Volume','🔉 Âm lượng')}</b></div><input type="range" min="0" max="1" step="0.1" value="${SET.volume}" oninput="SET.volume=+this.value;saveSet()" onchange="beep(880,.08);musicVolume()" aria-label="Volume"></div>`:''}
+  ${tg('vibe',SET.vibe,L('📳 Vibration','📳 Rung'),canVibe?L('Short buzz when you earn money or make a mistake','Rung nhẹ khi được tiền hoặc làm sai'):L('Your phone or browser does not support vibration (iPhone Safari)','Điện thoại hoặc trình duyệt này không hỗ trợ rung (Safari trên iPhone)'))}
+  ${tg('big',SET.big,L('🔠 Large text','🔠 Chữ to'),L('Bigger text in menus and orders','Chữ to hơn trong menu và phiếu order'))}
+  ${tg('motion',SET.motion,L('✨ Animations','✨ Hiệu ứng động'),L('Turn off to reduce motion','Tắt để giảm chuyển động'))}
+  <p style="font-weight:800;margin:12px 0 4px" class="notr">${L('👤 Player name','👤 Tên người chơi')}</p>
   <input id="pnameS" class="nmin" maxlength="16" value="${(S.player||'').replace(/"/g,'')}" onchange="const v=this.value.trim();if(v){S.player=v;save();toast('Name saved')}">
   <p style="font-weight:800;margin:14px 0 4px" class="notr">${L('💾 Move your game to another device','💾 Chuyển game sang máy khác')}</p>
   <p class="note notr">${L('Save a file (or copy a save code), then open it on the other phone or computer.','Lưu file (hoặc chép mã lưu game), rồi mở trên điện thoại hoặc máy tính khác.')}</p>
@@ -1558,8 +1572,8 @@ function settings(keep){
   <div class="arow notr" style="padding-left:0;margin-top:6px"><button onclick="copyCode()">📋 ${L('Copy save code','Chép mã lưu')}</button><button onclick="pasteCode()">📥 ${L('Paste save code','Dán mã lưu')}</button></div>
   <input type="file" id="loadfile" accept=".json,.txt,application/json" style="display:none" onchange="importFile(this)">
   <button class="big alt notr" onclick="S.tut=0;S.tips={};save();closeSettings();toast(L('Tips will show again','Hướng dẫn sẽ hiện lại'));if(R)setTimeout(tutStart,300)">🎓 ${L('Show the tutorial again','Xem lại hướng dẫn')}</button>
-  <button class="big" onclick="closeSettings()">Done</button>
-  <button class="big alt" onclick="confirmReset()">Start over</button>`);
+  <button class="big notr" onclick="closeSettings()">${L('Done','Xong')}</button>
+  <button class="big alt notr" onclick="confirmReset()">${L('Start over','Chơi lại từ đầu')}</button>`,()=>settings(true));
 }
 function saveBlob(){return {game:'saigonesee',v:1,at:new Date().toISOString(),S,settings:SET,lang:LANG,hof:(()=>{try{return JSON.parse(localStorage.getItem('saigonesee-hof')||'[]')}catch(e){return []}})()}}
 function exportSave(){save();const data=JSON.stringify(saveBlob());const name=`saigonesee-${(S.player||'player').replace(/[^\w-]+/g,'_')}-day${S.day}.json`;
@@ -1669,7 +1683,7 @@ function checkUnlocks(){S.unl=S.unl||{};const out=[];
   Object.keys(GATES).forEach(g=>{if(!S.unl[g]&&gateOk(g)){S.unl[g]=1;out.push(g)}});return out}
 const UNL_TXT={pickup:['📱 Online pickup','📣 Marketing'],uber:['🛵 Uber Eats','📣 Marketing'],door:['🚗 DoorDash','📣 Marketing'],grub:['🥡 Grubhub','📣 Marketing'],branch:['🏪 Your first branch','🏪 Branches'],board:['👔 Board of directors & 🏢 Office','👔 Board'],invest:['📈 Investing','📈 Invest'],farm:['🌱 Coffee farm','🌱 Farm']};
 function unlockCards(list){return list.map(g=>{const u=UNL_TXT[g]||[GATES[g].n,''];return `<div class="unl notr">🔓 <b>${L('New unlocked:','Mới mở khoá:')} ${u[0]}</b><br><small>${L('Find it in Manage shop →','Xem trong Quản lý tiệm →')} ${u[1]}</small></div>`}).join('')}
-function closeSettings(){if(SETFROM==='play')resume();else if(SETFROM==='pause')pause2();else intro()}
+function closeSettings(){if(SETFROM==='play')resume();else if(SETFROM==='pause')pause2();else if(SETBACK)SETBACK();else intro()}
 applySet();
 function beep(f,dur=.12,type='triangle',vol=.08){if(!SET.sound)return;vol*=SET.volume;
   try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
@@ -1677,6 +1691,13 @@ function beep(f,dur=.12,type='triangle',vol=.08){if(!SET.sound)return;vol*=SET.v
     g.gain.setValueAtTime(vol,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+dur);
     o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+dur)}catch(e){}
 }
+function sfxCtx(){return AC}
+// Soft two-tone "pop" for menu taps
+function uiPop(){if(!SET.sound)return;beep(740,.045,'sine',.06);setTimeout(()=>beep(1110,.05,'sine',.045),35)}
+function uiToggle(on){if(!SET.sound)return;on?(beep(660,.05,'sine',.06),setTimeout(()=>beep(990,.07,'sine',.05),50)):(beep(660,.05,'sine',.06),setTimeout(()=>beep(440,.07,'sine',.05),50))}
+document.addEventListener('pointerdown',e=>{const t=e.target.closest('button,summary,select,.exo,.srow,.lchip,.thmcard,.flyg button,input[type=checkbox]');if(!t||t.disabled)return;
+  if(t.closest('.ing,.chip,#tray,.cust,.bubble,[data-nosfx]'))return;
+  if(t.classList.contains('sw'))uiToggle(!t.classList.contains('on'));else uiPop()},{passive:true,capture:true});
 const sfx={tap:()=>beep(660,.05),coin:()=>{beep(880,.08);setTimeout(()=>beep(1320,.12),70);buzz(15)},bad:()=>{beep(180,.2,'sawtooth',.05);buzz([30,40,30])}};
 
 /* HUD */
@@ -2142,7 +2163,7 @@ function endDay(){
   }
   S.day++;S.best=Math.max(S.best||1,S.day);S.cands=genCands();runBoard();save();setTimeout(()=>autoPost('day'),300);
   const unl=checkUnlocks();if(unl.length){sfx.coin();setTimeout(()=>unl.forEach((g,i)=>setTimeout(()=>funPop('🔓',L('New unlocked: ','Mới mở khoá: ')+(UNL_TXT[g]||[GATES[g].n])[0],0),i*1800)),600)}
-  showModal(`<div class="moon notr">🌙</div><h2 class="notr" style="text-align:center">${L('Day '+d+' closed','Hết ngày '+d)}</h2>${unlockCards(unl)}${advisorCard(checkAdvisor())}${summary()}<div class="arow notr" style="padding-left:0;margin-top:10px"><button onclick="manage('books')">📒 ${L('Books','Sổ sách')}</button><button onclick="market()">🛒 ${L('Market','Chợ')}</button></div><button class="big" onclick="manage('staff')">${L('Manage shop','Quản lý tiệm')}</button>`);
+  const RS=R,DD=d,UNL=unl,ADV=checkAdvisor();const drawSum=()=>{const old=R;R=RS;showModal(`<div class="moon notr">🌙</div><h2 class="notr" style="text-align:center">${L('Day '+DD+' closed','Hết ngày '+DD)}</h2>${unlockCards(UNL)}${advisorCard(ADV)}${summary()}<div class="arow notr" style="padding-left:0;margin-top:10px"><button onclick="manage('books')">📒 ${L('Books','Sổ sách')}</button><button onclick="market()">🛒 ${L('Market','Chợ')}</button></div><button class="big" onclick="manage('staff')">${L('Manage shop','Quản lý tiệm')}</button>`,drawSum);R=old};drawSum();
   R=null;hud();
 }
 function genReviews(){
@@ -2349,9 +2370,9 @@ function manage(tab){
       return head+`<button class="mbulk" onclick="fireExec('${k}')">Let go</button></div>${Object.entries(e.opts).map(([o,t])=>`<label class="exo"><input type="checkbox" ${b.opts[o]?'checked':''} onchange="toggleOpt('${k}','${o}')"><span>${t}</span></label>`).join('')}</div>`}).join('');
   }
   if(MT==='upg'||MT==='eq')body=(MT==='eq'?'<p class="note">Equipment works at every location. Some machines unlock new menu items in 🔬 R&D.</p>':'')+'<div id="upgs"></div>';
-  showModal(`<h2>Manage shop</h2><p>Cash: <b>${fmt(S.money)}</b><br>Daily wages: <b>${fmt(totalWage())}</b></p>
+  showModal(`<div class="mhead"><h2>Manage shop</h2><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></div><p>Cash: <b>${fmt(S.money)}</b><br>Daily wages: <b>${fmt(totalWage())}</b></p>
   <div class="tabs">${tabs.map(([k,n])=>`<button class="${k===MT?'on':''}" onclick="manage('${k}')">${n}</button>`).join('')}</div>${tabTip(MT)}${body}
-  <button class="big" onclick="preDay()">Go to market</button>`);
+  <button class="big" onclick="preDay()">Go to market</button>`,()=>manage());
   if(MT==='upg'||MT==='eq')renderUpg();
   reapplyFilters();$('card').scrollTop=sc;
 }
@@ -2913,30 +2934,31 @@ function market(){
     return `<details class="srcgrp mgrp" data-key="${key}"${OPEN.has(key)?' open':''}><summary><span class="mgn">${n} <small>(${ks.length})</small></span>${low?`<span class="mlow">⚠️ ${low} low</span>`:'<span class="mok">✓ OK</span>'}</summary>
       ${gc?`<button class="flyall" onclick="restockGroup('${g}')">🛒 Restock ${n.replace(/^\S+\s/,'')} · ${fmt(gc)}</button>`:''}${ks.map(row).join('')}</details>`}).join('');
   const miss=unlocked().filter(r=>r.ing.some(k=>!(S.inv[k]>0))).map(r=>r.n);
-  showModal(`<h2>Market</h2><p>Cash on hand: <b>${fmt(S.money)}</b><br>Today: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${ING[S.spikeNext].n} costs 50% more today</div>`:''}
+  showModal(`<div class="mhead"><h2>Market</h2><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></div><p class="notr">${L('Cash on hand','Tiền mặt')}: <b>${fmt(S.money)}</b><br>${L('Today','Hôm nay')}: ${wxLine(S.day,S.wx.t)}</p>${S.spikeNext?`<div class="warn">🚚 ${L(ING[S.spikeNext].n+' costs 50% more today','Hôm nay '+ING[S.spikeNext].n+' đắt hơn 50%')}</div>`:''}
   <div class="mtop">${est?`<button class="big alt" onclick="restock()">🛒 Restock everything · ${fmt(est)}</button>`:'<p class="note" style="text-align:center">✓ Everything is stocked for a day like the last one.</p>'}
   <button class="big" onclick="startDay()">Open day ${S.day}</button></div>
   ${miss.length?`<div class="warn">Not enough ingredients for: ${miss.slice(0,6).join(', ')}${miss.length>6?' and '+(miss.length-6)+' more':''}</div>`:''}
-  <p class="note">Restock tops up to last day's need (+40% +20) plus 30 extra. Tap a group to buy items one by one. ${S.upg.supplier?'📦 Your supplier contract also restocks when you open. ':''}Branches order their own ingredients.</p>
+  <p class="note notr">${L("Restock tops up to last day's need (+40% +20) plus 30 extra. Tap a group to buy items one by one.","Nút mua đủ sẽ nhập theo nhu cầu hôm qua (+40% +20) và dư thêm 30. Chạm vào một nhóm để mua từng món.")} ${S.upg.supplier?L('📦 Your supplier contract also restocks when you open. ','📦 Hợp đồng nhà cung cấp cũng tự nhập hàng khi mở cửa. '):''}${L('Branches order their own ingredients.','Chi nhánh tự nhập hàng.')}</p>
   ${groups}
-  <button class="big alt" onclick="manage()">Manage shop</button>`);
+  <button class="big alt" onclick="manage()">Manage shop</button>`,()=>market());
   document.querySelectorAll('#card button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,g=ING[k],n=+b.dataset.n,c=n===5?ingPrice(k)*(S.upg.freezer&&PROTEINS.includes(k)?3.75:S.upg.shelving?4:4.25):ingPrice(k);
     if(S.money<c)return;S.money-=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+g.q*n;save();sfx.coin();
     const sc=$('card').scrollTop;market();$('card').scrollTop=sc});
 }
 /* modals */
-function showModal(html){$('card').innerHTML=html;$('modal').classList.add('show')}
+let RERENDER=null;
+function showModal(html,rr){$('card').innerHTML=html;$('modal').classList.add('show');RERENDER=rr||null}
 function closeModal(){$('modal').classList.remove('show')}
 function addonMenu(){return `<div class="addons"><b>Add-ons</b><div>🥤 Size L +$1</div><div>💪 Extra shot +$1</div><div>🧂 Salted cream top +$1.5</div><div>🍖 Extra meat +$2</div><div>🍳 Fried egg +$1.5</div><div>🌶️ Chili (free)</div></div>`}
 function recRow(r){return `<div class="rec"><span class="e">${r.e}</span><div><b>${r.n}</b>${r.vi?` <span class="vi">${r.vi}</span>`:''}${S.newIds.includes(r.id)?'<span class="new">new</span>':''}<br><span class="m">${r.ing.map(k=>ING[k].e).join(' ')}</span>${r.ing.includes('pate')&&r.ing.includes('butter')?'<br><small>Comes with pâté and butter. Some customers ask for no pâté or no butter.</small>':''}</div><b>${fmt(price(r))}</b></div>`}
 function pause(){
   if(!R||R.paused)return;R.paused=true;
-  showModal(`<h2>Paused</h2><button class="big alt" onclick="settings()">⚙️ Settings</button><p>${S.player?'👤 '+String(S.player).replace(/[<>&]/g,'')+'<br>':''}Day ${S.day}, ${fmt(S.money)}</p><button class="big" onclick="resume()">Resume</button><button class="big alt" onclick="schedLive()">📅 Schedule</button><button class="big alt" onclick="book(true)">📖 Recipes</button><button class="big alt" onclick="board('pause')">🏆 Leaderboard</button><button class="big alt" onclick="confirmReset()">Start over</button>`);
+  showModal(`<h2>Paused</h2><button class="big alt" onclick="settings()">⚙️ Settings</button><p>${S.player?'👤 '+String(S.player).replace(/[<>&]/g,'')+'<br>':''}Day ${S.day}, ${fmt(S.money)}</p><button class="big" onclick="resume()">Resume</button><button class="big alt" onclick="schedLive()">📅 Schedule</button><button class="big alt" onclick="book(true)">📖 Recipes</button><button class="big alt" onclick="board('pause')">🏆 Leaderboard</button><button class="big alt" onclick="confirmReset()">Start over</button>`,()=>{if(R){R.paused=false;pause()}});
 }
 function resume(){closeModal();if(R){R.paused=false;last=performance.now()}}
 function book(fromPause){
   if(R&&!R.paused)R.paused=true;
-  showModal(`<h2>Recipes</h2><p>Pick every ingredient. Order doesn't matter.</p>${addonMenu()}${unlocked().map(recRow).join('')}<button class="big" onclick="${R?'resume()':'closeModal()'}">${R?'Back to work':'Close'}</button>`);
+  showModal(`<h2>Recipes</h2><p>Pick every ingredient. Order doesn't matter.</p>${addonMenu()}${unlocked().map(recRow).join('')}<button class="big" onclick="${R?'resume()':'closeModal()'}">${R?'Back to work':'Close'}</button>`,()=>book(fromPause));
 }
 function confirmReset(){
   showModal(`<h2>Start over?</h2><p>Cash, days, staff, branches and upgrades all reset.</p><button class="big" onclick="doReset()">Start over</button><button class="big alt" onclick="${R?'pause2()':'intro()'}">Cancel</button>`);
@@ -2961,7 +2983,7 @@ function intro(){
   <input id="pname0" class="nmin" maxlength="16" autocomplete="nickname" placeholder="Type your name" value="${(S.player||'').replace(/"/g,'')}">
   <button class="big" onclick="if(!takeName())return;${cont?'preDay()':'market();if(!S.tut)setTimeout(()=>{if(!S.tut)tutStart()},250)'}">${cont?'Continue day '+S.day:'Start'}</button>
   <button class="big alt" onclick="board('intro')">🏆 Leaderboard</button>
-  ${cont?'<button class="big alt" onclick="confirmReset()">Start over</button>':''}`);
+  ${cont?'<button class="big alt" onclick="confirmReset()">Start over</button>':''}`,()=>intro());
 }
 
 /* fx */
@@ -3024,7 +3046,11 @@ VI_FN.push([/^(\S+) (.+)$/,(m,e,n)=>VI_EXACT.has(n)&&!/^[A-Za-z]/.test(e)?e+' '+
 VI_FN.unshift([/^(.*)(☕ Bar|🥖 Kitchen) ([\d.]+)s(.*)$/,(m)=>m.replace(/☕ Bar/g,'☕ Quầy bar').replace(/🥖 Kitchen/g,'🥖 Bếp')]);
 VI_RX.unshift([/^📓 Recipe notebook \((\d+)\)$/,"📓 Sổ công thức ($1)"]);
 VI_EXACT.set("📒 Books","📒 Sổ sách");VI_EXACT.set("⭐ Reviews","⭐ Đánh giá");
-function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';if(l==='vi')trTree(document.body);else untrTree(document.body);document.querySelectorAll('.langsw button').forEach(b=>b.classList.toggle('on',b.dataset.l===l))}
+function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';
+  const card=$('card'),sc=card?card.scrollTop:0;if(RERENDER&&$('modal').classList.contains('show')){try{RERENDER()}catch(e){}if(card)card.scrollTop=sc}
+  document.querySelectorAll('.tutov').forEach(e=>{if(TI>=0&&e.querySelector('.tutdots'))tutShow()});
+  buildStation&&R&&buildStation();hud&&hud();
+  if(l==='vi')trTree(document.body);else untrTree(document.body);document.querySelectorAll('.langsw button').forEach(b=>b.classList.toggle('on',b.dataset.l===l))}
 function langSwitch(){return `<div class="langsw notr"><button data-l="en" class="${LANG==='en'?'on':''}" onclick="setLang('en')">🇺🇸 English</button><button data-l="vi" class="${LANG==='vi'?'on':''}" onclick="setLang('vi')">🇻🇳 Tiếng Việt</button></div>`}
 
 initFin();initLab();initTax();initFarm();initOffice();
