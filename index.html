@@ -868,6 +868,30 @@ button,summary,.ing,.cust,.chip{touch-action:manipulation;-webkit-tap-highlight-
 .hgear,#app .hud .iconbtn,.introset .iconbtn{display:inline-flex!important;align-items:center;justify-content:center;padding:0!important;line-height:1!important;text-align:center;vertical-align:middle}
 .hgear{font-size:21px}.introset .iconbtn{font-size:20px}
 .mhead>span{display:inline-flex;align-items:center}
+:root[data-biz="pho"]{--y:#E8553E;--y2:#C9402B;--yl:#FBDCD3;--k:#2A1410;--k2:#1E0E0B;--k3:#3A1C16}
+:root[data-biz="hotpot"]{--y:#FF8A1F;--y2:#E0700A;--yl:#FFE3C7;--k:#1A1A1A;--k2:#111;--k3:#262626}
+:root[data-biz="pho"] body{background-color:#1E0E0B!important}:root[data-biz="hotpot"] body{background-color:#141414!important}
+.bizcard{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;background:#fff;border:1px solid #E7E0CC;border-radius:14px;padding:10px;margin:8px 0}
+.bizcard.cur{box-shadow:0 0 0 3px var(--y) inset}
+.bizsign{border-radius:10px;padding:8px 4px;text-align:center;border:2px solid}
+.bizsign b{display:block;font-size:11px;letter-spacing:.5px;font-family:"Baloo 2",sans-serif}.bizsign small{font-size:9.5px}
+.bizcard[data-b="cafe"] .bizsign{background:#111;color:#F3D03E;border-color:#F3D03E}.bizcard[data-b="cafe"] .bizsign small{color:#fff}
+.bizcard[data-b="pho"] .bizsign{background:#2A1410;color:#E8553E;border-color:#E8553E}.bizcard[data-b="pho"] .bizsign small{color:#FBDCD3}
+.bizcard[data-b="hotpot"] .bizsign{background:#1A1A1A;color:#FF8A1F;border-color:#FF8A1F}.bizcard[data-b="hotpot"] .bizsign small{color:#FFE3C7}
+.bizbadge{font-size:12px;font-weight:800;color:#2E9B6F}
+.minilayer{position:fixed;z-index:40;pointer-events:none}
+.minilayer .mtitle{position:absolute;left:6px;right:6px;top:6px;background:rgba(17,17,17,.88);color:var(--y);border-radius:12px;padding:6px 10px;font-weight:800;font-size:14px;text-align:center;overflow:hidden}
+.minilayer .mtime{position:absolute;left:0;bottom:0;height:3px;background:var(--y);width:100%;transition:width .2s linear}
+.minilayer .mb{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);font-size:40px;line-height:1;background:rgba(255,255,255,.92);border:3px solid var(--y);border-radius:50%;width:62px;height:62px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px #0006;padding:0;touch-action:manipulation}
+.minilayer .mb.big{width:84px;height:84px;font-size:48px}
+.minilayer .mb.num{font-family:"Baloo 2",sans-serif;font-weight:800;font-size:30px;color:#111}.minilayer .mb.num.ok{background:#8FC17A}
+.minilayer .mbar{position:absolute;left:25%;right:25%;bottom:14%;height:10px;border-radius:6px;background:#8FC17A;width:0;max-width:50%;box-shadow:0 0 0 2px #fff}
+.minilayer .a-float{animation:mfloat 2s ease-in-out infinite}@keyframes mfloat{50%{margin-top:-14px;filter:drop-shadow(0 0 10px gold)}}
+.minilayer .a-run{animation:mrun 6.5s linear forwards;top:78%!important}@keyframes mrun{from{left:-8%}to{left:108%}}
+.minilayer .a-bounce{animation:mbounce .8s ease-in-out infinite}@keyframes mbounce{50%{margin-top:-10px}}
+.minilayer .mres{position:absolute;left:8%;right:8%;top:40%;transform:translateY(-50%);background:#FFFDF6;border:3px solid var(--k);border-radius:14px;padding:10px;font-weight:800;text-align:center;font-size:15px;color:#111}
+.minilayer.lost .mres{background:#FDE3E0}
+.fxbar{display:none;margin:0 10px;padding:3px 10px;border-radius:999px;background:var(--y);color:var(--k);font-weight:800;font-size:12.5px;text-align:center}
 </style>
 </head>
 <body>
@@ -978,6 +1002,8 @@ const BASE_TAGS={phin:'coffee,bitter,chocolate',cond:'sweet,creamy',milk:'creamy
  avocado:'creamy,mild',pandan:'herbal,floral,sweet',ube:'sweet,earthy,creamy',yogurt:'sour,creamy',boba:'chewy,sweet',brownsugar:'caramel,sweet',cheesefoam:'salty,creamy,rich',lemongrass:'citrus,herbal',peach:'fruity,sweet',pineapple:'tropical,sour,sweet',pennywort:'herbal,fresh,earthy',mungbean:'sweet,earthy',sweetcorn:'sweet,creamy',fishcake:'savory,umami',meatball:'savory,rich',roastpork:'savory,crunchy,rich'};
 Object.keys(BASE_TAGS).forEach(k=>{if(ING[k])ING[k].tags=BASE_TAGS[k]?BASE_TAGS[k].split(','):[]});
 WORLD.forEach(([id,n,e,reg,st,tags,p])=>{if(!ING[id])ING[id]={st,e,n,u:'pack',q:12,p,src:1,world:1,reg,tags:tags.split(',')}});
+// Ingredients used by sister businesses (restaurant, hotpot)
+ING.phobroth={st:'kit',e:'🍲',n:'Phở broth',u:'pot',q:20,p:14,per:1,biz:1};ING.banhpho={st:'kit',e:'🍜',n:'Rice noodles (bánh phở)',u:'bag',q:20,p:6,per:1,biz:1};ING.beefslice={st:'kit',e:'🥩',n:'Rare beef slices',u:'tray',q:15,p:22,per:1,biz:1};ING.brisket={st:'kit',e:'🥓',n:'Beef brisket',u:'tray',q:15,p:18,per:1,biz:1};ING.pchicken={st:'kit',e:'🍗',n:'Poached chicken',u:'tray',q:15,p:14,per:1,biz:1};ING.sprouts={st:'top',e:'🌱',n:'Bean sprouts & herbs',u:'box',q:20,p:6,per:1,biz:1};ING.limechili={st:'top',e:'🍋',n:'Lime & chili',u:'bag',q:30,p:4,biz:1};ING.bbhbroth={st:'kit',e:'🌶️',n:'Bún bò Huế broth',u:'pot',q:20,p:15,per:1,biz:1};ING.bunthick={st:'kit',e:'🍝',n:'Thick vermicelli',u:'bag',q:20,p:6,per:1,biz:1};ING.brokenrice={st:'kit',e:'🍚',n:'Broken rice (cơm tấm)',u:'bag',q:20,p:5,biz:1};ING.porkchop={st:'kit',e:'🍖',n:'Grilled pork chop',u:'tray',q:12,p:18,per:1,biz:1};ING.eggmeatloaf={st:'kit',e:'🥚',n:'Egg meatloaf (chả trứng)',u:'tray',q:12,p:10,per:1,biz:1};ING.nuocmamchua={st:'top',e:'🥣',n:'Sweet fish sauce',u:'bottle',q:30,p:5,biz:1};ING.icedtea={st:'bar',e:'🧋',n:'Iced jasmine tea (trà đá)',u:'jug',q:30,p:3,biz:1};ING.chebamau={st:'top',e:'🍧',n:'Three-color dessert mix',u:'tub',q:15,p:8,per:1,biz:1};ING.tomyum={st:'kit',e:'🥘',n:'Tom yum broth',u:'pot',q:15,p:14,per:1,biz:1};ING.mushbroth={st:'kit',e:'🍄',n:'Mushroom broth',u:'pot',q:15,p:12,per:1,biz:1};ING.sukibroth={st:'kit',e:'🍯',n:'Sukiyaki broth',u:'pot',q:15,p:13,per:1,biz:1};ING.hpbeef={st:'kit',e:'🥩',n:'Beef platter',u:'plate',q:10,p:26,per:1,biz:1};ING.hpseafood={st:'kit',e:'🦐',n:'Seafood platter',u:'plate',q:10,p:30,per:1,biz:1};ING.fishball={st:'kit',e:'🍢',n:'Fish & shrimp balls',u:'bag',q:20,p:10,biz:1};ING.hptofu={st:'kit',e:'⬜',n:'Tofu & tofu skin',u:'tray',q:20,p:6,per:1,biz:1};ING.mushroom={st:'kit',e:'🍄‍🟫',n:'Mushroom mix',u:'box',q:15,p:9,per:1,biz:1};ING.hpgreens={st:'kit',e:'🥬',n:'Hotpot greens',u:'box',q:15,p:7,per:1,biz:1};ING.udon={st:'kit',e:'🍜',n:'Udon noodles',u:'pack',q:20,p:6,biz:1};ING.dipsauce={st:'top',e:'🥢',n:'Dipping sauce bar',u:'tub',q:40,p:6,biz:1};ING.lycheesoda={st:'bar',e:'🥤',n:'Lychee soda',u:'case',q:24,p:9,biz:1};ING.milktea={st:'bar',e:'🧋',n:'Milk tea base',u:'jug',q:20,p:8,per:1,biz:1};
 const ING_ORDER=Object.keys(ING);
 // Recipes simplified from Saigonesee's recipe book.
 // Prices from the Uber Eats menu. est:1 = no public price found, estimated.
@@ -1605,7 +1631,7 @@ const officeCount=()=>S.office?Object.values(S.office.team).reduce((a,t)=>a+t.le
 // Team power: sum of skill/3, doubled when the matching director is on the board
 function dp(d){if(!S.office)return 0;const t=S.office.team[d]||[];const p=t.reduce((a,x)=>a+x.skill/3,0);return p*(boardOn(DEPTS[d].boss)?1:.5)}
 function hireOffice(d,i){const c=S.office.cands[d][i];if(!c||officeCount()>=officeSeats())return;S.office.team[d].push(c);S.office.cands[d].splice(i,1);save();sfx.coin();toast(c.face+' '+c.name+' joined the '+DEPTS[d].n);manage()}
-function fireOffice(d,id){S.office.team[d]=S.office.team[d].filter(x=>x.id!==id);save();manage()}
+function fireOffice(d,id){const x=S.office.team[d].find(y=>y.id===id);if(x)addSev(x.face+' '+x.name,x.wage*20);S.office.team[d]=S.office.team[d].filter(y=>y.id!==id);save();manage()}
 function officeBody(){initOffice();const O=S.office,used=officeCount(),seats=officeSeats(),sal=Object.values(O.team).flat().reduce((a,x)=>a+x.wage,0);
   return `<div class="finsum"><div><small>Office seats</small><b>${used} / ${seats}</b></div><div><small>Salaries + rent</small><b>${fmt(sal+used*15)}/day</b></div></div>
   <p class="note">Each team works for its director. Without the director on the 👔 Board, a team works at half strength. More seats come with the 🏢 Regional office upgrade. Office rent is $15 per desk per day.</p>`+
@@ -1622,7 +1648,7 @@ const boardOn=(k,o)=>{const b=S.board&&S.board[k];return !!(b&&b.on&&(!o||b.opts
 // and managers must be balanced once you have 4+. Staff sometimes call in sick (paid, but they don't work that day).
 const minWage=()=>{const yrs=Math.floor((S.day+58)/365);return Math.round(34*Math.pow(1.05,yrs))};
 const genderOf=x=>x.g||(x.g=Math.random()<.5?'f':'m');
-function compliance(){const out=[];['main',...S.branches].forEach(l=>{const c=crewAt(l);if(c.length<6)return;const f=c.filter(x=>genderOf(x)==='f').length/c.length;if(f<.3||f>.7)out.push({l,f})});
+function compliance(){const out=[];allLocs().forEach(l=>{const c=crewAt(l);if(c.length<6)return;const f=c.filter(x=>genderOf(x)==='f').length/c.length;if(f<.3||f>.7)out.push({l,f})});
   const mg=S.staff.filter(x=>x.mgr);let mgBad=false;if(mg.length>=4){const f=mg.filter(x=>genderOf(x)==='f').length/mg.length;mgBad=f<.3||f>.7}
   const low=S.staff.filter(x=>x.wage<minWage());return {loc:out,mgBad,low}}
 // ---------- Overheads & losses ----------
@@ -1635,7 +1661,7 @@ function overheadDay(){const locs=['main',...S.branches.filter(b=>crewAt(b).leng
   if(S.upg.pestctl){const v=3*n;tot+=v;lines.push(['🐀',L('Pest control contract','Hợp đồng diệt côn trùng & chuột'),v])}
   S.money-=tot;R.ovh=tot;R.ovhLines=lines;
   // Surprise losses
-  let loss=0;const half=S.upg.insurance?.5:1,ev=(e,en,vi,v)=>{v=Math.round(v*half);loss+=v;R.news.push(`${e} ${L(en,vi)} −${fmt(v)}`)};
+  let loss=0;const half=(S.upg.insurance?.5:1)*(1-.25*dl('facil'))*(1-.3*dl('audit')),ev=(e,en,vi,v)=>{v=Math.round(v*half);loss+=v;R.news.push(`${e} ${L(en,vi)} −${fmt(v)}`)};
   if(!S.upg.pestctl&&Math.random()<.05){const fr=needSet?[...needSet()].filter(k=>ING[k]&&ING[k].per&&(S.inv[k]||0)>0):[];let gone=0;
     fr.sort(()=>Math.random()-.5).slice(0,2).forEach(k=>{const n2=Math.floor((S.inv[k]||0)*.4);S.inv[k]-=n2;gone+=n2*ingPrice(k)/ING[k].q});
     S.rating=Math.max(1,S.rating-.05);ev('🐀',`Rats got into the storeroom! Food thrown out and an emergency exterminator called (food lost worth ${fmt(gone)})`,`Chuột phá kho! Phải bỏ đồ ăn và gọi diệt chuột khẩn cấp (mất số đồ ăn trị giá ${fmt(gone)})`,350)}
@@ -1679,7 +1705,7 @@ S.brLvl=S.brLvl||{};S.brRate=S.brRate||{};S.brStats=S.brStats||{};S.lastUsed=S.l
 S.staff.forEach(x=>{if(x.mo==null)x.mo=70});
 const STINFO={"MA": ["Massachusetts", "ne"], "RI": ["Rhode Island", "ne"], "NH": ["New Hampshire", "ne"], "ME": ["Maine", "ne"], "CT": ["Connecticut", "ne"], "VT": ["Vermont", "ne"], "NY": ["New York", "ma"], "NJ": ["New Jersey", "ma"], "PA": ["Pennsylvania", "ma"], "DE": ["Delaware", "ma"], "MD": ["Maryland", "ma"], "DC": ["Washington, D.C.", "ma"], "VA": ["Virginia", "sa"], "NC": ["North Carolina", "sa"], "SC": ["South Carolina", "sa"], "GA": ["Georgia", "sa"], "FL": ["Florida", "sa"], "TN": ["Tennessee", "south"], "KY": ["Kentucky", "south"], "AL": ["Alabama", "south"], "LA": ["Louisiana", "south"], "MS": ["Mississippi", "south"], "AR": ["Arkansas", "south"], "WV": ["West Virginia", "south"], "TX": ["Texas", "south"], "OK": ["Oklahoma", "south"], "IL": ["Illinois", "mw"], "MI": ["Michigan", "mw"], "OH": ["Ohio", "mw"], "IN": ["Indiana", "mw"], "WI": ["Wisconsin", "mw"], "MN": ["Minnesota", "mw"], "MO": ["Missouri", "mw"], "NE": ["Nebraska", "mw"], "IA": ["Iowa", "mw"], "KS": ["Kansas", "mw"], "ND": ["North Dakota", "mw"], "SD": ["South Dakota", "mw"], "CO": ["Colorado", "mtn"], "UT": ["Utah", "mtn"], "ID": ["Idaho", "mtn"], "AZ": ["Arizona", "mtn"], "NM": ["New Mexico", "mtn"], "NV": ["Nevada", "mtn"], "MT": ["Montana", "mtn"], "WY": ["Wyoming", "mtn"], "CA": ["California", "pac"], "WA": ["Washington", "pac"], "OR": ["Oregon", "pac"], "AK": ["Alaska", "pac"], "HI": ["Hawaii", "pac"], "ON": ["Ontario", "can"], "QC": ["Québec", "can"], "BC": ["British Columbia", "can"], "AB": ["Alberta", "can"], "MB": ["Manitoba", "can"], "SK": ["Saskatchewan", "can"], "NS": ["Nova Scotia", "can"], "NL": ["Newfoundland", "can"], "CDMX": ["Ciudad de México", "mex"], "JAL": ["Jalisco", "mex"], "NL-MX": ["Nuevo León", "mex"], "QROO": ["Quintana Roo", "mex"], "BCS": ["Baja California Sur", "mex"], "BC-MX": ["Baja California", "mex"], "OAX": ["Oaxaca", "mex"], "PR": ["Puerto Rico", "mex"]};
 const BRREG=[["ne", "🦞", "New England", "New England"], ["ma", "🗽", "Mid-Atlantic", "Trung Đại Tây Dương"], ["sa", "🌴", "South Atlantic", "Nam Đại Tây Dương"], ["south", "🎸", "The South & Texas", "Miền Nam & Texas"], ["mw", "🌽", "Midwest", "Trung Tây"], ["mtn", "🏔️", "Mountain West", "Vùng núi phía Tây"], ["pac", "🌊", "Pacific Coast, Alaska & Hawaii", "Bờ Thái Bình Dương, Alaska & Hawaii"], ["can", "🍁", "Canada", "Canada"], ["mex", "🌮", "Mexico & Puerto Rico", "Mexico & Puerto Rico"]];
-const locName=l=>l==='main'?'Weymouth':LOC[l].n+(LOC[l].st&&LOC[l].st!=='MA'?', '+LOC[l].st.replace('-MX',''):'');
+const locName=l=>l==='main'?(curBiz()==='cafe'?'Weymouth':BIZ[curBiz()].s1):String(l).startsWith('main@')?BIZ[l.slice(5)].s1:LOC[l].n+(LOC[l].st&&LOC[l].st!=='MA'?', '+LOC[l].st.replace('-MX',''):'');
 const lvl=x=>Math.min(5+S.upg.train+S.upg.academy2,1+Math.floor(x.days/Math.max(2,5-S.upg.train)));
 const moFace=m=>m>80?'😄':m>50?'🙂':m>25?'😐':'😟';
 const spMul=x=>(1-.06*(lvl(x)-1))*(x.mo<25?1.25:x.mo>80?.9:1);
@@ -1690,9 +1716,10 @@ const demand=l=>(1+boost(l))*(1+S.buzz)*(1+funBoost())*(1-compHit(l))*(1+.07*S.u
 const recMul=r=>{let m=S.upg.kds?.92:1;const I=r.ing;if(S.upg.nitro&&I.includes('coldbrew'))m*=.8;if(S.upg.autofryer&&I.includes('eggroll'))m*=.85;if(S.upg.steamer2&&I.includes('milk'))m*=.9;if(S.upg.dispenser&&(I.includes('syrup')||I.includes('cond')))m*=.9;if(S.upg.icecream&&I.includes('ice'))m*=.92;if(S.upg.toaster&&I.includes('baguette'))m*=.88;if(S.upg.ricecooker&&(I.includes('bun')||I.includes('sticky')))m*=.9;if(S.upg.slicer&&I.some(k=>PROTEINS.includes(k)))m*=.9;if(r.k==='food')m*=1-.05*S.upg.prepst;if(S.upg.teabrew&&r.ing.includes('tea'))m*=.75;if(S.upg.juicer&&r.ing.some(k=>['orange','slmix'].includes(k)))m*=.7;if(S.upg.autophin&&r.ing.includes('phin'))m*=.8;if(r.req==='espresso'&&S.upg.espresso>1)m*=.8;if(S.upg.icemaker>1&&r.ing.includes('ice'))m*=.9;if(S.upg.blender&&r.ing.some(k=>['coconut','mango','straw'].includes(k)))m*=.75;if(S.upg.steamer&&r.ing.some(k=>['bao','ricepaper'].includes(k)))m*=.8;return m};
 const stMul=st=>Math.max(.3,1-.1*(st==='bar'?S.upg.machine:S.upg.grill)-.08*(st==='bar'?S.upg.robotarm:S.upg.robochef))*(R&&R.slow&&R.slow.st===st&&R.t<R.slow.until?1.6:1);
 const brRate=l=>S.brRate[l]??S.rating;
-const ingPrice=k=>{let v=ING[k].p;if(k==='phin')v*=S.upg.farm?Math.max(.1,.65-.15*S.upg.farm):1;if(PROTEINS.includes(k))v*=S.upg.ckit?Math.max(.4,.9-.1*S.upg.ckit):1;if(k==='phin'&&S.upg.roaster2)v*=.7;v*=1-.05*(S.upg.bulkdeal||0);if(S.spike===k)v*=1.5;if(k==='baguette'&&S.upg.oven)v*=.5;if(k==='ice'&&S.upg.icemaker)v=0;return Math.round(v*100)/100};
+const ingPrice=k=>{let v=ING[k].p;if(k==='phin')v*=S.upg.farm?Math.max(.1,.65-.15*S.upg.farm):1;if(PROTEINS.includes(k))v*=S.upg.ckit?Math.max(.4,.9-.1*S.upg.ckit):1;if(k==='phin'&&S.upg.roaster2)v*=.7;v*=1-.05*(S.upg.bulkdeal||0);v*=1-.04*dl('supply');if(S.spike===k)v*=1.5;if(k==='baguette'&&S.upg.oven)v*=.5;if(k==='ice'&&S.upg.icemaker)v=0;return Math.round(v*100)/100};
 const rdCost=r=>Math.round(r.p*10);
-const cap=l=>l==='main'?3+S.upg.station:Math.min(24,4+2*(S.brLvl[l]||0));
+const cap=l=>l==='main'?3+S.upg.station:String(l).startsWith('main@')?3+S.upg.station:Math.min(24,4+2*(S.brLvl[l]||0));
+const allLocs=()=>['main',...bizOwned().filter(id=>id!==curBiz()).map(id=>'main@'+id),...S.branches];
 const crewAt=l=>S.staff.filter(x=>x.loc===l);
 const totalWage=()=>S.staff.reduce((a,x)=>a+x.wage,0);
 let R=null, last=0, raf=0, uid=0;
@@ -1709,6 +1736,8 @@ const qCap=()=>2+(S.upg.line||0);
 const price=r=>(S.prices[r.id]??r.p)+(r.addp||0);
 const pRatio=r=>(price(r)-(r.addp||0))/r.p;
 const avgRatio=()=>{const u=unlocked();return u.reduce((a,r)=>a+pRatio(r),0)/u.length};
+const cafeAvgP=()=>curBiz()==='cafe'?avgPrice():((S.bizData||{}).cafe||{}).avgP||avgPrice();
+const cafeAvgR=()=>curBiz()==='cafe'?avgRatio():1;
 const avgPrice=()=>{const u=unlocked();return u.reduce((a,r)=>a+price(r),0)/u.length};
 function priceLabel(x){return x<.9?['Cheap','#2A8570']:x<=1.1?['Fair','#4A2C1D']:x<=1.3?['Pricey','#C77A12']:['Too pricey','#E0442F']}
 const fmt=v=>{const n=Math.round(Math.abs(v)*100)/100;return (v<0?'-':'')+'$'+(n%1?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):n.toLocaleString('en-US'))};
@@ -1775,6 +1804,12 @@ const GUIDE=[
   ['Red notes like "Extra sweet" or "No ice" are requests: tap an ingredient twice for extra, leave it out for none. Getting it right earns bigger tips.','Chữ đỏ như "Thêm ngọt" hay "Không đá" là lời dặn: chạm 2 lần để thêm, bỏ đi để không có. Làm đúng được tip nhiều hơn.'],
   ['The colored bar under each customer is their patience. When it runs out they leave and your rating drops.','Thanh màu dưới mỗi khách là độ kiên nhẫn. Hết thanh là khách bỏ về và bị trừ sao.'],
   ['The shop opens 7am–3pm. When the Kingston train arrives, expect a rush.','Tiệm mở 7 giờ sáng – 3 giờ chiều. Khi tàu Kingston tới, khách sẽ ùa vào.']]},
+ {id:'minis',e:'🎯',t:['Surprise events while you sell','Sự kiện bất ngờ trong giờ bán'],b:[
+  ['Every so often something pops up on the street. The shop keeps running, so tap fast!','Thỉnh thoảng sẽ có sự kiện bất ngờ hiện lên. Tiệm vẫn bán bình thường, nên hãy chạm thật nhanh!'],
+  ['🌟 Golden bean: double income for 15 s. 🎁 Mystery box: cash, free stock or a boost.','🌟 Hạt cà phê vàng: thu nhập ×2 trong 15 giây. 🎁 Hộp quà bí ẩn: tiền, nguyên liệu miễn phí hoặc boost.'],
+  ['🐀 Catch the rat before it eats your food. 🪳 Squash all the roaches or your rating drops.','🐀 Bắt chuột trước khi nó ăn mất đồ. 🪳 Đập hết gián, nếu không sẽ bị trừ đánh giá.'],
+  ['🧊 Fix the ice machine (tap 🔧 fast) for faster staff. 🌀 Unjam the blender (tap 1 → 2 → 3) for +20% tips. 🪴 Water the plants for patient customers. 📸 Pose for a blogger for buzz.','🧊 Sửa máy làm đá (chạm 🔧 liên tục) để nhân viên làm nhanh hơn. 🌀 Gỡ kẹt máy xay (chạm 1 → 2 → 3) để tip +20%. 🪴 Tưới cây để khách kiên nhẫn hơn. 📸 Chụp hình với blogger để tăng độ nổi tiếng.'],
+  ['Active boosts show in the yellow bar above the customers.','Các boost đang chạy hiện ở thanh vàng phía trên khách.']]},
  {id:'market',e:'🛒',t:['Market & expiry dates','Đi chợ & hạn sử dụng'],b:[
   ['Buy ingredients before opening. "Restock everything" buys what you used yesterday + 40% + 20, plus 30 extra.','Mua nguyên liệu trước khi mở cửa. "Mua đủ tất cả" nhập theo lượng dùng hôm qua + 40% + 20, dư thêm 30.'],
   ['Every batch has an expiry date. Older batches are used first.','Mỗi lô hàng có hạn sử dụng. Lô cũ được dùng trước.'],
@@ -1806,6 +1841,9 @@ const GUIDE=[
   ['💸 Quick cash: borrow from day 1, no questions, but 3%+ interest a day and it lowers your credit.','💸 Vay nóng: vay được từ ngày 1, không cần điều kiện, nhưng lãi 3%+ mỗi ngày và làm giảm điểm tín dụng.'],
   ['🏦 Bank loans open from day 5. They need a good credit score (and branches for big loans), but interest is much lower.','🏦 Vay ngân hàng mở từ ngày 5. Cần điểm tín dụng tốt (và đủ chi nhánh với khoản lớn), nhưng lãi thấp hơn nhiều.'],
   ['📊 Credit score (300–850) rises with profitable days, good ratings and on-time payments. Missed payments and negative cash pull it down.','📊 Điểm tín dụng (300–850) tăng khi có lời, được đánh giá tốt và trả nợ đúng hạn. Trễ hạn và âm tiền làm giảm điểm.'],
+  ['🔢 Each loan size can only be open once at a time. Bank loans can be taken 2 times a year per size, quick cash 3 times.','🔢 Mỗi hạn mức vay chỉ có 1 khoản cùng lúc. Vay ngân hàng tối đa 2 lần mỗi năm cho mỗi hạn mức, vay nóng tối đa 3 lần.'],
+  ['🏷️ Pawn shop (Finance tab): pawn equipment, luxury items or a truck for 40% of its value. Redeem within 30 days (+10% a month) or lose it. Pawned equipment stops working.','🏷️ Tiệm cầm đồ (tab Tài chính): cầm thiết bị, đồ xa xỉ hoặc xe food truck lấy 40% giá trị. Chuộc trong 30 ngày (+10% mỗi tháng) hoặc mất luôn. Thiết bị đem cầm sẽ ngừng hoạt động.'],
+  ['📝 You can always let directors, leaders or office staff go, even when cash is low. You pay severance over 6 months to 3 years depending on the amount.','📝 Luôn có thể cho giám đốc, lãnh đạo hay nhân viên văn phòng nghỉ, kể cả khi hết tiền. Bạn trả trợ cấp thôi việc dần trong 6 tháng tới 3 năm tùy số tiền.'],
   ['🧾 Income tax is paid every quarter (~3 months). Keep some cash ready.','🧾 Thuế thu nhập nộp mỗi quý (~3 tháng). Nhớ giữ sẵn tiền mặt.'],
   ['📒 Books shows profit by day, week, month, quarter and year with % changes.','📒 Sổ sách cho xem lợi nhuận theo ngày, tuần, tháng, quý, năm kèm % tăng giảm.']]},
  {id:'grow',e:'📈',t:['Growing the business','Phát triển công ty'],b:[
@@ -1820,6 +1858,18 @@ const GUIDE=[
   ['🌱 Farm: buy land, plant coffee, hire farmers, roast beans, then sell bags, instant coffee and bottles.','🌱 Nông trại: mua đất, trồng cà phê, thuê nông dân, rang cà phê, rồi bán bịch, cà phê hoà tan và đóng chai.'],
   ['📈 Invest spare cash in stocks, gold, bank savings and real estate.','📈 Đầu tư tiền dư vào cổ phiếu, vàng, gửi tiết kiệm và bất động sản.'],
   ['🎰 Leisure: casino, sports teams, giving back and luxury items for when you\'re rich.','🎰 Giải trí: casino, đội bóng, từ thiện và đồ xa xỉ khi đã giàu.']]},
+ {id:'events',e:'🎪',t:['Food trucks, pop-ups & events','Food truck, pop-up & sự kiện'],b:[
+  ['🚚 Buy food trucks in the 🎪 Events tab. They sell your café menu every day. Offices are busy on weekdays, parks and breweries on weekends, beaches in summer. Pick "Auto" to let the truck choose.','🚚 Mua xe food truck ở tab 🎪 Sự kiện. Xe bán menu cà phê mỗi ngày. Khu văn phòng đông ngày thường, công viên và nhà máy bia đông cuối tuần, bãi biển đông mùa hè. Chọn "Tự chọn" để xe tự tìm chỗ.'],
+  ['🎪 Pop-ups: farmers market, night market, campus week, music festival, Lunar New Year fair, Christmas market… Short, busy and good for buzz.','🎪 Pop-up: chợ nông sản, chợ đêm, tuần lễ ở trường, lễ hội âm nhạc, hội chợ Tết, chợ Giáng sinh… Ngắn ngày, đông khách, tăng độ nổi tiếng.'],
+  ['💒 Weddings, conferences and parties book a few days ahead. Accept them and make sure you have a food truck or the catering van.','💒 Tiệc cưới, hội nghị, tiệc tùng đặt trước vài ngày. Nhận đơn và nhớ có xe food truck hoặc xe catering.']]},
+ {id:'group',e:'🏢',t:['Other restaurants in your group','Các ngành khác trong tập đoàn'],b:[
+  ['Open 🍜 Phở Saigonesee (Vietnamese restaurant) or 🥘 Saigon Hotpot (conveyor hotpot) in the 🏢 Group tab.','Mở 🍜 Phở Saigonesee (nhà hàng Việt) hoặc 🥘 Saigon Hotpot (lẩu băng chuyền) ở tab 🏢 Tập đoàn.'],
+  ['Tap Go → to run that business. The sign, colors, menu and ingredients all change.','Chạm Chuyển → để điều hành nơi đó. Bảng hiệu, màu sắc, menu và nguyên liệu đều đổi theo.'],
+  ['Money, directors, office, branches, farm and investments are shared by the whole group.','Tiền, ban giám đốc, văn phòng, chi nhánh, nông trại và đầu tư dùng chung cho cả tập đoàn.'],
+  ['Businesses you are not running still open every day with the staff you assign to them.','Nơi bạn không trực tiếp điều hành vẫn mở cửa mỗi ngày với nhân viên được phân công.']]},
+ {id:'corp',e:'🌎',t:['Running a multinational','Điều hành tập đoàn đa quốc gia'],b:[
+  ['🧭 Regional directors (2+ branches in a region), country directors (USA 5+, Canada/Mexico 3+) and a North America president (20+ branches, 2+ countries) make branches in their area stronger.','🧭 Giám đốc khu vực (từ 2 chi nhánh trong vùng), giám đốc quốc gia (Mỹ từ 5, Canada/Mexico từ 3) và chủ tịch Bắc Mỹ (từ 20 chi nhánh, 2 quốc gia) giúp chi nhánh trong khu vực mạnh hơn.'],
+  ['🏛️ Corporate departments: legal (fewer fines), supply chain (cheaper ingredients), facilities (lower rent), quality (fewer mistakes), communications (buzz), audit (fewer losses), international tax and global HR.','🏛️ Các bộ phận tập đoàn: pháp chế (giảm phạt), chuỗi cung ứng (nguyên liệu rẻ hơn), cơ sở vật chất (giảm tiền thuê), chất lượng (ít làm sai), truyền thông (độ nổi tiếng), kiểm toán (giảm mất mát), thuế quốc tế và nhân sự toàn cầu.']]},
  {id:'tips',e:'💡',t:['Tips for new players','Mẹo cho người mới'],b:[
   ['Hire 1–2 staff in the first days so you\'re not doing everything alone.','Thuê 1–2 nhân viên ngay mấy ngày đầu để không phải làm hết một mình.'],
   ['Don\'t overbuy fresh food: without a fridge it spoils overnight.','Đừng mua quá nhiều đồ tươi: không có tủ lạnh sẽ hỏng qua đêm.'],
@@ -1931,13 +1981,16 @@ const HELP={
   menu:['💲',['Prices','Giá bán'],[['Set your own price for each item.','Tự đặt giá cho từng món.'],['Higher price = more profit per cup, but fewer customers and smaller tips.','Giá cao lời hơn mỗi ly, nhưng ít khách hơn và tip ít hơn.'],['"Fair" is the sweet spot for most items.','Mức "Hợp lý" là tốt nhất cho đa số món.']]],
   rd:['🔬',['Research & Lab','Nghiên cứu & Lab'],[['Research unlocks real Saigonesee menu items. Each takes 1 day.','Nghiên cứu mở món thật của Saigonesee. Mỗi món mất 1 ngày.'],['In the Lab, mix a base + 1–4 flavors to invent new items.','Trong Lab, trộn 1 nền + 1–4 hương vị để sáng chế món mới.'],['Source ingredients from around the world to try more combos.','Tìm nguyên liệu khắp thế giới để thử nhiều công thức hơn.'],['Hire researchers to invent for you every night.','Thuê nghiên cứu viên để họ tự sáng chế mỗi đêm.']]],
   mkt:['📣',['Marketing','Marketing'],[['Ads bring more customers for a few days.','Quảng cáo giúp thêm khách trong vài ngày.'],['Turn on delivery apps for extra orders (they take 30%).','Bật app giao hàng để có thêm đơn (app lấy 30%).'],['Competitors steal customers. Google ads pull them back.','Đối thủ giành khách. Quảng cáo Google kéo khách lại.']]],
-  fin:['🏦',['Finance','Tài chính'],[['💸 Quick cash works from day 1 but is very expensive. 🏦 Bank loans open from day 5 and need a good credit score.','💸 Vay nóng dùng được từ ngày 1 nhưng lãi rất cao. 🏦 Vay ngân hàng mở từ ngày 5 và cần điểm tín dụng tốt.'],['📊 Pay on time and stay profitable to raise your credit score.','📊 Trả nợ đúng hạn và kinh doanh có lời để tăng điểm tín dụng.'],['See daily profit, taxes and loans.','Xem lợi nhuận mỗi ngày, thuế và khoản vay.'],['Catering orders pay well. Make the items before the deadline.','Đơn catering trả nhiều tiền. Làm đủ món trước hạn.'],['Loans give cash now but you repay every day.','Vay có tiền ngay nhưng phải trả mỗi ngày.'],['Income tax is paid every quarter (about 3 months). Keep some cash ready.','Thuế thu nhập trả mỗi quý (khoảng 3 tháng). Nhớ giữ sẵn tiền mặt.']]],
+  fin:['🏦',['Finance','Tài chính'],[['🏷️ Short on cash? Use the pawn shop to turn equipment into cash for 30 days.','🏷️ Kẹt tiền? Dùng tiệm cầm đồ để đổi thiết bị lấy tiền mặt trong 30 ngày.'],['💸 Quick cash works from day 1 but is very expensive. 🏦 Bank loans open from day 5 and need a good credit score.','💸 Vay nóng dùng được từ ngày 1 nhưng lãi rất cao. 🏦 Vay ngân hàng mở từ ngày 5 và cần điểm tín dụng tốt.'],['📊 Pay on time and stay profitable to raise your credit score.','📊 Trả nợ đúng hạn và kinh doanh có lời để tăng điểm tín dụng.'],['See daily profit, taxes and loans.','Xem lợi nhuận mỗi ngày, thuế và khoản vay.'],['Catering orders pay well. Make the items before the deadline.','Đơn catering trả nhiều tiền. Làm đủ món trước hạn.'],['Loans give cash now but you repay every day.','Vay có tiền ngay nhưng phải trả mỗi ngày.'],['Income tax is paid every quarter (about 3 months). Keep some cash ready.','Thuế thu nhập trả mỗi quý (khoảng 3 tháng). Nhớ giữ sẵn tiền mặt.']]],
   upg:['🔧',['Upgrades','Nâng cấp'],[['Upgrades make the shop better forever.','Nâng cấp giúp tiệm tốt hơn mãi mãi.'],['Some bring more customers, some make them wait longer, some raise tips.','Có mục thêm khách, có mục giúp khách chờ lâu hơn, có mục tăng tip.'],['Start with cheap ones like stools, fans and a neon sign.','Bắt đầu với mục rẻ như thêm ghế, quạt, bảng đèn.']]],
   eq:['🛠️',['Equipment','Thiết bị'],[['❄️ A walk-in fridge keeps fresh food up to 4–5 days instead of 1.','❄️ Kho lạnh giữ đồ tươi 4–5 ngày thay vì 1 ngày.'],['Machines make staff faster at every location.','Máy móc giúp nhân viên làm nhanh hơn ở mọi tiệm.'],['Some machines unlock new menu items (espresso machine, fryer…).','Một số máy mở món mới (máy espresso, nồi chiên…).'],['Farm equipment boosts coffee harvests and roasting.','Thiết bị nông trại tăng sản lượng cà phê và rang.']]],
   board:['👔',['Board of directors','Ban giám đốc'],[['New duties: HR follows labor rules, Operations rush-orders missing stock, Finance refinances quick-cash loans.','Việc mới: Nhân sự lo luật lao động, Vận hành tự gọi hàng khi thiếu, Tài chính đổi vay nóng sang vay ngân hàng.'],['Directors run parts of the company for you every night.','Giám đốc tự điều hành công ty giúp bạn mỗi đêm.'],['HR hires staff, Operations opens branches, Finance handles money…','Nhân sự tuyển người, Vận hành mở chi nhánh, Tài chính lo tiền…'],['They only spend money above your cash reserve.','Họ chỉ tiêu phần tiền vượt quỹ dự phòng.'],['Untick any job you want to keep doing yourself.','Bỏ tick việc nào bạn muốn tự làm.']]],
   office:['🏢',['Office teams','Văn phòng'],[['Office teams make each director stronger.','Các phòng ban giúp giám đốc làm việc hiệu quả hơn.'],['A team works at half strength without its director.','Không có giám đốc thì phòng chỉ làm được một nửa.'],['More desks come with the Regional office upgrade.','Thêm chỗ ngồi bằng nâng cấp Văn phòng khu vực.']]],
   invest:['📈',['Investing','Đầu tư'],[['Put spare cash to work. It keeps earning while you sell coffee.','Cho tiền dư sinh lời. Tiền vẫn lời trong lúc bạn bán cà phê.'],['📈 Stocks: prices change every night. Safer ones pay dividends.','📈 Cổ phiếu: giá đổi mỗi đêm. Mã ổn định có trả cổ tức.'],['🏦 Bank: savings are safe. CDs pay more but lock your money.','🏦 Ngân hàng: tiết kiệm an toàn. Sổ có kỳ hạn lãi cao hơn nhưng khoá tiền.'],['🏠 Real estate: collect rent every day.','🏠 Bất động sản: thu tiền thuê mỗi ngày.']]],
   farm:['🌱',['Farm & roastery','Nông trại & nhà máy'],[['1. Buy land and plant a coffee variety.','1. Mua đất và trồng một giống cà phê.'],['2. Hire farmers. They pick ripe cherries 🍒.','2. Thuê nông dân. Họ hái trái chín 🍒.'],['3. Build a roastery to turn cherries into roasted beans.','3. Xây nhà máy rang để biến trái thành cà phê rang.'],['4. Beans go to your cafés first. Pack the rest into bags and sell them.','4. Cà phê gửi về quán trước. Phần còn lại đóng bịch để bán.']]],
+  corp:['🌎',['Corporate','Tập đoàn'],[['Hire a Regional Director once you have 2+ branches in a region, a Country Director at 5+ (3+ in Canada or Mexico), and a North America President at 20+ branches in 2+ countries.','Thuê Giám đốc khu vực khi có từ 2 chi nhánh trong vùng, Giám đốc quốc gia khi có từ 5 (Canada hoặc Mexico từ 3), và Chủ tịch Bắc Mỹ khi có từ 20 chi nhánh ở 2 quốc gia trở lên.'],['Leaders make branches in their area serve more customers, cost less and keep better ratings.','Lãnh đạo giúp chi nhánh trong khu vực phục vụ nhiều khách hơn, tốn ít chi phí hơn và giữ đánh giá tốt hơn.'],['Corporate departments (legal, supply chain, facilities, quality, communications, audit, international tax, global HR) help the whole group. Each has 3 levels.','Các bộ phận tập đoàn (pháp chế, chuỗi cung ứng, cơ sở vật chất, chất lượng, truyền thông, kiểm toán, thuế quốc tế, nhân sự toàn cầu) giúp toàn hệ thống. Mỗi bộ phận có 3 cấp.']]],
+  events:['🎪',['Trucks, pop-ups & events','Food truck, pop-up & sự kiện'],[['🚚 Food trucks sell your menu around town every day. Park where the crowds are: offices on weekdays, parks and breweries on weekends, beaches in summer.','🚚 Food truck bán menu mỗi ngày khắp thành phố. Đỗ nơi đông người: khu văn phòng ngày thường, công viên và bãi nhà máy bia cuối tuần, bãi biển mùa hè.'],['🎪 Pop-ups are short, busy events. Some are seasonal, like the Lunar New Year fair or Christmas market.','🎪 Pop-up là sự kiện ngắn ngày, đông khách. Có loại theo mùa như Hội chợ Tết hay Chợ Giáng sinh.'],['💒 Big events (weddings, conferences) book days ahead. You need a truck or the catering van.','💒 Sự kiện lớn (tiệc cưới, hội nghị) đặt trước vài ngày. Cần có xe food truck hoặc xe catering.']]],
+  group:['🏢',['Group businesses','Các ngành trong tập đoàn'],[['Open a Vietnamese restaurant or a conveyor hotpot under your group.','Mở nhà hàng Việt hoặc lẩu băng chuyền thuộc tập đoàn của bạn.'],['Tap Go → to run that business today. The screen, menu and ingredients change to match.','Chạm Chuyển → để điều hành nơi đó hôm nay. Màn hình, menu và nguyên liệu sẽ đổi theo.'],['Money, directors, office teams, branches, farm and investments stay shared.','Tiền, ban giám đốc, văn phòng, chi nhánh, nông trại và đầu tư vẫn dùng chung.'],['Businesses you don\'t run today still open with their own staff. Assign staff to each in the Staff tab.','Nơi bạn không điều hành hôm nay vẫn mở cửa với nhân viên riêng. Phân công nhân viên ở tab Nhân viên.']]],
   fun:['🎰',['Leisure','Giải trí'],[['Spend your fortune on fun, sports, giving and luxury.','Tiêu tiền cho giải trí, thể thao, từ thiện và đồ xa xỉ.'],['🎰 Casino: fun but risky. The house wins in the long run.','🎰 Casino: vui nhưng rủi ro. Về lâu dài nhà cái luôn thắng.'],['⚽ Teams earn or lose money every night. Sponsorships boost buzz.','⚽ Đội bóng mỗi đêm có thể lời hoặc lỗ. Tài trợ giúp tăng độ nổi tiếng.'],['🏫 Giving raises your rating and brings more customers.','🏫 Từ thiện tăng đánh giá và thêm khách.'],['🛥️ Luxury is just for you. It costs upkeep every day.','🛥️ Đồ xa xỉ chỉ để hưởng thụ, tốn phí duy trì mỗi ngày.']]],
   rev:['⭐',['Reviews','Đánh giá'],[['What customers say about your shop.','Khách nói gì về tiệm của bạn.'],['Reply if you like. It\'s just for fun.','Muốn trả lời thì trả lời, chỉ để cho vui.']]],
   books:['📒',['Books','Sổ sách'],[['Pick Day, Week, Month, Quarter or Year.','Chọn Ngày, Tuần, Tháng, Quý hoặc Năm.'],['▲ green is good, ▼ red needs attention.','▲ xanh là tốt, ▼ đỏ là cần chú ý.'],['See where your money goes and what to improve.','Xem tiền chi vào đâu và cần cải thiện gì.']]],
@@ -1973,7 +2026,7 @@ function checkAdvisor(){S.hints=S.hints||{};const a=ADV.find(a=>!S.hints[a.id]&&
 function advisorCard(a){if(!a)return '';return `<div class="advtip notr">💡 <b>${L('Tip:','Gợi ý:')}</b> ${L(a.en,a.vi)}${a.tab?` <button onclick="closeModal();manage('${a.tab}')" style="display:block;margin-top:6px;border:2px solid #4C86B8;background:#fff;border-radius:8px;padding:4px 10px;font:inherit;font-weight:800;font-size:13px">${L('Take me there →','Đi tới đó →')}</button>`:''}</div>`}
 function checkUnlocks(){S.unl=S.unl||{};const out=[];
   Object.keys(GATES).forEach(g=>{if(!S.unl[g]&&gateOk(g)){S.unl[g]=1;out.push(g)}});return out}
-const UNL_TXT={leisure:['🎰 Leisure & lifestyle','🎰 Leisure'],pickup:['📱 Online pickup','📣 Marketing'],uber:['🛵 Uber Eats','📣 Marketing'],door:['🚗 DoorDash','📣 Marketing'],grub:['🥡 Grubhub','📣 Marketing'],branch:['🏪 Your first branch','🏪 Branches'],board:['👔 Board of directors & 🏢 Office','👔 Board'],invest:['📈 Investing','📈 Invest'],farm:['🌱 Coffee farm','🌱 Farm']};
+const UNL_TXT={corp:['🌎 Corporate headquarters','🌎 Corporate'],events:['🎪 Food trucks & events','🎪 Events'],group:['🏢 Group businesses','🏢 Group'],leisure:['🎰 Leisure & lifestyle','🎰 Leisure'],pickup:['📱 Online pickup','📣 Marketing'],uber:['🛵 Uber Eats','📣 Marketing'],door:['🚗 DoorDash','📣 Marketing'],grub:['🥡 Grubhub','📣 Marketing'],branch:['🏪 Your first branch','🏪 Branches'],board:['👔 Board of directors & 🏢 Office','👔 Board'],invest:['📈 Investing','📈 Invest'],farm:['🌱 Coffee farm','🌱 Farm']};
 function unlockCards(list){return list.map(g=>{const u=UNL_TXT[g]||[GATES[g].n,''];return `<div class="unl notr">🔓 <b>${L('New unlocked:','Mới mở khoá:')} ${u[0]}</b><br><small>${L('Find it in Manage shop →','Xem trong Quản lý tiệm →')} ${u[1]}</small></div>`}).join('')}
 function closeSettings(){if(SETFROM==='play')resume();else if(SETFROM==='pause')pause2();else if(SETBACK)SETBACK();else intro()}
 applySet();
@@ -2055,6 +2108,48 @@ function rushOffer(k){if(!R)return;R.paused=true;const g=ING[k],base=ingPrice(k)
    `<button class="big alt notr" onclick="resume()">${L('Not now','Để sau')}</button>`)}
 function rushBuy(k,rid,n){const r=RUSH.find(x=>x.id===rid),c=Math.round(ingPrice(k)*r.mark*100)/100*n;if(S.money<c||!R)return;S.money-=c;S.spend+=c;R.rushes2=R.rushes2||[];R.rushes2.push({k,n,at:R.t+DAYLEN*r.mins/480,e:r.e});
   toast(r.e+' '+L(`${r.n} is on the way (${r.mins} min)`,`${r.n} đang giao tới (${r.mins} phút)`));save();resume()}
+
+// ================= SURPRISE MINI-EVENTS (the day keeps running) =================
+// Every so often something happens on screen. Tap fast to win money, free stock or a short boost; ignore it and you may lose a little.
+const fxSpeed=()=>{const f=R&&R.fx;if(!f)return 1;return (R.t<f.fast?1.25:1)*(R.t<f.slow?.7:1)};
+const fxIncome=()=>{const f=R&&R.fx;if(!f)return 1;return (R.t<f.x2?2:1)*(R.t<f.tip?1.2:1)};
+function fxSet(k,secs){R.fx=R.fx||{};R.fx[k]=Math.max(R.fx[k]||0,R.t)+secs;renderFx()}
+function renderFx(){let el=$('fxbar');if(!el){el=document.createElement('div');el.id='fxbar';el.className='fxbar notr';$('street').parentNode.insertBefore(el,$('street'))}
+  const f=R&&R.fx||{},on=[];if(R){if(R.t<f.x2)on.push(`💰 ×2 ${Math.ceil(f.x2-R.t)}s`);if(R.t<f.tip)on.push(`💵 +20% ${Math.ceil(f.tip-R.t)}s`);if(R.t<f.fast)on.push(`⚡ ${L('fast','nhanh')} ${Math.ceil(f.fast-R.t)}s`);if(R.t<f.slow)on.push(`🐢 ${L('slow','chậm')} ${Math.ceil(f.slow-R.t)}s`);if(R.t<f.pat)on.push(`😌 ${L('patient','kiên nhẫn')} ${Math.ceil(f.pat-R.t)}s`)}
+  const h=on.join(' · ');if(el.__h!==h){el.__h=h;el.textContent=h;el.style.display=h?'block':'none'}}
+const MINIS=[
+ {id:'bean',w:3,e:'✨',t:['A golden coffee bean! Tap it!','Hạt cà phê vàng! Chạm nhanh!'],make:m=>{const b=miniBtn(m,'🌟',{anim:'float'});b.onclick=()=>miniWin(m,()=>{fxSet('x2',15);return L('Double income for 15 seconds!','Thu nhập ×2 trong 15 giây!')})}},
+ {id:'rat',w:3,e:'🐀',t:['A rat! Catch it!','Có chuột! Bắt nhanh!'],make:m=>{const b=miniBtn(m,'🐀',{anim:'run'});b.onclick=()=>miniWin(m,()=>{const v=20+Math.round(Math.random()*40);S.money+=v;return L(`Caught it! +${fmt(v)} (no food lost)`,`Bắt được rồi! +${fmt(v)} (không mất đồ ăn)`)})},
+  fail:()=>{const fr=[...needSet()].filter(k=>ING[k]&&ING[k].per&&(S.inv[k]||0)>3);if(!fr.length)return '';const k=pick(fr),n=Math.ceil(S.inv[k]*.2);S.inv[k]-=n;stock();return L(`The rat ate ${n} ${ING[k].n}`,`Chuột đã ăn mất ${n} ${ING[k].n}`)}},
+ {id:'roach',w:2,e:'🪳',t:['Roaches! Squash them all!','Gián! Đập hết đi!'],make:m=>{m.need=5;m.got=0;for(let i=0;i<5;i++){const b=miniBtn(m,'🪳',{x:10+Math.random()*75,y:15+Math.random()*65});b.onclick=()=>{b.remove();sfx.tap();buzz(10);if(++m.got>=m.need)miniWin(m,()=>{const v=40;S.money+=v;S.rating=Math.min(5,S.rating+.02);return L(`All clean! +${fmt(v)} and a better rating`,`Sạch sẽ! +${fmt(v)} và tăng đánh giá`)})}}},
+  fail:()=>{S.rating=Math.max(1,S.rating-.05);return L('A customer saw a roach. Rating down','Khách thấy gián. Bị trừ đánh giá')}},
+ {id:'ice',w:2,e:'🧊',t:['The ice machine jammed! Tap 🔧 to fix it','Máy làm đá bị kẹt! Chạm 🔧 liên tục để sửa'],make:m=>tapFix(m,'🔧',8,()=>{fxSet('fast',15);return L('Fixed and tuned up! Staff work faster for 15s','Đã sửa xong! Nhân viên làm nhanh hơn trong 15 giây')}),
+  fail:()=>{fxSet('slow',15);return L('Still broken… drinks are slow for 15s','Vẫn hỏng… đồ uống làm chậm trong 15 giây')}},
+ {id:'blend',w:2,e:'🌀',t:['The blender is stuck! Tap 1 → 2 → 3','Máy xay bị kẹt! Chạm 1 → 2 → 3'],make:m=>{m.next=1;[1,2,3].sort(()=>Math.random()-.5).forEach((n,i)=>{const b=miniBtn(m,String(n),{x:18+i*28,y:48,cls:'num'});b.onclick=()=>{if(n!==m.next){sfx.bad();m.next=1;m.el.querySelectorAll('.mb.num').forEach(x=>x.classList.remove('ok'));return}b.classList.add('ok');sfx.tap();if(++m.next>3)miniWin(m,()=>{fxSet('tip',20);return L('Blender back! Tips +20% for 20s','Máy xay chạy lại! Tip +20% trong 20 giây')})}})},
+  fail:()=>{fxSet('slow',10);return L('The blender is down for a bit','Máy xay ngừng một lúc')}},
+ {id:'plant',w:2,e:'🪴',t:['The plants are wilting! Water them (3 taps)','Cây sắp héo! Tưới nước (chạm 3 lần)'],make:m=>tapFix(m,'💧',3,()=>{fxSet('pat',20);R.cust.forEach(c=>{if(c)c.left=c.max});return L('Fresh and green! Customers are extra patient for 20s','Cây xanh tươi! Khách kiên nhẫn hơn trong 20 giây')})},
+ {id:'gift',w:2,e:'🎁',t:['A mystery delivery! Open it!','Có hộp quà bí ẩn! Mở ra xem!'],make:m=>{const b=miniBtn(m,'🎁',{anim:'bounce'});b.onclick=()=>miniWin(m,()=>{const r=Math.random();
+   if(r<.4){const v=50+Math.round(Math.random()*250);S.money+=v;return L(`Cash inside! +${fmt(v)}`,`Có tiền bên trong! +${fmt(v)}`)}
+   if(r<.75){const ks=[...needSet()].filter(k=>ING[k]).sort(()=>Math.random()-.5).slice(0,2);ks.forEach(k=>{const q=ING[k].q*2;S.inv[k]=(S.inv[k]||0)+q;lotAdd(k,q)});stock();return L('Free ingredients: ','Tặng nguyên liệu: ')+ks.map(k=>ING[k].e).join(' ')}
+   fxSet('x2',10);return L('Lucky! Double income for 10s','May mắn! Thu nhập ×2 trong 10 giây')})}},
+ {id:'selfie',w:2,e:'📸',t:['A food blogger wants a photo! Tap 📸 3 times','Blogger ẩm thực muốn chụp hình! Chạm 📸 3 lần'],make:m=>tapFix(m,'📸',3,()=>{S.buzz=Math.min(.5,S.buzz+.05);return L('Great shot! Buzz is up','Ảnh đẹp! Độ nổi tiếng tăng')})},
+];
+function placeMini(el){const r=$('street').getBoundingClientRect();Object.assign(el.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'})}
+function miniBtn(m,txt,o={}){const b=document.createElement('button');b.className='mb '+(o.cls||'')+(o.anim?' a-'+o.anim:'');b.textContent=txt;b.setAttribute('data-nosfx','');b.style.left=(o.x??(20+Math.random()*55))+'%';b.style.top=(o.y??(30+Math.random()*40))+'%';m.el.appendChild(b);return b}
+function tapFix(m,icon,need,win){m.n=0;const b=miniBtn(m,icon,{x:42,y:45,cls:'big'});const bar=document.createElement('i');bar.className='mbar';m.el.appendChild(bar);
+  b.onclick=()=>{m.n++;sfx.tap();buzz(8);bar.style.width=(m.n/need*100)+'%';b.style.transform=`rotate(${m.n%2?-15:15}deg)`;if(m.n>=need)miniWin(m,win)}}
+function spawnMini(){if(!R||R.mini)return;const pool=MINIS.flatMap(x=>Array(x.w).fill(x)),M=pick(pool);const st=$('street');if(!st)return;
+  const el=document.createElement('div');el.className='minilayer notr';el.innerHTML=`<div class="mtitle">${M.e} ${L(M.t[0],M.t[1])}<i class="mtime"></i></div>`;placeMini(el);document.body.appendChild(el);
+  const m={M,el,start:R.t,until:R.t+6.5};R.mini=m;M.make(m);sfx.coin();buzz([20,30,20])}
+function miniWin(m,fn){if(!R||R.mini!==m)return;const msg=fn();m.done=1;sfx.coin();buzz(30);miniEnd(m,'🎉 '+msg,true)}
+function miniEnd(m,msg,good){m.el.classList.add(good?'won':'lost');m.el.innerHTML=`<div class="mres">${msg}</div>`;R.mini=null;R.miniStats=R.miniStats||{won:0,lost:0};R.miniStats[good?'won':'lost']++;
+  setTimeout(()=>m.el.remove(),1600);R.nextMini=R.t+14+Math.random()*10}
+function miniTick(){if(!R)return;if(R.mini)placeMini(R.mini.el);if(R.nextMini==null)R.nextMini=10+Math.random()*8;
+  if(!R.mini&&R.t>=R.nextMini&&R.t<DAYLEN-8)spawnMini();
+  const m=R.mini;if(m){const left=Math.max(0,m.until-R.t),tb=m.el.querySelector('.mtime');if(tb)tb.style.width=(left/6.5*100)+'%';
+    if(R.t>=m.until){const f=m.M.fail?m.M.fail():'';miniEnd(m,'⌛ '+(f||L('Missed it!','Lỡ mất rồi!')),false)}}
+  document.querySelectorAll('.minilayer').forEach(e=>e.style.visibility=$('modal').classList.contains('show')?'hidden':'visible');
+  if(Math.floor(R.t*4)!==R.fxTick){R.fxTick=Math.floor(R.t*4);renderFx()}}
 function autoRush(){if(!R||!boardOn('coo','rush')||R.t>DAYLEN*.85)return;const left=(DAYLEN-R.t)/DAYLEN*480;
   needSet().forEach(k=>{if((S.inv[k]||0)>2||(R.rushes2||[]).some(x=>x.k===k)||!unlocked().some(r=>r.ing.includes(k)))return;
     const opt=RUSH.slice().sort((a,b)=>a.mark-b.mark).find(r=>r.mins<left-30);if(!opt)return;const c=Math.round(ingPrice(k)*opt.mark*100)/100*2;if(spendable()<c)return;
@@ -2273,7 +2368,7 @@ function itemEarn(c,it,staff,q){
 }
 function completeItem(c,it,staff,q){
   const earn=itemEarn(c,it,staff,q);if(q==='miss'){rate(2.3);R.missMod=(R.missMod||0)+1}else if(it.rec.mods&&!staff)R.gotMod=(R.gotMod||0)+1;it.done=true;it.by=null;it.el.classList.add('done');it.el.classList.remove('byc');it.byEl.textContent='✓';
-  S.money+=earn;R.earned+=earn;R.items++;S.life.sold[it.rec.id]=(S.life.sold[it.rec.id]||0)+1;R.soldToday=R.soldToday||{};R.soldToday[it.rec.id]=(R.soldToday[it.rec.id]||0)+1;if(it.rec.addp&&q!=='miss')S.life.addons++;floatAt(it.el,'+'+fmt(earn));sfx.coin();
+  const fxm=fxIncome();if(fxm>1){R.fxBonus=(R.fxBonus||0)+earn*(fxm-1)}S.money+=earn*fxm;R.earned+=earn*fxm;R.items++;S.life.sold[it.rec.id]=(S.life.sold[it.rec.id]||0)+1;R.soldToday=R.soldToday||{};R.soldToday[it.rec.id]=(R.soldToday[it.rec.id]||0)+1;if(it.rec.addp&&q!=='miss')S.life.addons++;floatAt(it.el,'+'+fmt(earn));sfx.coin();
   if(c.items.every(x=>x.done)){
     const ratio=c.left/c.max,pr=c.items.reduce((a,x)=>a+pRatio(x.rec),0)/c.items.length;
     R.served++;rate(3+(staff?1.5:2)*ratio-Math.max(-.5,Math.min(2,(pr-1)*2.5)));
@@ -2318,10 +2413,10 @@ function crewTick(dt){
     if(w.c){
       if(w.c.cater){if(!R.cat){w.c=null;w.it=null;w.bar.style.width='0';return}}
       else if(R.cust[w.c.slot]!==w.c||w.it.done){w.c=null;w.it=null;w.bar.style.width='0';return}
-      w.t-=dt;w.bar.style.width=(100*(1-w.t/w.sp))+'%';
+      w.t-=dt*fxSpeed();w.bar.style.width=(100*(1-w.t/w.sp))+'%';
       if(w.t<=0){const c=w.c,it=w.it;
         // Mistake chance: new, tired or unhappy staff get orders wrong and have to remake them
-        const pm=(crewAt('main').some(x=>x.mgr)?.6:1)*Math.max(.3,1-.05*dp('hr'))*(Math.max(.01,.07-.012*lvl(w.s))+(w.s.mo<40?.04:0)+(w.s.mo<20?.04:0));
+        const pm=(1-.2*dl('qa'))*(crewAt('main').some(x=>x.mgr)?.6:1)*Math.max(.3,1-.05*dp('hr'))*(Math.max(.01,.07-.012*lvl(w.s))+(w.s.mo<40?.04:0)+(w.s.mo<20?.04:0));
         if(Math.random()<pm&&hasStock(it.rec.ing)){it.rec.ing.forEach(k=>{S.inv[k]--;R.used[k]=(R.used[k]||0)+1});const lossV=it.rec.ing.reduce((a,k)=>a+ingPrice(k)/ING[k].q,0);R.mist=(R.mist||0)+1;R.mistV=(R.mistV||0)+lossV;
           w.t=w.sp*.6;floatAt(w.el||c.el,'🙈',false);stock();return}
         w.c=null;w.it=null;w.cool=.3;w.bar.style.width='0';if(c.cater){it.got++;caterCheck()}else completeItem(c,it,true)}
@@ -2355,12 +2450,12 @@ function branchDay(b){
   const crew=crewAt(b.id),lv=S.brLvl[b.id]||0;
   const base=30*(1+.02*Math.min(S.day,40));
   const appsOn=Object.keys(APPS).filter(a=>S.apps[a]&&S.apps[a].on).length;
-  const dem=Math.round((1+.12*appsOn)*base*b.demand*(1+.15*lv)*demand(b.id)*(brRate(b.id)/5)*Math.pow(avgRatio(),-1.5)*(.85+Math.random()*.3));
-  const capO=(1+.02*dp('ops'))*crew.reduce((a,x)=>a+(DAYLEN/(bestSp(x)*spMul(x)))*.9*(x.pos==='flex'?1.15:1),0)*(crew.some(x=>x.mgr)?1.2:1)*(1+.05*(S.upg.machine+S.upg.grill))*(1+.1*S.upg.hq);
+  const dem=Math.round((1+.12*appsOn)*base*b.demand*(1+.15*lv)*demand(b.id)*(brRate(b.id)/5)*Math.pow(cafeAvgR(),-1.5)*(.85+Math.random()*.3));
+  const LB=leadBonus(b.id);const capO=(1+.02*dp('ops')+LB.cap)*crew.reduce((a,x)=>a+(DAYLEN/(bestSp(x)*spMul(x)))*.9*(x.pos==='flex'?1.15:1),0)*(crew.some(x=>x.mgr)?1.2:1)*(1+.05*(S.upg.machine+S.upg.grill))*(1+.1*S.upg.hq);
   const capC=Math.floor(capO/1.6),served=Math.min(dem,capC),lost=dem-served;
-  const ic=Math.max(.08,.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet-.06*(S.farm?S.farm.brCover:0)-.02*(S.upg.bulkdeal||0)-.005*dp('ops')),rev=served*1.6*avgPrice()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic*(crew.some(x=>x.mgr)?.97:1),rentD=Math.round(b.rent*1.3*(1+.03*Math.floor((S.day+58)/365))),net=rev-ing-rentD;
+  const ic=Math.max(.08,.3-.05*S.upg.ckit-.02*S.upg.farm-.03*S.upg.fleet-.06*(S.farm?S.farm.brCover:0)-.02*(S.upg.bulkdeal||0)-.005*dp('ops')),rev=served*1.6*cafeAvgP()*(1+.05*S.upg.franchise)*(1-.3*(.12*appsOn/(1+.12*appsOn))),ing=rev*ic*(crew.some(x=>x.mgr)?.97:1)*(1-LB.cost),rentD=Math.round((1-.05*dl('facil'))*(1-(initCorp().lead.na?.02:0))*b.rent*1.3*(1+.03*Math.floor((S.day+58)/365))),net=rev-ing-rentD;
   const good=dem?served/dem:0;
-  if(crew.length)S.brRate[b.id]=Math.max(1,Math.min(5,brRate(b.id)*.8+(1+4*good-Math.max(0,(avgRatio()-1)*2.5))*.2));
+  if(crew.length)S.brRate[b.id]=Math.max(1,Math.min(5,brRate(b.id)*(.8-LB.rate)+(LB.rate*5)+(1+4*good-Math.max(0,(cafeAvgR()-1)*2.5))*.2));
   const reviews=crew.length?makeReviews(good,1+(Math.random()<.4?1:0),b.id):[];
   reviews.forEach(v=>S.buzz=Math.max(-.3,Math.min(.5,S.buzz+(v.st-3)*.01)));
   return {dem,served,lost,cap:capC,rev,ing,rent:rentD,net,idle:!crew.length,staff:crew.length,rating:brRate(b.id),reviews};
@@ -2391,10 +2486,10 @@ function loop(now){
     const rush=R.t<R.rushUntil;
     R.spawnT-=dt;
     if(R.spawnT<=0){spawn();const iv=Math.max(2.3,7-S.day*.4)*Math.pow(.95,S.upg.bang)*(S.day>LASTDAY?Math.max(.7,1-(S.day-LASTDAY)*.02):1);R.spawnT=iv/demand('main')*Math.pow(avgRatio(),1.5)*(rush?.4:1)*Math.max(.3,1-.07*R.crew.length)*(.7+Math.random()*.6)}
-    R.cust.forEach(c=>{if(!c)return;c.left-=dt;const p=Math.max(0,c.left/c.max);
+    R.cust.forEach(c=>{if(!c)return;c.left-=dt*(R.fx&&R.t<R.fx.pat?.6:1);const p=Math.max(0,c.left/c.max);
       c.bar.style.width=(p*100)+'%';c.bar.classList.toggle('low',p<.3);
       if(c.left<=0){c.items.forEach(it=>it.by=null);removeCust(c,'😤');regMiss(c);if(c.inf){S.buzz=Math.max(-.3,S.buzz-.1);R.news.push('📸 The influencer posted about a long wait');toast('📸 The influencer walked out. Buzz is down')}R.lost++;rate(1);sfx.bad();hud()}});
-    queueTick(dt);eventsTick();rushTick();
+    queueTick(dt);eventsTick();rushTick();miniTick();
     if(R.cat&&Math.floor(R.t)!==R.catSec){R.catSec=Math.floor(R.t);renderCater()}
     if(Math.floor(R.t)%4===0&&Math.floor(R.t)!==R.unlSec){R.unlSec=Math.floor(R.t);const unl=checkUnlocks();unl.forEach((g,i)=>setTimeout(()=>{if(R)funPop('🔓',(UNL_TXT[g]||[GATES[g].n])[0],0)},i*1600))}
     if(R.cat&&R.t>R.cat.due){S.rating=Math.max(1,S.rating-.15);S.buzz=Math.max(-.3,S.buzz-.05);R.news.push('📦 Catering for '+R.cat.client+' was late and got cancelled');toast('📦 Catering order missed its deadline');R.cat=null;S.catJob=null;renderCater()}
@@ -2405,6 +2500,8 @@ function loop(now){
   raf=requestAnimationFrame(loop);
 }
 function endDay(){
+  if(R.mini){R.mini.el.remove();R.mini=null}document.querySelectorAll('.minilayer').forEach(e=>e.remove());const fb=$('fxbar');if(fb)fb.style.display='none';
+  if(R.miniStats&&(R.miniStats.won||R.miniStats.lost))R.news.push(`🎯 ${L('Surprises','Sự kiện bất ngờ')}: ${R.miniStats.won} ${L('won','thắng')}, ${R.miniStats.lost} ${L('missed','bỏ lỡ')}${R.fxBonus?` · ${L('boost earnings','tiền thưởng từ boost')} +${fmt(R.fxBonus)}`:''}`);
   R.queue=[];renderQueue();
   R.cust.forEach(c=>c&&removeCust(c,'👋'));
   R.tray.forEach(k=>S.inv[k]++);R.tray=[];
@@ -2414,22 +2511,23 @@ function endDay(){
   Object.keys(ING).forEach(k=>{const lost=lotsNight(k);if(lost>0)R.spoiled.push(ING[k].e+'×'+lost)});
   R.br=[];
   S.branches.forEach(id=>{const r=branchDay(LOC[id]);S.money+=r.net;r.id=id;r.n=LOC[id].n;R.br.push(r);S.brStats[id]=r});
+  R.br.push(...sisterDay());
   const eqLv=UPG.filter(u=>u.eq&&u.id!=='solar').reduce((a,u)=>a+(S.upg[u.id]||0),0);R.elec=Math.round(eqLv*3*(S.upg.solar?.5:1)*(S.upg.battery?.75:1));S.money-=R.elec;
   R.wages=0;R.quit=[];const holPay=holiday(S.day)?1.5:1;R.holPay=holPay>1;R.sick=[];
   const busy=R.served/Math.max(1,R.crew.length)>12,mDecay=(S.upg.dish?.75:1)*(S.upg.hr?.5:1)*(S.upg.uniform?.9:1);
   S.staff.slice().forEach(x=>{const wg=x.wage*holPay;if(S.money>=wg){S.money-=wg;R.wages+=wg;x.days++;
       if(x.days%Math.max(2,5-S.upg.train)===0&&lvl(x)<=5+S.upg.train&&x.days/Math.max(2,5-S.upg.train)<5+S.upg.train){x.mo=Math.min(100,x.mo+10);R.news.push('⬆️ '+x.face+' '+x.name+' reached level '+lvl(x))}
       const mg=x.loc!=='main'&&crewAt(x.loc).some(y=>y.mgr);
-      x.mo+=S.upg.profitshare?5:0;x.mo-=Math.max(.6,1-.05*dp('hr'))*(1-.1*S.upg.benefits)*((mg?1.5:3)+(x.pos==='flex'&&x.loc==='main'?1:0)+(x.loc==='main'&&busy?3:0))*mDecay;
+      x.mo+=S.upg.profitshare?5:0;x.mo-=(1-.1*dl('hrglobal'))*Math.max(.6,1-.05*dp('hr'))*(1-.1*S.upg.benefits)*((mg?1.5:3)+(x.pos==='flex'&&x.loc==='main'?1:0)+(x.loc==='main'&&busy?3:0))*mDecay;
       if(x.mo<=0){R.news.push('😞 '+x.name+' quit (low morale)');S.staff=S.staff.filter(y=>y!==x)}
       else if(x.mo<20)R.news.push('😟 '+x.name+' is unhappy. Consider a raise or bonus')}
     else{R.quit.push(x.name);S.staff=S.staff.filter(y=>y!==x)}});
-  initOffice();R.officePay=Object.values(S.office.team).flat().reduce((a,x)=>a+x.wage,0)+officeCount()*15;S.money-=R.officePay;
+  initOffice();R.officePay=Object.values(S.office.team).flat().reduce((a,x)=>a+x.wage,0)+officeCount()*15+corpPay();S.money-=R.officePay;
   Object.keys(DEPTS).forEach(d=>{if(Math.random()<.5)S.office.cands[d]=genOffice(d)});
   {const C=compliance();let fine=0;C.loc.forEach(v=>{fine+=150;R.news.push(L(`⚖️ Diversity rule broken at ${locName(v.l)} (${Math.round(v.f*100)}% women). Fine $150`,`⚖️ Vi phạm quy định cân bằng giới tính ở ${locName(v.l)} (${Math.round(v.f*100)}% nữ). Phạt $150`))});
    if(C.mgBad){fine+=300;R.news.push(L('⚖️ Manager team is not gender-balanced. Fine $300','⚖️ Đội quản lý chưa cân bằng giới tính. Phạt $300'))}
    if(C.low.length){fine+=100*C.low.length;R.news.push(L(`⚖️ ${C.low.length} staff paid below minimum wage (${fmt(minWage())}/day). Fine`,`⚖️ ${C.low.length} nhân viên bị trả dưới lương tối thiểu (${fmt(minWage())}/ngày). Bị phạt`))}
-   if(fine){S.money-=fine;R.fines=fine}}
+   fine=Math.round(fine*Math.pow(.5,dl('legal')));if(fine){S.money-=fine;R.fines=fine}}
   S.lastMist=R.mist||0;S.lastFine=R.fines||0;S.lastSpoil=(R.spoiled||[]).length>0;
   if(R.mist)R.news.push(L(`🙈 Staff mistakes: ${R.mist} orders remade (${fmt(R.mistV)} of ingredients wasted)`,`🙈 Nhân viên làm sai: ${R.mist} món phải làm lại (hao hụt ${fmt(R.mistV)} nguyên liệu)`));
   if(R.holPay)R.news.push(L('🎉 Holiday pay: wages were 1.5x today','🎉 Lương ngày lễ: hôm nay trả lương gấp 1.5'));
@@ -2448,10 +2546,10 @@ function endDay(){
   S.comps.forEach(c=>{c.str=Math.min(1,c.str+(avgRatio()-c.px)*.3-(S.rating-4)*.08-hit*.6-.02+(Math.random()-.5)*.06)});
   S.comps.filter(c=>c.str<=.05).forEach(c=>R.news.push('🎉 '+c.name+' near '+locName(c.loc)+' closed down'));
   S.comps=S.comps.filter(c=>c.str>.05);
-  if(S.day>=5&&Math.random()<.2){const fr=['main',...S.branches].filter(l=>!S.comps.some(c=>c.loc===l));
+  if(S.day>=5&&Math.random()<.2){const fr=allLocs().filter(l=>!S.comps.some(c=>c.loc===l));
     if(fr.length){const c={name:pick(COMPNAMES),loc:pick(fr),str:.45+Math.random()*.3,px:Math.round((.85+Math.random()*.2)*100)/100};S.comps.push(c);R.news.push('⚠️ '+c.name+' opened near '+locName(c.loc))}}
-  genReviews();S.buzz*=S.upg.pragency?.88:.8;S.buzz=Math.min(.5,Math.max(S.buzz+.005*dp('mkt'),.05*S.upg.brand+.01*dp('mkt')+funBuzz()));
-  finDay();labTeam();farmDay();funDay();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
+  genReviews();S.buzz*=S.upg.pragency?.88:.8;S.buzz=Math.min(.5,Math.max(S.buzz+.005*dp('mkt'),.05*S.upg.brand+.01*dp('mkt')+funBuzz()+.03*dl('comms')));
+  finDay();labTeam();farmDay();funDay();eventsDay();pawnDay();sevDay();if(Math.random()<.5||!S.lab.rcands.length)S.lab.rcands=genResearchers();
   {const L=S.lab,un=DISCO.filter(d=>!L.found.includes(d.id)&&!L.leads.includes(d.id));
    if(un.length&&(L.leads.length<3)&&Math.random()<(boardOn('cpo')?.7:.25)+.1*S.upg.lab){const d=pick(un);L.leads.push(d.id);R.news.push('💡 Product team has a new idea: '+d.n+'. See 🔬 R&D → Invent')}}
   if(R.cat){R.news.push('📦 Catering for '+R.cat.client+' was not finished');S.rating=Math.max(1,S.rating-.15);R.cat=null;S.catJob=null}
@@ -2464,7 +2562,7 @@ function endDay(){
   R.payTax=(R.wages+(R.boardPay||0)+(R.labPay||0)+(R.officePay||0))*payRate();S.money-=R.payTax;T.paid.payroll+=R.payTax;
   R.propTax=Object.keys(S.fin.props).reduce((a,k)=>a+S.fin.pval[k]*(COMMERCIAL.includes(k)?TAX.comProp:TAX.resProp)/TAX.year,0);S.money-=R.propTax;T.paid.property+=R.propTax;
   if(T.owed>0){const pay=Math.min(T.owed,Math.max(0,S.money));S.money-=pay;T.owed-=pay;T.paid.income+=pay;if(pay)R.news.push('🧾 Paid '+fmt(pay)+' of overdue income tax')}
-  const op=(R.farm?R.farm.rev+R.farm.trader-R.farm.cost:0)+R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-(R.labPay||0)-(R.officePay||0)-R.payTax-R.propTax-(R.mainRent||0)-(R.fines||0)-(R.ovh||0)-(R.loss||0);
+  const op=(R.evRev||0)-(R.evCost||0)+(R.farm?R.farm.rev+R.farm.trader-R.farm.cost:0)+R.earned+R.br.reduce((a,b)=>a+b.net,0)-R.wages-S.spend-loanPay-(R.elec||0)-(R.boardPay||0)-(R.labPay||0)-(R.officePay||0)-R.payTax-R.propTax-(R.mainRent||0)-(R.fines||0)-(R.ovh||0)-(R.loss||0)-(R.sevPay||0);
   let div=0;if(S.ipo.sold&&op>0){div=op*S.ipo.sold*.5;S.money-=div}
   R.op=op;R.div=div;R.loanPay=loanPay;R.ingSpend=S.spend;S.spend=0;
   S.life.profit+=op;S.life.rev+=R.earned+R.br.reduce((a,b)=>a+(b.rev||0),0);S.life.served+=R.served+R.br.reduce((a,b)=>a+(b.served||0),0);if(op>S.life.best.p)S.life.best={d:S.day,p:Math.round(op)};
@@ -2472,18 +2570,18 @@ function endDay(){
   if(S.day%TAX.quarter===0){
     const taxable=T.qProfit+T.qInv,minQ=TAX.maMin/4;
     let fed=Math.max(0,taxable)*TAX.fed,ma=Math.max(minQ,Math.max(0,taxable)*TAX.ma);
-    const plan=(boardOn('cfo','tax')?.9:1)*(S.upg.books?.97:1)*Math.max(.8,1-.02*dp('fin'));fed*=plan;ma=Math.max(minQ,ma*plan);
+    const plan=(1-(S.branches.some(id=>brCountry(id)!=='usa')?.04*dl('intltax'):0))*(boardOn('cfo','tax')?.9:1)*(S.upg.books?.97:1)*Math.max(.8,1-.02*dp('fin'));fed*=plan;ma=Math.max(minQ,ma*plan);
     const due=fed+ma,pay=Math.min(due,Math.max(0,S.money));S.money-=pay;T.paid.income+=pay;
     if(pay<due){T.owed+=(due-pay)*1.05;R.news.push('⚠️ Not enough cash for quarterly taxes. '+fmt((due-pay)*1.05)+' is overdue (5% penalty)')}
     R.qTax={taxable,fed,ma,due,plan:plan<1};T.hist.unshift({d:S.day,taxable:Math.round(taxable),due:Math.round(due)});T.hist=T.hist.slice(0,8);
     T.qProfit=0;T.qInv=0;
   }
   {const brRev=R.br.reduce((a,b)=>a+(b.rev||0),0),brCost=R.br.reduce((a,b)=>a+((b.rev||0)-b.net),0),farmRev=R.farm?R.farm.rev+R.farm.trader:0,inv=(R.fin?(R.fin.div+R.fin.int+R.fin.rent):0)+(R.funInc||0),qt=R.qTax?R.qTax.due:0;
-   const net=op+inv-qt-div-(R.funCost||0),rev=R.earned+brRev+farmRev;
-   const cat={ing:R.ingSpend||0,wages:R.wages||0,branch:brCost,elec:R.elec||0,team:(R.boardPay||0)+(R.officePay||0)+(R.labPay||0),farm:R.farm?R.farm.cost:0,tax:(R.payTax||0)+(R.propTax||0)+qt,loan:R.loanPay||0,div:div||0,fun:R.funCost||0,rent:R.mainRent||0,fines:R.fines||0,waste:0,ovh:R.ovh||0,loss:R.loss||0};
+   const net=op+inv-qt-div-(R.funCost||0),rev=R.earned+brRev+farmRev+(R.evRev||0);
+   const cat={ing:R.ingSpend||0,wages:R.wages||0,branch:brCost,elec:R.elec||0,team:(R.boardPay||0)+(R.officePay||0)+(R.labPay||0),farm:R.farm?R.farm.cost:0,tax:(R.payTax||0)+(R.propTax||0)+qt,loan:R.loanPay||0,div:div||0,fun:R.funCost||0,rent:R.mainRent||0,fines:R.fines||0,waste:0,ovh:R.ovh||0,loss:R.loss||0,events:R.evCost||0,sev:R.sevPay||0};
    const exp=rev+inv-net,listed=Object.values(cat).reduce((a,b)=>a+b,0);if(exp-listed>.5)cat.other=exp-listed;
    const served=R.served+R.br.reduce((a,b)=>a+(b.served||0),0),lost=R.lost+R.balked+R.br.reduce((a,b)=>a+(b.lost||0),0);
-   R.pl={rev,inv,exp,net,cat,served,lost,parts:{shop:R.earned,branches:brRev,farm:farmRev}};
+   R.pl={rev,inv,exp,net,cat,served,lost,parts:{shop:R.earned,branches:brRev,farm:farmRev,events:R.evRev||0}};
    S.ledger=S.ledger||[];S.ledger.push({d:S.day,rev:Math.round(rev*100)/100,inv:Math.round(inv*100)/100,exp:Math.round(exp*100)/100,net:Math.round(net*100)/100,cust:served,lost,rating:+S.rating.toFixed(2),cash:Math.round(S.money),cat:Object.fromEntries(Object.entries(cat).map(([k,v])=>[k,Math.round(v*100)/100]))});
    if(S.ledger.length>400)S.ledger=S.ledger.slice(-400)}
   creditDay(op,R.missedLoan);
@@ -2520,17 +2618,17 @@ function genReviews(){
   S.revFeed=[...R.reviews,...(S.revFeed||[])].slice(0,60);save();
   S.brStats.main={dem:tot,served:R.served,lost:R.lost+R.balked,rev:R.earned,reviews:R.reviews,rating:S.rating};
 }
-function brLine(b){
+function brLine(b){if(b.sister)return `<div class="stat"><span>${b.n}<br><small>${b.served}/${b.dem} ${L('customers','khách')}, ★ ${b.rating.toFixed(1)}</small></span><span>${fmt(b.net)}</span></div>`;
   const warn=b.idle?' <span class="tag">no staff</span>':b.lost>b.dem*.2?' <span class="tag">needs staff</span>':'';
   return `<div class="stat"><span>🏪 ${b.n}${warn}<br><small>${b.served}/${b.dem} customers, ★ ${b.rating.toFixed(1)}</small></span><span>${fmt(b.net)}</span></div>`;
 }
-const CAT_LBL={ing:['🛒','Ingredients','Nguyên liệu'],wages:['👥','Staff wages','Lương nhân viên'],branch:['🏬','Branch costs','Chi phí chi nhánh'],elec:['⚡','Electricity','Tiền điện'],team:['👔','Directors & office','Ban giám đốc & văn phòng'],farm:['🌱','Farm & roastery','Nông trại & nhà máy'],tax:['🧾','Taxes','Thuế'],loan:['🏦','Loan payments','Trả nợ vay'],div:['💸','Shareholder dividends','Cổ tức cổ đông'],fun:['🛥️','Teams & luxury','Đội bóng & xa xỉ'],rent:['🏠','Weymouth rent','Tiền thuê mặt bằng Weymouth'],fines:['⚖️','Fines','Tiền phạt'],ovh:['🧾','Overheads (trash, Wi-Fi, insurance, water & gas, grease trap)','Chi phí cố định (rác, Wi-Fi, bảo hiểm, nước & gas, bể mỡ)'],loss:['🐀','Accidents & damage','Sự cố & thiệt hại'],waste:['🙈','Staff mistakes','Nhân viên làm hỏng'],other:['📦','Other','Khác']};
+const CAT_LBL={ing:['🛒','Ingredients','Nguyên liệu'],wages:['👥','Staff wages','Lương nhân viên'],branch:['🏬','Branch costs','Chi phí chi nhánh'],elec:['⚡','Electricity','Tiền điện'],team:['👔','Directors & office','Ban giám đốc & văn phòng'],farm:['🌱','Farm & roastery','Nông trại & nhà máy'],tax:['🧾','Taxes','Thuế'],loan:['🏦','Loan payments','Trả nợ vay'],div:['💸','Shareholder dividends','Cổ tức cổ đông'],fun:['🛥️','Teams & luxury','Đội bóng & xa xỉ'],rent:['🏠','Weymouth rent','Tiền thuê mặt bằng Weymouth'],fines:['⚖️','Fines','Tiền phạt'],events:['🚚','Food trucks, pop-ups & events','Food truck, pop-up & sự kiện'],sev:['📝','Severance','Trợ cấp thôi việc'],ovh:['🧾','Overheads (trash, Wi-Fi, insurance, water & gas, grease trap)','Chi phí cố định (rác, Wi-Fi, bảo hiểm, nước & gas, bể mỡ)'],loss:['🐀','Accidents & damage','Sự cố & thiệt hại'],waste:['🙈','Staff mistakes','Nhân viên làm hỏng'],other:['📦','Other','Khác']};
 const pct=(a,b)=>b?((a-b)/Math.abs(b))*100:null;
 function chgTag(a,b,goodUp=true){const c=pct(a,b);if(c==null||!isFinite(c))return '';const up=c>=0,good=goodUp?up:!up;return `<span class="chg ${good?'good':'bad'}">${up?'▲':'▼'} ${Math.abs(c).toFixed(0)}%</span>`}
 function plCard(){
   const P=R.pl;if(!P)return summary0();const prev=S.ledger&&S.ledger.length>1?S.ledger[S.ledger.length-2]:null;
   const lines=Object.entries(P.cat).filter(([k,v])=>v>.005).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="pll sub"><span>${CAT_LBL[k][0]} ${L(CAT_LBL[k][1],CAT_LBL[k][2])}</span><span>${fmt(v)}</span></div>`).join('');
-  const revL=[['🏪',L('Weymouth shop','Tiệm Weymouth'),P.parts.shop],['🏬',L('Branches','Chi nhánh'),P.parts.branches],['🌱',L('Coffee bags & cherries','Cà phê bịch & trái'),P.parts.farm],['📈',L('Investment income','Thu nhập đầu tư'),P.inv]].filter(x=>x[2]>.005).map(x=>`<div class="pll sub"><span>${x[0]} ${x[1]}</span><span>${fmt(x[2])}</span></div>`).join('');
+  const revL=[['🏪',L('Weymouth shop','Tiệm Weymouth'),P.parts.shop],['🏬',L('Branches','Chi nhánh'),P.parts.branches],['🌱',L('Coffee bags & cherries','Cà phê bịch & trái'),P.parts.farm],['🚚',L('Trucks, pop-ups & events','Food truck, pop-up & sự kiện'),P.parts.events||0],['📈',L('Investment income','Thu nhập đầu tư'),P.inv]].filter(x=>x[2]>.005).map(x=>`<div class="pll sub"><span>${x[0]} ${x[1]}</span><span>${fmt(x[2])}</span></div>`).join('');
   return `<div class="plcard notr">
    <div class="pltiles"><div><b>${P.served}</b><span>☕ ${L('served','đã phục vụ')}</span></div><div><b>${P.lost}</b><span>😤 ${L('walked out','bỏ về')}</span></div><div><b>${S.rating.toFixed(1)}</b><span>⭐ ${L('rating','đánh giá')}</span></div></div>
    <details class="pld"><summary class="pll main"><span>💵 ${L('Revenue','Doanh thu')}</span><span class="pos">+${fmt(P.rev+P.inv)} ${prev?chgTag(P.rev+P.inv,prev.rev+prev.inv):''}</span></summary>${revL}</details>
@@ -2606,8 +2704,8 @@ document.addEventListener('toggle',e=>{const d=e.target;if(d.tagName!=='DETAILS'
 function reapplyFilters(){document.querySelectorAll('#card .lsearch[data-q]').forEach(inp=>{if(!inp.value)return;inp.dataset.q==='bench'?labFilter(inp,'.labgrid .lchip'):labFilter(inp,'.srcrow',1)})}
 function manage(tab){
   if(tab)MT=tab;
-  const sc=$('card').scrollTop,locs=['main',...S.branches];if(!locs.includes(ML))ML='main';
-  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['office','🏢 Office'],['invest','📈 Invest'],['farm','🌱 Farm'],['fun','🎰 Leisure'],['rev','⭐ Reviews'],['books','📒 Books'],['stats','📊 Stats']];
+  const sc=$('card').scrollTop,locs=allLocs();if(!locs.includes(ML))ML='main';
+  const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['office','🏢 Office'],['invest','📈 Invest'],['farm','🌱 Farm'],['corp','🌎 Corporate'],['events','🎪 Events'],['group','🏢 Group'],['fun','🎰 Leisure'],['rev','⭐ Reviews'],['books','📒 Books'],['stats','📊 Stats']];
   let body='';
   if(MT==='staff'){
     const li=locs.indexOf(ML),mark=l=>{const n=crewAt(l).length,c=cap(l),st=S.brStats[l];return n<c?(n===0?'⚪':'🟡'):(l!=='main'&&st&&st.lost>st.dem*.1?'🔴':'🟢')};
@@ -2664,7 +2762,7 @@ function manage(tab){
     (needEq.length?`<p class="note">🛠️ ${needEq.length} more items need equipment first: ${[...new Set(needEq.flatMap(r=>[].concat(r.req)).filter(q=>!S.upg[q]).map(q=>UPG.find(u=>u.id===q).n))].join(', ')}.</p>`:'');
   }
   if(MT==='mkt'){
-    const bz=S.buzz,bl=bz>.2?'Hot 🔥':bz>.05?'Good':bz>-.05?'Normal':'Bad',locs=['main',...S.branches];
+    const bz=S.buzz,bl=bz>.2?'Hot 🔥':bz>.05?'Good':bz>-.05?'Normal':'Bad',locs=allLocs();
     body=`<p>Buzz: <b>${bl}</b></p><p style="font-weight:800;margin-bottom:4px">Traffic today</p><div class="trg">${locs.map(l=>`<div><span>${locName(l)}${compHit(l)?' ⚠️':''}</span><b>${Math.round(demand(l)*100)}%</b></div>`).join('')}</div>`+
     CAMP.map(k=>{
       if(k.local){const off=locs.filter(l=>!campOn(k.id,l)),allCost=off.length*campCost(k);
@@ -2689,7 +2787,7 @@ function manage(tab){
     (S.catJob?`<div class="upg"><div><b>${S.catJob.client}</b> <small>booked for today</small><br><small>${S.catJob.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return r.e+' '+r.n+' ×'+x.qty}).join(', ')}</small></div></div>`:'')+
     (S.catOffers.length?S.catOffers.map(o=>{const due=7*60+Math.floor(o.due/DAYLEN*480);return `<div class="upg"><div><b>${o.client}</b><br><small>${o.items.map(x=>{const r=REC.find(z=>z.id===x.rid);return r.e+' '+r.n+' ×'+x.qty}).join(', ')}</small><br><small>Due by ${Math.floor(due/60)}:${String(due%60).padStart(2,'0')}, pays ${fmt(o.pay)}</small></div><button ${S.catJob?'disabled':''} onclick="acceptCat(${o.id})">Accept</button></div>`}).join('')+'<p class="note">An accepted order runs during your next day. Make each item and tap the 📦 banner. Staff help when they are free. Missing the deadline costs rating.</p>':'<p class="note">No requests right now. They come in every few days.</p>')+
     taxSection()+
-    creditCard()+
+    creditCard()+pawnCard()+
     S.loans.map((l,i)=>`<div class="upg"><div><b>${l.kind==='quick'?'💸':'🏦'} ${fmt(l.amt)} ${L('loan','khoản vay')}</b><br><small>${fmt(l.pay)}/${L('day','ngày')}, ${l.left} ${L('days left','ngày còn lại')}</small></div><button ${S.money<payoff(l)?'disabled':''} onclick="payOff(${i})">${L('Pay off','Trả hết')} ${fmt(payoff(l))}</button></div>`).join('')+
     `<p style="margin:10px 0 2px;font-weight:800" class="notr">💸 ${L('Quick cash (social lending)','Vay nóng (vay xã hội)')}</p><p class="note notr">${L('Anyone can borrow, no questions asked. Very high interest, and it hurts your credit a little.','Ai cũng vay được, không cần giấy tờ. Lãi rất cao và làm giảm nhẹ điểm tín dụng.')}</p>`+
     LOANS.map((o,i)=>o.kind!=='quick'?'':loanRow(o,i)).join('')+
@@ -2701,6 +2799,9 @@ function manage(tab){
     `<button class="big alt" onclick="board('manage')">🏆 Leaderboard</button>`;
   }
   if(MT==='farm'){body=gateOk('farm')||(S.farm&&S.farm.plots.length)?farmBody():gateCard('farm','Grow the café business first. The coffee farm unlocks when you hit these goals.')}
+  if(MT==='corp'){body=gateOk('corp')||Object.keys(initCorp().lead).length||Object.keys(initCorp().dept).length?corpBody():gateCard('corp',L('Become a big chain first. Corporate headquarters unlocks at these goals.','Hãy trở thành chuỗi lớn trước. Trụ sở tập đoàn mở khi đạt các mục tiêu này.'))}
+  if(MT==='events'){body=gateOk('events')||(S.ev&&(S.ev.trucks.length||S.ev.pop.length))?eventsBody():gateCard('events',L('Grow a little first. Food trucks and events unlock at these goals.','Hãy phát triển thêm chút. Food truck và sự kiện mở khi đạt các mục tiêu này.'))}
+  if(MT==='group'){body=gateOk('group')||Object.keys((S.group||{}).own||{}).length?groupBody():gateCard('group',L('Grow the café first. Opening other restaurants unlocks at these goals.','Hãy phát triển tiệm cà phê trước. Mở thêm loại hình nhà hàng khác khi đạt các mục tiêu này.'))}
   if(MT==='fun'){body=gateOk('leisure')||Object.keys((S.fun||{}).own||{}).length?funBody():gateCard('leisure',L('Build your fortune first. Leisure unlocks when you hit these goals.','Hãy làm giàu trước đã. Giải trí mở khi đạt các mục tiêu này.'))}
   if(MT==='rev'){body=reviewsBody()}
   if(MT==='books'){body=booksBody()}
@@ -2714,12 +2815,12 @@ function manage(tab){
       `<p style="font-weight:800;margin:12px 0 4px">🏅 Best sellers</p>`+(top.length?top.map(([id,n],i)=>{const r=REC.find(x=>x.id===id);return r?`<div class="stat"><span>${i+1}. ${r.e} ${r.n}</span><b>${n}</b></div>`:''}).join(''):'<p class="note">Sell some items first.</p>')+
       `<p style="font-weight:800;margin:12px 0 4px">🔓 Coming up</p>`+Object.keys(GATES).filter(g=>!gateOk(g)&&!(g==='branch'&&S.branches.length)&&!(APPS[g]&&S.apps[g])&&!(g==='board'&&Object.keys(S.board).length)).map(g=>gateCard(g)).join('')||'<p class="note">Everything is unlocked!</p>';
   }
-  if(MT==='office'){body=gateOk('board')||Object.keys(S.board).length?officeBody():gateCard('board','The office opens together with the board of directors.')}
+  if(MT==='office'){body=gateOk('board')||Object.keys(S.board).length||officeCount()?officeBody():gateCard('board','The office opens together with the board of directors.')}
   if(MT==='board'){
     const sal=Object.keys(S.board).filter(k=>S.board[k].on).reduce((a,k)=>a+EXECS[k].sal,0);
     body=`<p class="note">Directors run parts of the company for you each night after closing. They only spend money above your cash reserve.</p>
     <p style="font-weight:800;margin-bottom:4px">Keep a cash reserve of</p><div class="tabs sm">${RESERVES.map(v=>`<button class="${S.reserve===v?'on':''}" onclick="S.reserve=${v};save();manage()">${fmt(v)}</button>`).join('')}</div>
-    <p class="note">Board salaries: <b>${fmt(sal)}/day</b></p>`+(!gateOk('board')&&!Object.keys(S.board).length?gateCard('board','Build up the business first. Directors join once you hit these goals.'):'')+
+    <p class="note">Board salaries: <b>${fmt(sal)}/day</b></p>${sevCard()}`+(!gateOk('board')&&!Object.keys(S.board).length?gateCard('board','Build up the business first. Directors join once you hit these goals.'):'')+
     Object.entries(EXECS).map(([k,e])=>{const b=S.board[k];
       const head=`<div class="exec"><div class="exh"><span class="exf">${e.e}</span><div><b>${e.n}</b><br><small>${e.d}. ${fmt(e.sal)}/day</small></div>`;
       if(!b)return head+`<button class="mbuy" ${S.money<e.fee||!gateOk('board')?'disabled':''} onclick="hireExec('${k}')"><b>${fmt(e.fee)}</b><span>Hire</span></button></div><ul class="exl">${Object.values(e.opts).map(t=>`<li>${t}</li>`).join('')}</ul></div>`;
@@ -2743,7 +2844,11 @@ const LOANS=[
 const credit=()=>Math.round(S.credit??640);
 const creditLbl=c=>c>=780?['Excellent','Xuất sắc','#2E9B6F']:c>=720?['Very good','Rất tốt','#5AA469']:c>=660?['Good','Tốt','#C9A200']:c>=600?['Fair','Trung bình','#E08A32']:['Poor','Kém','#C0392B'];
 const loanRate=o=>o.kind==='bank'?Math.max(o.rate*.6,o.rate-(credit()-o.credit)*.00002):o.rate;
-const loanLock=o=>o.kind!=='bank'?'':S.day<o.day?L(`Opens on day ${o.day}`,`Mở từ ngày ${o.day}`):credit()<o.credit?L(`Needs credit ${o.credit}+`,`Cần điểm tín dụng ${o.credit}+`):o.req&&S.branches.length<o.req?L(`Needs ${o.req} branches`,`Cần ${o.req} chi nhánh`):'';
+const LOAN_YEAR_MAX={quick:3,bank:2};
+const loanUses=o=>((S.loanHist||{})[o.id]||[]).filter(d=>S.day-d<365).length;
+const loanLock=o=>S.loans.some(l=>l.id===o.id)?L('You already have this loan. Pay it off first','Bạn đang có khoản vay này. Trả hết trước đã'):
+  loanUses(o)>=LOAN_YEAR_MAX[o.kind]?L(`Limit reached: ${LOAN_YEAR_MAX[o.kind]} times a year`,`Đã hết lượt: tối đa ${LOAN_YEAR_MAX[o.kind]} lần mỗi năm`):
+  o.kind==='quick'&&S.loans.filter(l=>l.kind==='quick').length>=2?L('Max 2 quick-cash loans at once','Tối đa 2 khoản vay nóng cùng lúc'):o.kind!=='bank'?'':S.day<o.day?L(`Opens on day ${o.day}`,`Mở từ ngày ${o.day}`):credit()<o.credit?L(`Needs credit ${o.credit}+`,`Cần điểm tín dụng ${o.credit}+`):o.req&&S.branches.length<o.req?L(`Needs ${o.req} branches`,`Cần ${o.req} chi nhánh`):'';
 function creditDay(prof,missed){let c=S.credit??640;c+=missed?-25:0;c+=prof>0?2:-3;if(S.money<0)c-=5;if(S.rating>=4.3)c+=1;if(S.rating<3)c-=2;
   c+=S.loans.some(l=>l.kind==='quick')?-1:0;S.credit=Math.max(300,Math.min(850,c))}
 const avgProfit=()=>{const h=S.hist.slice(-7);return h.length?h.reduce((a,x)=>a+x.p,0)/h.length:0};
@@ -2763,9 +2868,24 @@ function taxSection(){initTax();const T=S.tax,left=TAX.quarter-((S.day-1)%TAX.qu
   ${r('Property: ~1.1% homes, ~2.2% commercial per year',fmt(T.paid.property))}
   ${T.hist.length?'<p class="note" style="margin-top:6px">Recent quarters: '+T.hist.map(h=>`day ${h.d}: ${fmt(h.due)}`).join(' · ')+'</p>':''}
   <p class="note">Meals tax is paid by customers on top of menu prices, so it doesn't cut your profit. Rates are simplified for the game; real taxes depend on your business type.</p></details>`}
-function loanRow(o,i){const lock=loanLock(o),r=loanRate(o);return `<div class="upg notr"><div><b>${L('Borrow','Vay')} ${fmt(o.amt)}</b><br><small>${(r*100).toFixed(2)}% ${L('a day for','mỗi ngày trong')} ${o.days} ${L('days','ngày')}: ${fmt(o.amt*(1+r*o.days)/o.days)}/${L('day','ngày')}</small>${lock?`<br><small style="color:#C0392B;font-weight:800">🔒 ${lock}</small>`:''}</div><button ${lock||S.loans.length>=3?'disabled':''} onclick="takeLoan(${i})">${L('Borrow','Vay')}</button></div>`}
+function loanRow(o,i){const lock=loanLock(o),r=loanRate(o);return `<div class="upg notr"><div><b>${L('Borrow','Vay')} ${fmt(o.amt)}</b><br><small>${(r*100).toFixed(2)}% ${L('a day for','mỗi ngày trong')} ${o.days} ${L('days','ngày')}: ${fmt(o.amt*(1+r*o.days)/o.days)}/${L('day','ngày')}</small>${lock?`<br><small style="color:#C0392B;font-weight:800">🔒 ${lock}</small>`:''}<br><small>${L('Used','Đã vay')} ${loanUses(o)}/${LOAN_YEAR_MAX[o.kind]} ${L('times this year','lần trong năm')}</small></div><button ${lock||S.loans.length>=3?'disabled':''} onclick="takeLoan(${i})">${L('Borrow','Vay')}</button></div>`}
+// Pawn shop: hand over equipment or luxury items for quick cash. Redeem within 30 days (plus 10% a month), or lose the item.
+function pawnables(){const out=[];UPG.filter(u=>u.id&&u.eq&&(S.upg[u.id]||0)>0).forEach(u=>{let v=0;for(let i=0;i<S.upg[u.id];i++)v+=u.base*1.5*Math.pow(1.7,i);out.push({key:'u:'+u.id,n:u.n,v:Math.round(u.base*1.5*Math.pow(1.7,S.upg[u.id]-1))})});
+  initFun();LUX.filter(x=>S.fun.own[x.id]).forEach(x=>out.push({key:'l:'+x.id,n:x.e+' '+L(x.n,x.vi),v:x.price}));
+  (S.ev&&S.ev.trucks||[]).forEach(t=>out.push({key:'t:'+t.id,n:'🚚 '+L('Food truck','Xe food truck')+' #'+t.no,v:30000}));return out}
+function pawn(key){const it=pawnables().find(x=>x.key===key);if(!it)return;const cash=Math.round(it.v*.4);S.pawn=S.pawn||[];
+  const [t,id]=key.split(':');let back=null;if(t==='u'){S.upg[id]--;back={t,id}}else if(t==='l'){back={t,id,own:S.fun.own[id]};delete S.fun.own[id]}else{const i=S.ev.trucks.findIndex(x=>String(x.id)===id);back={t,truck:S.ev.trucks[i]};S.ev.trucks.splice(i,1)}
+  S.pawn.push({n:it.n,cash,day:S.day,due:S.day+30,back});S.money+=cash;save();sfx.coin();toast('🏷️ '+L('Pawned for ','Đã cầm được ')+fmt(cash));manage()}
+const redeemCost=p=>Math.round(p.cash*(1+.1*Math.max(1,Math.ceil((S.day-p.day)/30))));
+function redeem(i){const p=S.pawn[i];if(!p||S.money<redeemCost(p))return;S.money-=redeemCost(p);const b=p.back;if(b.t==='u')S.upg[b.id]=(S.upg[b.id]||0)+1;else if(b.t==='l')S.fun.own[b.id]=b.own||{day:S.day};else S.ev.trucks.push(b.truck);S.pawn.splice(i,1);save();sfx.coin();toast('🏷️ '+L('Got it back!','Đã chuộc lại!'));manage()}
+function pawnDay(){(S.pawn||[]).slice().forEach(p=>{if(S.day>p.due){S.pawn=S.pawn.filter(x=>x!==p);R.news.push('🏷️ '+L(`${p.n} was not redeemed in time and now belongs to the pawn shop`,`${p.n} không chuộc kịp và đã thuộc về tiệm cầm đồ`))}})}
+function pawnCard(){const items=pawnables(),P=S.pawn||[];
+  return `<details class="srcgrp notr" data-key="pawn"${OPEN.has('pawn')?' open':''}><summary>🏷️ ${L('Pawn shop','Tiệm cầm đồ')} ${P.length?`<small>(${P.length} ${L('pawned','đang cầm')})</small>`:''}</summary>
+  <p class="note">${L('Short on cash? Pawn equipment, luxury items or a food truck for 40% of its value. Redeem it within 30 days for the cash plus 10% a month, or you lose it. Pawned equipment stops working until you get it back.','Kẹt tiền? Cầm thiết bị, đồ xa xỉ hoặc xe food truck lấy 40% giá trị. Chuộc lại trong 30 ngày với tiền gốc cộng 10% mỗi tháng, quá hạn là mất luôn. Thiết bị đem cầm sẽ ngừng hoạt động cho tới khi chuộc lại.')}</p>
+  ${P.map((p,i)=>`<div class="upg"><span class="fc">🏷️</span><div><b>${p.n}</b><br><small>${L('Due','Hạn chuộc')} ${dateStr(p.due)} (${Math.max(0,p.due-S.day)} ${L('days left','ngày còn lại')})</small></div><button ${S.money<redeemCost(p)?'disabled':''} onclick="redeem(${i})">${L('Redeem','Chuộc')} ${fmt(redeemCost(p))}</button></div>`).join('')}
+  ${items.length?items.map(x=>`<div class="upg"><div><b>${x.n}</b><br><small>${L('Value','Giá trị')} ${fmt(x.v)}</small></div><button class="fire" onclick="pawn('${x.key}')">${L('Pawn for','Cầm lấy')} ${fmt(Math.round(x.v*.4))}</button></div>`).join(''):`<p class="note">${L('Nothing to pawn yet.','Chưa có gì để cầm.')}</p>`}</details>`}
 function creditCard(){const c=credit(),lb=creditLbl(c),pct=(c-300)/550*100;return `<div class="credit notr"><div class="crtop"><span>📊 ${L('Credit score','Điểm tín dụng')}</span><b style="color:${lb[2]}">${c} · ${L(lb[0],lb[1])}</b></div><div class="crbar"><i style="left:${pct}%"></i></div><small>${L('Goes up with profitable days, good ratings and on-time payments. Missed payments and quick-cash loans pull it down.','Tăng khi có lời, được đánh giá tốt và trả nợ đúng hạn. Trễ hạn và vay nóng làm giảm điểm.')}</small></div>`}
-function takeLoan(i){const o=LOANS[i];if(S.loans.length>=3||loanLock(o))return;const r=loanRate(o);S.money+=o.amt;S.loans.push({amt:o.amt,kind:o.kind,days:o.days,left:o.days,pay:Math.round(o.amt*(1+r*o.days)/o.days*100)/100});if(o.kind==='quick')S.credit=Math.max(300,(S.credit??640)-8);save();sfx.coin();toast((o.kind==='quick'?'💸 ':'🏦 ')+L('Borrowed ','Đã vay ')+fmt(o.amt));manage()}
+function takeLoan(i){const o=LOANS[i];if(S.loans.length>=3||loanLock(o))return;const r=loanRate(o);S.money+=o.amt;S.loanHist=S.loanHist||{};(S.loanHist[o.id]=S.loanHist[o.id]||[]).push(S.day);S.loans.push({id:o.id,amt:o.amt,kind:o.kind,days:o.days,left:o.days,pay:Math.round(o.amt*(1+r*o.days)/o.days*100)/100});if(o.kind==='quick')S.credit=Math.max(300,(S.credit??640)-8);save();sfx.coin();toast((o.kind==='quick'?'💸 ':'🏦 ')+L('Borrowed ','Đã vay ')+fmt(o.amt));manage()}
 function payOff(i){const l=S.loans[i],c=payoff(l);if(S.money<c)return;S.money-=c;S.loans.splice(i,1);save();toast('🏦 Loan paid off');manage()}
 function ipo(){const v=valuation();if(v<25000||S.ipo.sold)return;S.money+=v*.2;S.ipo.sold=.2;save();sfx.coin();toast('🔔 Saigonesee is now a public company!');manage()}
 function shares(d){const v=valuation();if(d>0){if(S.ipo.sold>=.49)return;S.money+=v*.095;S.ipo.sold=Math.min(.49,S.ipo.sold+.1)}else{if(S.money<v*.105)return;S.money-=v*.105;S.ipo.sold=Math.max(0,Math.round((S.ipo.sold-.1)*100)/100)}save();manage()}
@@ -3195,7 +3315,139 @@ function funDay(){initFun();const F=S.fun;let inc=0,cost=0;F.last={};
     if(Math.random()<.25)R.news.push(`${x.e} ${L(x.n,x.vi)} ${win?L('won last night!','thắng trận tối qua!'):L('lost last night.','thua trận tối qua.')}`)});
   LUX.filter(x=>F.own[x.id]&&x.up).forEach(x=>cost+=x.up);
   S.money+=inc-cost;R.funInc=inc;R.funCost=cost}
+
+// ================= GROUP BUSINESSES =================
+// Each business has its own menu, stock, prices, rating and shop staff. Money, the board, office, farm, investments and branches are shared.
+const REC_SETS={cafe:null,pho:[{id:'phobo',k:'food',n:'Beef Phở',vi:'Phở Bò',e:'🍜',ing:["phobroth", "banhpho", "beefslice", "brisket", "sprouts", "limechili"],p:16,d:1},{id:'phoga',k:'food',n:'Chicken Phở',vi:'Phở Gà',e:'🍜',ing:["phobroth", "banhpho", "pchicken", "sprouts", "limechili"],p:15,d:1},{id:'comtam',k:'food',n:'Broken Rice Plate',vi:'Cơm Tấm Sườn',e:'🍚',ing:["brokenrice", "porkchop", "eggmeatloaf", "nuocmamchua"],p:17,d:1},{id:'tradacf',k:'drink',n:'Iced Tea',vi:'Trà Đá',e:'🧋',ing:["icedtea", "ice"],p:3,d:1},{id:'vncoffee2',k:'drink',n:'Vietnamese Coffee',vi:'Cà Phê Sữa Đá',e:'☕',ing:["phin", "cond", "ice"],p:6,d:1},{id:'bunbohue',k:'food',n:'Bún Bò Huế',vi:'Bún Bò Huế',e:'🌶️',ing:["bbhbroth", "bunthick", "brisket", "sprouts", "limechili"],p:17,d:2},{id:'phodb',k:'food',n:'Special Combo Phở',vi:'Phở Đặc Biệt',e:'🍜',ing:["phobroth", "banhpho", "beefslice", "brisket", "pchicken", "sprouts", "limechili"],p:19,d:3},{id:'comtamdb',k:'food',n:'Special Broken Rice',vi:'Cơm Tấm Đặc Biệt',e:'🍚',ing:["brokenrice", "porkchop", "eggmeatloaf", "shrimp", "nuocmamchua"],p:20,d:4},{id:'goicuon2',k:'food',n:'Fresh Spring Rolls',vi:'Gỏi Cuốn',e:'🌯',ing:["ricepaper", "shrimp", "herbs", "nuocmamchua"],p:9,d:2},{id:'chegio',k:'food',n:'Egg Rolls',vi:'Chả Giò',e:'🥟',ing:["eggroll", "herbs", "nuocmamchua"],p:9,d:3},{id:'chebamau',k:'food',n:'Three-Color Dessert',vi:'Chè Ba Màu',e:'🍧',ing:["chebamau", "coconut", "ice"],p:7,d:5},{id:'bunchaha',k:'food',n:'Grilled Pork Vermicelli',vi:'Bún Thịt Nướng',e:'🥗',ing:["bun", "pork", "herbs", "pickles", "nuocmamchua"],p:16,d:4}],hotpot:[{id:'hptomyum',k:'food',n:'Tom Yum Hotpot',vi:'Lẩu Thái',e:'🥘',ing:["tomyum", "hpgreens", "fishball", "mushroom"],p:18,d:1},{id:'hpmush',k:'food',n:'Mushroom Hotpot',vi:'Lẩu Nấm',e:'🍄',ing:["mushbroth", "mushroom", "hptofu", "hpgreens"],p:16,d:1},{id:'hpbeefset',k:'food',n:'Beef Platter',vi:'Đĩa Bò',e:'🥩',ing:["hpbeef", "dipsauce"],p:14,d:1},{id:'hpmilktea',k:'drink',n:'Milk Tea',vi:'Trà Sữa',e:'🧋',ing:["milktea", "ice"],p:6,d:1},{id:'hpsuki',k:'food',n:'Sukiyaki Hotpot',vi:'Lẩu Sukiyaki',e:'🍯',ing:["sukibroth", "hpbeef", "hptofu", "udon", "hpgreens"],p:22,d:2},{id:'hpsea',k:'food',n:'Seafood Platter',vi:'Đĩa Hải Sản',e:'🦐',ing:["hpseafood", "dipsauce"],p:19,d:2},{id:'hpballs',k:'food',n:'Fish Ball Plate',vi:'Đĩa Viên',e:'🍢',ing:["fishball", "dipsauce"],p:8,d:1},{id:'hpudon',k:'food',n:'Udon Add-on',vi:'Mì Udon',e:'🍜',ing:["udon", "hpgreens"],p:5,d:3},{id:'hplychee',k:'drink',n:'Lychee Soda',vi:'Soda Vải',e:'🥤',ing:["lycheesoda", "ice"],p:5,d:2},{id:'hpcombo',k:'food',n:'Family Combo',vi:'Combo Gia Đình',e:'👨‍👩‍👧',ing:["tomyum", "hpbeef", "hpseafood", "fishball", "hptofu", "udon", "hpgreens", "dipsauce"],p:48,d:4},{id:'hpveg',k:'food',n:'Veggie Platter',vi:'Đĩa Rau Nấm',e:'🥬',ing:["hpgreens", "mushroom", "hptofu", "dipsauce"],p:10,d:2}]};
+const BIZ={
+  cafe:{e:'☕',n:'Saigonesee Café',vi:'Saigonesee Café',s1:'SAIGONESEE',s2:'Cà Phê · Bánh Mì',cost:0,rent:0,dem:60,starter:{}},
+  pho:{e:'🍜',n:'Phở Saigonesee (Vietnamese restaurant)',vi:'Phở Saigonesee (Nhà hàng Việt)',s1:'PHỞ SAIGONESEE',s2:'Nhà Hàng Việt',cost:120000,rent:120,dem:70,
+       starter:{phobroth:40,banhpho:40,beefslice:30,brisket:30,pchicken:30,sprouts:40,limechili:30,brokenrice:30,porkchop:24,eggmeatloaf:24,nuocmamchua:30,icedtea:30,ice:25,phin:10,cond:15}},
+  hotpot:{e:'🥘',n:'Saigon Hotpot (conveyor hotpot)',vi:'Saigon Hotpot (Lẩu băng chuyền)',s1:'SAIGON HOTPOT',s2:'Lẩu Băng Chuyền',cost:350000,rent:260,dem:65,
+       starter:{tomyum:30,mushbroth:30,hpbeef:20,fishball:40,mushroom:30,hptofu:40,hpgreens:30,dipsauce:40,milktea:20,ice:25}},
+};
+const curBiz=()=>S.biz||'cafe';
+const bizOwned=()=>['cafe',...Object.keys((S.group||{}).own||{})];
+const isMainLoc=l=>l==='main'||String(l).startsWith('main@');
+function applyBiz(){const b=BIZ[curBiz()];document.documentElement.setAttribute('data-biz',curBiz());
+  document.querySelectorAll('.sg1').forEach(e=>e.textContent=b.s1);document.querySelectorAll('.sg2').forEach(e=>e.textContent=b.s2);document.title=b.s1}
+function newBizData(id){return {known:REC_SETS[id].filter(r=>r.d===1).map(r=>r.id),inv:{...BIZ[id].starter},lots:{},prices:{},lastUsed:{},rating:4,newIds:[]}}
+function stashBiz(){const cur=curBiz();S.bizData=S.bizData||{};
+  S.bizData[cur]={known:S.known,inv:S.inv,lots:S.lots||{},prices:S.prices,lastUsed:S.lastUsed||{},rating:S.rating,newIds:S.newIds||[],avgP:avgPrice(),seasonOff:S.seasonOff||[]};
+  S.staff.forEach(x=>{if(x.loc==='main')x.loc='main@'+cur});REC_SETS[cur]=REC.slice()}
+function loadBiz(id){REC.splice(0,REC.length,...REC_SETS[id]);const d=S.bizData[id]||newBizData(id);
+  Object.assign(S,{known:d.known,inv:d.inv,lots:d.lots||{},prices:d.prices||{},lastUsed:d.lastUsed||{},rating:d.rating??4,newIds:d.newIds||[],seasonOff:[]});
+  S.staff.forEach(x=>{if(x.loc==='main@'+id)x.loc='main'});S.biz=id}
+function switchBiz(id){if(R){toast(L('Finish the day first','Hãy kết thúc ngày bán trước'));return}if(id===curBiz()||!bizOwned().includes(id))return;
+  stashBiz();loadBiz(id);applyBiz();save();sfx.coin();toast(BIZ[id].e+' '+L('Now running ','Đang điều hành ')+L(BIZ[id].n,BIZ[id].vi));market()}
+function buyBiz(id){const b=BIZ[id];S.group=S.group||{own:{}};if(S.group.own[id]||S.money<b.cost)return;S.money-=b.cost;S.group.own[id]={day:S.day};
+  S.bizData=S.bizData||{};S.bizData[id]=newBizData(id);save();sfx.coin();funPop(b.e,L(b.n,b.vi)+' — '+L('opened!','khai trương!'),0);manage('group')}
+// Businesses you are not running today still open with their own staff and earn money
+function sisterDay(){const out=[];bizOwned().filter(id=>id!==curBiz()).forEach(id=>{const B=BIZ[id],d=S.bizData&&S.bizData[id];if(!d)return;
+  const crew=S.staff.filter(x=>x.loc==='main@'+id),capC=crew.reduce((a,x)=>a+(DAYLEN/(bestSp(x)*spMul(x)*1.3)),0)*.9;
+  const dem=Math.round(B.dem*(1+.02*Math.min(S.day,40))*(d.rating/5)*demand('main')*(.85+Math.random()*.3)),served=Math.min(dem,Math.round(capC)),lost=dem-served;
+  const rev=served*(d.avgP||10)*1.15,ing=rev*.33,rent=B.rent,net=rev-ing-rent;S.money+=net;
+  d.rating=Math.max(1,Math.min(5,d.rating*.85+(1+4*(dem?served/dem:0))*.15));
+  out.push({id:'biz:'+id,n:B.e+' '+L(B.n,B.vi),rev,ing,rent,net,served,lost,dem,cap:Math.round(capC),rating:d.rating,reviews:[],sister:1})});return out}
+function groupBody(){S.group=S.group||{own:{}};const cur=curBiz();
+  return `<p class="note notr">${L('Your group can run several kinds of restaurants. Each has its own menu, stock and shop staff, but money, directors, office teams, branches, farm and investments are shared.','Tập đoàn có thể điều hành nhiều loại hình nhà hàng. Mỗi nơi có menu, kho hàng và nhân viên riêng, nhưng dùng chung tiền, ban giám đốc, văn phòng, chi nhánh, nông trại và đầu tư.')}</p>`+
+  Object.entries(BIZ).map(([id,b])=>{const own=bizOwned().includes(id),d=(S.bizData||{})[id],crew=id===cur?crewAt('main').length:S.staff.filter(x=>x.loc==='main@'+id).length;
+    return `<div class="bizcard notr ${id===cur?'cur':''}" data-b="${id}"><div class="bizsign"><b>${b.s1}</b><small>${b.s2}</small></div>
+    <div class="bizinfo"><b>${b.e} ${L(b.n,b.vi)}</b><br><small>${own?`${L('Shop staff','Nhân viên tiệm')}: ${crew} · ⭐ ${(id===cur?S.rating:(d?d.rating:4)).toFixed(1)}${b.rent?` · ${L('rent','thuê')} ${fmt(b.rent)}/${L('day','ngày')}`:''}`:L(`Open for ${fmt(b.cost)} · rent ${fmt(b.rent)}/day`,`Mở với giá ${fmt(b.cost)} · thuê ${fmt(b.rent)}/ngày`)}</small></div>
+    ${id===cur?`<span class="bizbadge">✓ ${L('Running now','Đang điều hành')}</span>`:own?`<button class="mbuy" onclick="switchBiz('${id}')"><b>${L('Go','Chuyển')} →</b><span>${L('run today','điều hành')}</span></button>`:`<button class="mbuy" ${S.money<b.cost?'disabled':''} onclick="buyBiz('${id}')"><b>${fmt(b.cost)}</b><span>${L('Open','Mở')}</span></button>`}</div>`}).join('')+
+  `<p class="note notr">${L('Tip: businesses you are not running today still open with the staff assigned to them (see the Staff tab). Hire a shop team for each one.','Mẹo: những nơi bạn không trực tiếp điều hành hôm nay vẫn mở cửa với nhân viên được phân công (xem tab Nhân viên). Hãy thuê đội riêng cho mỗi nơi.')}</p>`}
+
+// ================= EVENTS: food trucks, pop-ups, event catering =================
+const SPOTS={office:{e:'🏢',n:'Office district',vi:'Khu văn phòng'},park:{e:'🌳',n:'City park',vi:'Công viên'},beach:{e:'🏖️',n:'Beach',vi:'Bãi biển'},
+  stadium:{e:'🏟️',n:'Stadium',vi:'Sân vận động'},college:{e:'🎓',n:'College campus',vi:'Trường đại học'},brewery:{e:'🍻',n:'Brewery lot',vi:'Bãi xe nhà máy bia'}};
+function spotMult(k){const wk=S.day%7===0||S.day%7===6,sea=season(S.day)[0],w=S.wx.t;let m=1;
+  if(k==='office')m=wk?.4:1.3;if(k==='park')m=(wk?1.5:.8)*(sea==='Summer'?1.3:sea==='Winter'?.5:1);if(k==='beach')m=sea==='Summer'?2:sea==='Winter'?.15:.7;
+  if(k==='stadium')m=(S.day%4===0?2.4:.5);if(k==='college')m=(wk?.5:1.3)*(sea==='Summer'?.3:1);if(k==='brewery')m=wk?1.6:.7;
+  if(['rain','storm','snow'].includes(w))m*=k==='office'||k==='college'?.8:.4;return m}
+const POPUPS=[
+  {id:'farmers',e:'🥕',n:'Farmers market',vi:'Chợ nông sản',fee:150,days:1,base:90,when:()=>S.day%7===6},
+  {id:'night',e:'🏮',n:'Night market',vi:'Chợ đêm',fee:400,days:2,base:130,when:()=>season(S.day)[0]!=='Winter'},
+  {id:'campus',e:'🎓',n:'College campus week',vi:'Tuần lễ ở trường đại học',fee:600,days:3,base:110,when:()=>season(S.day)[0]!=='Summer'},
+  {id:'fest',e:'🎸',n:'Summer music festival',vi:'Lễ hội âm nhạc mùa hè',fee:2500,days:2,base:420,when:()=>season(S.day)[0]==='Summer'},
+  {id:'tet',e:'🧧',n:'Lunar New Year fair',vi:'Hội chợ Tết',fee:1500,days:3,base:300,when:()=>{const t=dateOf(S.day);return t.getMonth()===1&&t.getDate()>=5&&t.getDate()<=19}},
+  {id:'xmas',e:'🎄',n:'Christmas market',vi:'Chợ Giáng sinh',fee:1800,days:3,base:320,when:()=>dateOf(S.day).getMonth()===11},
+  {id:'mall',e:'🛍️',n:'Mall kiosk (1 week)',vi:'Ki-ốt trung tâm thương mại (1 tuần)',fee:1200,days:7,base:80,when:()=>true},
+];
+const BIGEV=[{e:'💒',n:'Wedding reception',vi:'Tiệc cưới',g:[120,250],pp:32},{e:'🏢',n:'Corporate conference',vi:'Hội nghị công ty',g:[80,300],pp:22},{e:'🎓',n:'Graduation party',vi:'Tiệc tốt nghiệp',g:[50,120],pp:18},
+  {e:'🎬',n:'Film set catering',vi:'Phục vụ đoàn làm phim',g:[40,90],pp:28},{e:'🏥',n:'Hospital staff appreciation',vi:'Tri ân nhân viên bệnh viện',g:[100,200],pp:15},{e:'⛪',n:'Community festival',vi:'Lễ hội cộng đồng',g:[150,400],pp:12}];
+function initEv(){S.ev=S.ev||{trucks:[],pop:[],offers:[],booked:[],stats:{rev:0}};return S.ev}
+function buyTruck(){const E=initEv(),c=30000+E.trucks.length*5000;if(S.money<c||E.trucks.length>=10)return;S.money-=c;E.trucks.push({id:Date.now(),spot:'office',auto:true,no:E.trucks.length+1});save();sfx.coin();funPop('🚚',L('Food truck #'+E.trucks.length+' is on the road!','Xe food truck số '+E.trucks.length+' đã lăn bánh!'),0);manage('events')}
+function setSpot(id,k){const t=initEv().trucks.find(x=>x.id===id);if(t){t.spot=k;t.auto=k==='auto';if(t.auto)t.spot='office'}save();manage('events')}
+function bookPop(id){const E=initEv(),p=POPUPS.find(x=>x.id===id);if(S.money<p.fee||E.pop.some(x=>x.id===id))return;S.money-=p.fee;E.pop.push({id,left:p.days});save();sfx.coin();toast(p.e+' '+L('Booked: ','Đã đặt: ')+L(p.n,p.vi));manage('events')}
+function acceptEv(i){const E=initEv(),o=E.offers[i];if(!o)return;E.offers.splice(i,1);E.booked.push(o);save();sfx.coin();toast(o.e+' '+L('Event booked for ','Đã nhận sự kiện ngày ')+dateStr(o.day));manage('events')}
+function eventsDay(){const E=initEv();let rev=0,cost=0;const ap=cafeAvgP(),rt=S.rating/5;
+  E.trucks.forEach(t=>{if(t.auto){let best='office',bm=0;Object.keys(SPOTS).forEach(k=>{const m=spotMult(k);if(m>bm){bm=m;best=k}});t.spot=best}
+    const n=Math.round(55*spotMult(t.spot)*rt*(1+S.buzz)*(.8+Math.random()*.4)),r=n*ap*.95,c=110+45+r*.3;rev+=r;cost+=c;t.last={n,net:r-c}});
+  E.pop=E.pop.filter(x=>{const p=POPUPS.find(y=>y.id===x.id);const n=Math.round(p.base*rt*(1+S.buzz)*(.8+Math.random()*.4)),r=n*ap,c=r*.35+60;rev+=r;cost+=c;S.buzz=Math.min(.5,S.buzz+.01);x.left--;
+    if(x.left<=0)R.news.push(`${p.e} ${L(p.n,p.vi)}: ${L('finished','kết thúc')}`);return x.left>0});
+  E.booked=E.booked.filter(o=>{if(o.day!==S.day)return true;const ok=E.trucks.length>0||S.upg.van>0,pay=o.pay;
+    if(ok){rev+=pay;cost+=pay*.38;R.news.push(`${o.e} ${L(o.n,o.vi)} (${o.guests} ${L('guests','khách')}) — ${L('served! +','đã phục vụ! +')}${fmt(pay*.62)}`);S.buzz=Math.min(.5,S.buzz+.02)}
+    else{S.rating=Math.max(1,S.rating-.2);R.news.push(`${o.e} ${L(o.n,o.vi)}: ${L('no truck or catering van to serve it! Client upset','không có xe food truck hay xe catering để phục vụ! Khách hàng rất không hài lòng')}`)}return false});
+  if(S.day>=10&&Math.random()<.25&&E.offers.length<3){const b=pick(BIGEV),g=Math.round(b.g[0]+Math.random()*(b.g[1]-b.g[0]));E.offers.push({e:b.e,n:b.n,vi:b.vi,guests:g,pay:Math.round(g*b.pp),day:S.day+3+Math.floor(Math.random()*6)})}
+  E.offers=E.offers.filter(o=>o.day>S.day+1);
+  S.money+=rev-cost;E.stats.rev+=rev;R.evRev=rev;R.evCost=cost}
+let EVT='truck';
+function eventsBody(){const E=initEv();let b=`<div class="tabs sm notr">${[['truck','🚚 '+L('Food trucks','Food truck')],['pop','🎪 Pop-up'],['cat','💒 '+L('Events','Sự kiện')]].map(([k,n])=>`<button class="${EVT===k?'on':''}" onclick="EVT='${k}';manage()">${n}</button>`).join('')}</div>`;
+  if(EVT==='truck'){const c=30000+E.trucks.length*5000;
+    b+=`<p class="note notr">${L('Food trucks sell your café menu around town. Each costs about $155/day (crew + fuel & permits) plus ingredients. Pick a spot, or let the truck choose the best one each day.','Food truck bán menu cà phê khắp thành phố. Mỗi xe tốn khoảng $155/ngày (nhân viên + xăng & giấy phép) cộng nguyên liệu. Chọn điểm đỗ, hoặc để xe tự chọn điểm tốt nhất mỗi ngày.')}</p>`+
+    E.trucks.map(t=>`<div class="upg notr"><span class="fc">🚚</span><div><b>${L('Truck','Xe')} #${t.no}</b> <small>${SPOTS[t.spot].e} ${L(SPOTS[t.spot].n,SPOTS[t.spot].vi)}${t.last?` · ${L('last','hôm qua')}: ${t.last.n} ${L('customers','khách')}, <b class="${t.last.net>=0?'upt':'dnt'}">${t.last.net>=0?'+':'−'}${fmt(Math.abs(t.last.net))}</b>`:''}</small><br>
+      <select onchange="setSpot(${t.id},this.value)"><option value="auto" ${t.auto?'selected':''}>🤖 ${L('Auto: best spot','Tự chọn điểm tốt nhất')}</option>${Object.entries(SPOTS).map(([k,v])=>`<option value="${k}" ${!t.auto&&t.spot===k?'selected':''}>${v.e} ${L(v.n,v.vi)} (×${spotMult(k).toFixed(1)} ${L('today','hôm nay')})</option>`).join('')}</select></div></div>`).join('')+
+    (E.trucks.length<10?`<button class="flyall notr" ${S.money<c?'disabled':''} onclick="buyTruck()">🚚 ${L('Buy a food truck','Mua xe food truck')} · ${fmt(c)}</button>`:'')}
+  if(EVT==='pop'){b+=`<p class="note notr">${L('Pop-ups are short events with lots of customers and a buzz boost. Some only happen in certain seasons or holidays.','Pop-up là sự kiện ngắn ngày, đông khách và giúp tăng độ nổi tiếng. Một số chỉ có theo mùa hoặc dịp lễ.')}</p>`+
+    POPUPS.map(p=>{const on=E.pop.find(x=>x.id===p.id),av=p.when();return `<div class="upg notr"><span class="fc">${p.e}</span><div><b>${L(p.n,p.vi)}</b><br><small>${p.days} ${L('day(s)','ngày')} · ${L('about','khoảng')} ${p.base} ${L('customers a day','khách mỗi ngày')}${on?` · <b class="upt">${L('running','đang diễn ra')}, ${on.left} ${L('left','ngày còn lại')}</b>`:!av?` · ${L('not available now','hiện chưa có')}`:''}</small></div>${on?'':`<button ${!av||S.money<p.fee?'disabled':''} onclick="bookPop('${p.id}')">${fmt(p.fee)}</button>`}</div>`}).join('')}
+  if(EVT==='cat'){b+=`<p class="note notr">${L('Big events book ahead. You need at least one food truck or the catering van to serve them. Food costs about 38% of the pay.','Sự kiện lớn đặt trước. Cần ít nhất 1 xe food truck hoặc xe catering để phục vụ. Chi phí đồ ăn khoảng 38% tiền nhận.')}</p>`+
+    (E.booked.length?`<p style="font-weight:800;margin:8px 0 4px" class="notr">📅 ${L('Booked','Đã nhận')}</p>`+E.booked.map(o=>`<div class="stat notr"><span>${o.e} ${L(o.n,o.vi)} · ${o.guests} ${L('guests','khách')}<br><small>${dateStr(o.day)}</small></span><b>${fmt(o.pay)}</b></div>`).join(''):'')+
+    (E.offers.length?`<p style="font-weight:800;margin:8px 0 4px" class="notr">📨 ${L('Requests','Yêu cầu mới')}</p>`+E.offers.map((o,i)=>`<div class="upg notr"><span class="fc">${o.e}</span><div><b>${L(o.n,o.vi)}</b><br><small>${o.guests} ${L('guests','khách')} · ${dateStr(o.day)} · ${L('pays','trả')} ${fmt(o.pay)}</small></div><button onclick="acceptEv(${i})">${L('Accept','Nhận')}</button></div>`).join(''):`<p class="note notr">${L('No requests right now. They come in every few days after day 10.','Chưa có yêu cầu. Sau ngày 10, cứ vài ngày sẽ có yêu cầu mới.')}</p>`)}
+  return b}
+
+// ================= CORPORATE: area leaders & multinational departments =================
+const brRegion=id=>{const st=(LOC[id]&&LOC[id].st)||'MA';return (STINFO[st]||['','ne'])[1]};
+const brCountry=id=>{const r=brRegion(id);return r==='can'?'can':r==='mex'?'mex':'usa'};
+const LEADERS=[
+  ...BRREG.filter(r=>!['can','mex'].includes(r[0])).map(r=>({id:'r:'+r[0],lvl:'region',e:'🧭',n:`Regional Director — ${r[2]}`,vi:`Giám đốc khu vực — ${r[3]}`,area:r[0],need:2,fee:3000,sal:150})),
+  {id:'c:usa',lvl:'country',e:'🇺🇸',n:'Country Director — USA',vi:'Giám đốc quốc gia — Mỹ',area:'usa',need:5,fee:15000,sal:400},
+  {id:'c:can',lvl:'country',e:'🇨🇦',n:'Country Director — Canada',vi:'Giám đốc quốc gia — Canada',area:'can',need:3,fee:15000,sal:400},
+  {id:'c:mex',lvl:'country',e:'🇲🇽',n:'Country Director — Mexico',vi:'Giám đốc quốc gia — Mexico',area:'mex',need:3,fee:15000,sal:400},
+  {id:'na',lvl:'continent',e:'🌎',n:'President — North America',vi:'Chủ tịch khu vực Bắc Mỹ',area:'na',need:20,fee:100000,sal:1500},
+];
+const leadCount=L0=>L0.lvl==='region'?S.branches.filter(id=>brRegion(id)===L0.area).length:L0.lvl==='country'?S.branches.filter(id=>brCountry(id)===L0.area).length:S.branches.length;
+const leadReady=L0=>leadCount(L0)>=L0.need&&(L0.lvl!=='continent'||new Set(S.branches.map(brCountry)).size>=2);
+const CDEPTS=[
+  {id:'legal',e:'⚖️',n:'Legal & compliance',vi:'Pháp chế & tuân thủ',fee:5000,sal:120,d:['Fines cut by 50% per level','Giảm 50% tiền phạt mỗi cấp']},
+  {id:'supply',e:'🚛',n:'Supply chain & procurement',vi:'Chuỗi cung ứng & thu mua',fee:8000,sal:150,d:['Ingredients 4% cheaper per level','Nguyên liệu rẻ hơn 4% mỗi cấp']},
+  {id:'facil',e:'🏗️',n:'Real estate & facilities',vi:'Bất động sản & cơ sở vật chất',fee:8000,sal:140,d:['Rent 5% lower and accident damage 25% lower per level','Giảm 5% tiền thuê và 25% thiệt hại sự cố mỗi cấp']},
+  {id:'qa',e:'✅',n:'Quality assurance',vi:'Đảm bảo chất lượng',fee:6000,sal:120,d:['Staff mistakes 20% fewer per level, ratings recover faster','Giảm 20% nhân viên làm sai mỗi cấp, đánh giá hồi phục nhanh hơn']},
+  {id:'comms',e:'📰',n:'Corporate communications',vi:'Truyền thông tập đoàn',fee:6000,sal:120,d:['Buzz never drops below +3% per level','Độ nổi tiếng không dưới +3% mỗi cấp']},
+  {id:'audit',e:'🔍',n:'Internal audit',vi:'Kiểm toán nội bộ',fee:5000,sal:100,d:['Theft and mishaps 30% smaller per level','Giảm 30% mất mát do trộm và sự cố mỗi cấp']},
+  {id:'intltax',e:'🌐',n:'International tax',vi:'Thuế quốc tế',fee:10000,sal:160,d:['Income tax 4% lower per level (needs a branch outside the USA)','Giảm 4% thuế thu nhập mỗi cấp (cần có chi nhánh ngoài Mỹ)']},
+  {id:'hrglobal',e:'🌍',n:'Global HR & training',vi:'Nhân sự toàn cầu & đào tạo',fee:7000,sal:130,d:['Staff level up faster and morale drops 10% slower per level','Nhân viên lên cấp nhanh hơn và tinh thần giảm chậm hơn 10% mỗi cấp']},
+];
+function initCorp(){S.corp=S.corp||{lead:{},dept:{}};return S.corp}
+const dl=id=>(initCorp().dept[id]||0);
+function hireLead(id){const L0=LEADERS.find(x=>x.id===id),C=initCorp();if(!L0||C.lead[id]||!leadReady(L0)||S.money<L0.fee)return;S.money-=L0.fee;C.lead[id]=1;save();sfx.coin();toast(L0.e+' '+L('Welcome aboard!','Chào mừng gia nhập!'));manage('corp')}
+function fireLead(id){const x=LEADERS.find(y=>y.id===id);if(!confirm(L(`Let them go? Severance ${fmt(x.sal*45)} paid over time.`,`Cho nghỉ? Trợ cấp thôi việc ${fmt(x.sal*45)} trả dần.`)))return;delete initCorp().lead[id];addSev(x.e+' '+L(x.n,x.vi),x.sal*45);save();manage('corp')}
+function downDept(id){const C=initCorp(),D=CDEPTS.find(x=>x.id===id),lv=C.dept[id]||0;if(!lv)return;if(!confirm(L('Close one level of this department? Severance applies.','Giảm một cấp bộ phận này? Sẽ phải trả trợ cấp thôi việc.')))return;C.dept[id]=lv-1;addSev(D.e+' '+L(D.n,D.vi),D.sal*40);save();manage('corp')}
+function upDept(id){const D=CDEPTS.find(x=>x.id===id),C=initCorp(),lv=C.dept[id]||0,c=Math.round(D.fee*Math.pow(2.2,lv));if(lv>=3||S.money<c)return;S.money-=c;C.dept[id]=lv+1;save();sfx.coin();manage('corp')}
+// Bonus for one branch from its regional / country / continent leaders
+function leadBonus(id){const C=initCorp();let cap=0,cost=0,rate=0;if(C.lead['r:'+brRegion(id)]){cap+=.08;rate+=.05}if(C.lead['c:'+brCountry(id)]){cap+=.05;cost+=.03}if(C.lead.na){cap+=.05;cost+=.02}return {cap,cost,rate}}
+function corpPay(){const C=initCorp();let t=0;LEADERS.forEach(x=>{if(C.lead[x.id])t+=x.sal});CDEPTS.forEach(x=>{t+=x.sal*(C.dept[x.id]||0)});return t}
+function corpBody(){const C=initCorp();let b=`<p class="note notr">${L('Run a multinational: leaders for each region, country and the continent make branches there stronger, and corporate departments make the whole group run better.','Điều hành tập đoàn đa quốc gia: lãnh đạo từng khu vực, quốc gia và châu lục giúp chi nhánh ở đó mạnh hơn, các bộ phận tập đoàn giúp cả hệ thống vận hành tốt hơn.')}</p>
+  <div class="finsum notr"><div><small>${L('Corporate payroll','Lương khối tập đoàn')}</small><b>${fmt(corpPay())}/${L('day','ngày')}</b></div><div><small>${L('Branches','Chi nhánh')}</small><b>${S.branches.length}</b></div></div>
+  <p style="font-weight:800;margin:10px 0 4px" class="notr">🧭 ${L('Area leadership','Lãnh đạo theo khu vực')}</p>
+  <p class="note notr">${L('Regional: +8% capacity and better ratings. Country: +5% capacity, 3% lower costs. Continent president: +5% capacity and 2% lower costs everywhere.','Khu vực: +8% sức phục vụ và đánh giá tốt hơn. Quốc gia: +5% sức phục vụ, giảm 3% chi phí. Chủ tịch châu lục: +5% sức phục vụ và giảm 2% chi phí toàn hệ thống.')}</p>`+
+  ['continent','country','region'].map(lv=>LEADERS.filter(x=>x.lvl===lv).map(x=>{const on=C.lead[x.id],cnt=leadCount(x),ok=leadReady(x);
+    return `<div class="upg notr"><span class="fc">${x.e}</span><div><b>${L(x.n,x.vi)}</b><br><small>${cnt}/${x.need} ${L('branches','chi nhánh')}${x.lvl==='continent'?' · '+L('2+ countries','từ 2 quốc gia'):''} · ${fmt(x.sal)}/${L('day','ngày')}</small></div>${on?`<button class="fire" onclick="fireLead('${x.id}')">${L('Let go','Cho nghỉ')}</button>`:`<button ${!ok||S.money<x.fee?'disabled':''} onclick="hireLead('${x.id}')">${ok?fmt(x.fee):'🔒'}</button>`}</div>`}).join('')).join('')+
+  `<p style="font-weight:800;margin:14px 0 4px" class="notr">🏛️ ${L('Corporate departments','Các bộ phận tập đoàn')}</p>`+
+  CDEPTS.map(x=>{const lv=C.dept[x.id]||0,c=Math.round(x.fee*Math.pow(2.2,lv));return `<div class="upg notr"><span class="fc">${x.e}</span><div><b>${L(x.n,x.vi)}</b> <small>${L('Level','Cấp')} ${lv}/3</small><br><small>${L(x.d[0],x.d[1])} · ${fmt(x.sal)}/${L('day per level','ngày mỗi cấp')}</small></div><div class="acts">${lv>=3?`<small style="font-weight:800;color:#2E9B6F">✓</small>`:`<button ${S.money<c?'disabled':''} onclick="upDept('${x.id}')">${fmt(c)}</button>`}${lv?`<button class="fire" onclick="downDept('${x.id}')">−1</button>`:''}</div></div>`}).join('')+sevCard();return b}
 const GATES={
+  corp:{day:30,profit:150000,rating:4.2,n:'Corporate headquarters'},
+  events:{day:12,profit:20000,rating:4.0,n:'Food trucks & events'},
+  group:{day:25,profit:80000,rating:4.2,n:'Group businesses'},
   leisure:{day:20,profit:50000,rating:4.0,n:'Leisure & lifestyle'},
   invest:{day:8,profit:3000,rating:3.8,n:'Investing'},
   farm:{day:12,profit:8000,rating:4.0,n:'Coffee farm'},
@@ -3310,7 +3562,7 @@ function copyNotebook(){const t=[...S.lab.found.map(id=>DISCO.find(x=>x.id===id)
   try{navigator.clipboard.writeText('Saigonesee new item ideas\n\n'+t).then(()=>toast('📋 Copied! Paste it into Notes or a message'))}catch(e){toast('Could not copy on this device')}}
 function research(id){const r=REC.find(x=>x.id===id);if(S.money<rdCost(r)||S.rd.length>=1+S.upg.lab)return;
   S.money-=rdCost(r);S.rd.push({id,left:1});save();sfx.coin();toast('Researching '+r.n);manage()}
-function flyersAll(){const k=CAMP.find(z=>z.id==='flyer');['main',...S.branches].filter(l=>!campOn('flyer',l)).forEach(l=>{if(S.money>=campCost(k)){S.money-=campCost(k);S.camps.push({id:'flyer',left:k.days,loc:l})}});save();sfx.coin();toast('📄 Flyers are out everywhere');manage()}
+function flyersAll(){const k=CAMP.find(z=>z.id==='flyer');allLocs().filter(l=>!campOn('flyer',l)).forEach(l=>{if(S.money>=campCost(k)){S.money-=campCost(k);S.camps.push({id:'flyer',left:k.days,loc:l})}});save();sfx.coin();toast('📄 Flyers are out everywhere');manage()}
 function expandBr(id){const b=LOC[id],lv=S.brLvl[id]||0,c=Math.round(b.cost*.6*(lv+1));if(S.money<c||lv>=10)return;S.money-=c;S.brLvl[id]=lv+1;save();sfx.coin();toast(b.n+' expanded: more staff room and traffic');manage()}
 function campCost(k){return Math.round(k.cost*Math.max(.6,1-.05*dp('mkt')))}
 function runCamp(id,l){const k0=CAMP.find(z=>z.id===id),k={...k0,cost:campCost(k0)};if(S.money<k.cost||campOn(id,k.local?l:null))return;
@@ -3332,7 +3584,7 @@ function complianceCard(){const C=compliance(),ok=!C.loc.length&&!C.mgBad&&!C.lo
   <div class="stat"><span>👑 ${L('Balanced managers (4+)','Quản lý cân bằng (từ 4 người)')}</span><span>${C.mgBad?`<b class="dnt">✗</b>`:'✓'}</span></div>
   <p class="note">${L('Each location with 6+ staff needs at least 30% women and 30% men. Breaking a rule means a fine every night. Minimum wage rises 5% every January 1.','Mỗi tiệm từ 6 nhân viên cần ít nhất 30% nữ và 30% nam. Vi phạm sẽ bị phạt mỗi đêm. Lương tối thiểu tăng 5% mỗi ngày 1/1.')}</p></details>`}
 function staffRow(x){
-  const opts=['main',...S.branches].map(l=>`<option value="${l}" ${l===x.loc?'selected':''}>${locName(l)}</option>`).join('');
+  const opts=allLocs().map(l=>`<option value="${l}" ${l===x.loc?'selected':''}>${locName(l)}</option>`).join('');
   const k='stf:'+x.id;
   return `<details class="stf" data-key="${k}"${OPEN.has(k)?' open':''}><summary><span class="fc">${x.face}</span><span class="si"><b>${x.name}${x.mgr?' 👑':''} <small class="gtag">${genderOf(x)==='f'?'♀':'♂'}</small></b> <small>Lv ${lvl(x)}${x.loc==='main'?' · '+POS[x.pos].e+' '+POS[x.pos].n:''}</small><small>${skillText(x)}</small><small>${fmt(x.wage)}/day · morale ${moFace(x.mo)} ${Math.round(x.mo)}</small></span><span class="chev">▾</span></summary>
   <div class="sd"><div class="arow" style="padding-left:0"><button onclick="raise(${x.id})">Raise +${fmt(Math.round(x.wage*.1))}</button><button ${S.money<25?'disabled':''} onclick="bonus(${x.id})">Bonus $25</button>${!x.mgr?`<button onclick="promote(${x.id})">${L('Make manager','Làm quản lý')}</button>`:''}${S.branches.length?`<select aria-label="Location" onchange="moveStaff(${x.id},this.value)">${opts}</select>`:''}<button onclick="fire(${x.id})">Let go</button></div>${x.loc==='main'?posBtns(x):''}</div></details>`;
@@ -3360,7 +3612,7 @@ function runBoard(){
   if(boardOn('hr','hire')){
     // Work out how many people each location needs, neediest first
     const perStaff=10;
-    const needs=['main',...S.branches].map(l=>{const have=crewAt(l).length,c=cap(l);let target=c;
+    const needs=allLocs().map(l=>{const have=crewAt(l).length,c=cap(l);let target=c;
       if(l!=='main'){const st=S.brStats[l];target=Math.min(c,Math.max(2,st?Math.ceil(st.dem/perStaff):2))}
       const turned=l==='main'?0:(S.brStats[l]?S.brStats[l].lost:0);
       return {l,want:Math.max(0,target-have),prio:(have===0?1000:0)+turned}}).filter(x=>x.want>0).sort((a,b)=>b.prio-a.prio);
@@ -3384,7 +3636,7 @@ function runBoard(){
   if(boardOn('hr','sched')){const c=crewAt('main');let ch=0;c.forEach(x=>{const p=Object.keys(x.skills).length>1?'flex':Object.keys(x.skills)[0];if(x.pos!==p){x.pos=p;ch++}});if(ch)log.push('👩‍💼 Updated '+ch+' staff positions at Weymouth')}
   // Finance
   if(boardOn('cfo','refi')){const q=S.loans.filter(l=>l.kind==='quick');if(q.length){const owe=q.reduce((a,l)=>a+payoff(l),0);const o=LOANS.find(o=>o.kind==='bank'&&!loanLock(o)&&o.amt>=owe);
-    if(o&&S.loans.length-q.length<3){S.loans=S.loans.filter(l=>l.kind!=='quick');const r=loanRate(o);S.money+=o.amt-owe;S.loans.push({amt:o.amt,kind:'bank',days:o.days,left:o.days,pay:Math.round(o.amt*(1+r*o.days)/o.days*100)/100});log.push(`🧑‍💼 Paid off quick-cash loans with a cheaper ${fmt(o.amt)} bank loan`)}}}
+    if(o&&S.loans.length-q.length<3){S.loans=S.loans.filter(l=>l.kind!=='quick');const r=loanRate(o);S.money+=o.amt-owe;S.loanHist=S.loanHist||{};(S.loanHist[o.id]=S.loanHist[o.id]||[]).push(S.day);S.loans.push({id:o.id,amt:o.amt,kind:'bank',days:o.days,left:o.days,pay:Math.round(o.amt*(1+r*o.days)/o.days*100)/100});log.push(`🧑‍💼 Paid off quick-cash loans with a cheaper ${fmt(o.amt)} bank loan`)}}}
   if(boardOn('cfo','loans'))S.loans.slice().forEach(l=>{const c=payoff(l);if(spendable()>c){S.money-=c;S.loans=S.loans.filter(y=>y!==l);log.push('🧑‍💼 Paid off a '+fmt(l.amt)+' loan early')}});
   if(boardOn('cfo','prices')&&R.balked>=3){let n=0;unlocked().forEach(r=>{if(pRatio(r)>1.15){S.prices[r.id]=Math.round((price(r)-.25)*4)/4;n++}});if(n)log.push('🧑‍💼 Lowered prices on '+n+' items after customers balked')}
   if(boardOn('cfo','buyback')&&S.ipo.sold>0){const v=valuation();if(spendable()>v*.105*2){S.money-=v*.105;S.ipo.sold=Math.max(0,Math.round((S.ipo.sold-.1)*100)/100);log.push('🧑‍💼 Bought back 10% of company shares')}}
@@ -3410,7 +3662,13 @@ function runBoard(){
     while(S.rd.length<1+S.upg.lab&&avail.length&&spendable()>rdCost(avail[0])){const r=avail.shift();S.money-=rdCost(r);S.rd.push({id:r.id,left:1});log.push('👨‍🍳 Started researching '+r.n)}}
 }
 function hireExec(k){const e=EXECS[k];if(S.money<e.fee||!gateOk('board'))return;S.money-=e.fee;S.board[k]={on:true,opts:Object.fromEntries(Object.keys(e.opts).map(o=>[o,1]))};save();sfx.coin();toast(e.e+' '+e.n+' joined the board');if(k==='hr')S.cands=S.cands.concat(genCands().slice(0,3));manage()}
-function fireExec(k){S.board[k].on=false;save();toast(EXECS[k].n+' left the board');manage()}
+// Severance: letting senior people go is always allowed, but you owe them a payout spread over 6 months to 3 years
+function sevTerm(v){return v<5000?180:v<25000?365:v<100000?730:1095}
+function addSev(name,total){total=Math.round(total);S.sev=S.sev||[];const d=sevTerm(total);S.sev.push({n:name,total,left:total,daily:Math.round(total/d*100)/100,days:d});
+  toast('📝 '+L(`Severance ${fmt(total)} paid over ${Math.round(d/30)} months`,`Trợ cấp thôi việc ${fmt(total)}, trả trong ${Math.round(d/30)} tháng`))}
+function sevDay(){let t=0;(S.sev||[]).forEach(x=>{const p=Math.min(x.daily,x.left);x.left=Math.round((x.left-p)*100)/100;t+=p});S.sev=(S.sev||[]).filter(x=>x.left>.01);S.money-=t;R.sevPay=t}
+function sevCard(){const V=S.sev||[];if(!V.length)return '';return `<details class="srcgrp notr" data-key="sev"${OPEN.has('sev')?' open':''}><summary>📝 ${L('Severance owed','Trợ cấp thôi việc còn nợ')} <small>(${fmt(V.reduce((a,x)=>a+x.left,0))})</small></summary>${V.map(x=>`<div class="stat"><span>${x.n}<br><small>${fmt(x.daily)}/${L('day','ngày')}</small></span><span>${fmt(x.left)} / ${fmt(x.total)}</span></div>`).join('')}</details>`}
+function fireExec(k){if(!confirm(L(`Let ${EXECS[k].n} go? Severance of ${fmt(EXECS[k].sal*60)} will be paid over time.`,`Cho ${EXECS[k].n} nghỉ? Phải trả trợ cấp thôi việc ${fmt(EXECS[k].sal*60)} theo từng ngày.`)))return;S.board[k].on=false;addSev(EXECS[k].e+' '+EXECS[k].n,EXECS[k].sal*60);save();toast(EXECS[k].n+' left the board');manage()}
 function rehireExec(k){const e=EXECS[k];if(S.money<e.fee/2)return;S.money-=e.fee/2;S.board[k].on=true;save();manage()}
 function toggleOpt(k,o){const b=S.board[k];b.opts[o]=b.opts[o]?0:1;save();manage()}
 function hire(i){const c=S.cands[i];if(!c||crewAt(ML).length>=cap(ML))return;
@@ -3578,9 +3836,10 @@ VI_FN.push([/^(.+) ×(\d+)$/,(m,a,n)=>{const e=a.match(/^(\S+) (.+)$/);const nm=
 VI_FN.push([/^(\S+) (.+)$/,(m,e,n)=>VI_EXACT.has(n)&&!/^[A-Za-z]/.test(e)?e+' '+VI_EXACT.get(n):m]);
 VI_FN.unshift([/^(.*)(☕ Bar|🥖 Kitchen) ([\d.]+)s(.*)$/,(m)=>m.replace(/☕ Bar/g,'☕ Quầy bar').replace(/🥖 Kitchen/g,'🥖 Bếp')]);
 VI_RX.unshift([/^📓 Recipe notebook \((\d+)\)$/,"📓 Sổ công thức ($1)"]);
-VI_EXACT.set("📒 Books","📒 Sổ sách");VI_EXACT.set("🎰 Leisure","🎰 Giải trí");VI_EXACT.set("🥇 Gold","🥇 Vàng");VI_EXACT.set("⭐ Reviews","⭐ Đánh giá");
+VI_EXACT.set("📒 Books","📒 Sổ sách");VI_EXACT.set("🎰 Leisure","🎰 Giải trí");VI_EXACT.set("🏢 Group","🏢 Tập đoàn");VI_EXACT.set("🎪 Events","🎪 Sự kiện");VI_EXACT.set("🌎 Corporate","🌎 Đa quốc gia");VI_EXACT.set("🥇 Gold","🥇 Vàng");VI_EXACT.set("⭐ Reviews","⭐ Đánh giá");
 Object.entries({"Fresh food keeps up to 4 days (5 with a vacuum sealer). Level 1: baguettes and milk. Level 2: all fresh items": "Đồ tươi giữ được tối đa 4 ngày (5 ngày nếu có máy hút chân không). Cấp 1: bánh mì và sữa. Cấp 2: mọi đồ tươi", "All fresh food keeps the full 5 days": "Mọi đồ tươi giữ đủ 5 ngày", "Chilled food keeps 5 days instead of 4": "Đồ trong tủ lạnh giữ 5 ngày thay vì 4", "Room for 1 more staff member at Weymouth (up to 24)": "Thêm 1 chỗ làm ở Weymouth (tối đa 24 người)", "Cut items that don't sell and research replacements": "Cắt món bán ế và nghiên cứu món thay thế", "Build a seasonal menu (feature items that fit the season and holidays)": "Làm menu theo mùa (đẩy món hợp mùa và ngày lễ)"}).forEach(([k,v])=>VI_EXACT.set(k,v));
 Object.entries({"Follow labor rules: raise anyone under minimum wage and hire to fix gender balance": "Tuân thủ luật lao động: tăng lương người dưới mức tối thiểu và tuyển để cân bằng giới tính", "Keep one backup person at Weymouth for sick days": "Giữ 1 người dự phòng ở Weymouth cho ngày nghỉ ốm", "Buy fresh food only for what fits in the fridge (less waste)": "Chỉ mua đồ tươi vừa đủ theo tủ lạnh (bớt lãng phí)", "Rush-order ingredients during the day when something runs out": "Tự gọi hàng gấp trong ngày khi hết nguyên liệu", "Keep service contracts in place (pest control)": "Duy trì hợp đồng dịch vụ (diệt côn trùng)", "Replace quick-cash loans with cheaper bank loans when possible": "Đổi vay nóng sang vay ngân hàng rẻ hơn khi có thể", "🐀 Pest control contract": "🐀 Hợp đồng diệt côn trùng & chuột", "No more rats or roaches. Costs $3 per location per day": "Hết chuột và gián. Tốn $3 mỗi tiệm mỗi ngày", "Losses from accidents, damage and theft are cut in half": "Thiệt hại do sự cố, hư hỏng và trộm giảm một nửa"}).forEach(([k,v])=>VI_EXACT.set(k,v));
+Object.entries({"Phở broth": "Nước dùng phở", "Rice noodles (bánh phở)": "Bánh phở", "Rare beef slices": "Bò tái", "Beef brisket": "Nạm bò", "Poached chicken": "Gà luộc", "Bean sprouts & herbs": "Giá & rau thơm", "Lime & chili": "Chanh & ớt", "Bún bò Huế broth": "Nước lèo bún bò Huế", "Thick vermicelli": "Bún sợi to", "Broken rice (cơm tấm)": "Cơm tấm", "Grilled pork chop": "Sườn nướng", "Egg meatloaf (chả trứng)": "Chả trứng", "Sweet fish sauce": "Nước mắm chua ngọt", "Iced jasmine tea (trà đá)": "Trà đá", "Three-color dessert mix": "Chè ba màu", "Tom yum broth": "Nước lẩu Thái", "Mushroom broth": "Nước lẩu nấm", "Sukiyaki broth": "Nước lẩu Sukiyaki", "Beef platter": "Đĩa bò", "Seafood platter": "Đĩa hải sản", "Fish & shrimp balls": "Cá viên & tôm viên", "Tofu & tofu skin": "Đậu hũ & tàu hũ ky", "Mushroom mix": "Nấm thập cẩm", "Hotpot greens": "Rau lẩu", "Udon noodles": "Mì udon", "Dipping sauce bar": "Quầy nước chấm", "Lychee soda": "Soda vải", "Milk tea base": "Cốt trà sữa"}).forEach(([k,v])=>VI_EXACT.set(k,v));
 function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';
   const card=$('card'),sc=card?card.scrollTop:0;if(RERENDER&&$('modal').classList.contains('show')){try{RERENDER()}catch(e){}if(card)card.scrollTop=sc}
   document.querySelectorAll('.tutov').forEach(e=>{if(TI>=0&&e.querySelector('.tutdots'))tutShow()});
@@ -3589,6 +3848,8 @@ function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e
 function langSwitch(){return `<div class="langsw notr"><button data-l="en" class="${LANG==='en'?'on':''}" onclick="setLang('en')">🇺🇸 English</button><button data-l="vi" class="${LANG==='vi'?'on':''}" onclick="setLang('vi')">🇻🇳 Tiếng Việt</button></div>`}
 
 initFin();initLab();initTax();initFarm();initOffice();initFun();
+if(S.biz&&S.biz!=='cafe'&&REC_SETS[S.biz]){REC_SETS.cafe=REC.slice();REC.splice(0,REC.length,...REC_SETS[S.biz])}
+applyBiz();
 if(!S.unl){S.unl={};Object.keys(GATES).forEach(g=>{if(gateOk(g))S.unl[g]=1});if(S.day>3){S.tut=1;S.tips=S.tips||{};Object.keys(TAB_TIPS).forEach(t=>S.tips[t]=1)}save()}
 if(LANG==='vi')setTimeout(()=>setLang('vi'),0);
 intro();
