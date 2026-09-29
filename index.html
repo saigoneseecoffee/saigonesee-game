@@ -3164,6 +3164,8 @@ function tabHeader(){const m=TABMETA[MT]||['🏠','Manage','Quản lý'];
 
 function manage(tab){
   if(tab)MT=tab;if(!MT)MT='hub';
+  const vsig=[MT,typeof IT!=='undefined'?IT:'',typeof TS!=='undefined'?TS:'',typeof FT!=='undefined'?FT:'',typeof EVT!=='undefined'?EVT:'',typeof RNT!=='undefined'?RNT:'',typeof BT!=='undefined'?BT:'',typeof FUNT!=='undefined'?FUNT:'',typeof BK!=='undefined'?BK:''].join('|');
+  const sameView=$('modal').classList.contains('show')&&vsig===window.__vsig;window.__vsig=vsig;
   const sc=$('card').scrollTop,locs=allLocs();if(!locs.includes(ML))ML='main';
   const tabs=[['staff','👥 Staff'],['branch','🏪 Branches'],['menu','💲 Prices'],['rd','🔬 R&D'],['mkt','📣 Marketing'],['fin','🏦 Finance'],['upg','🔧 Upgrades'],['eq','🛠️ Equipment'],['board','👔 Board'],['office','🏢 Office'],['invest','📈 Invest'],['farm','🌱 Farm'],['corp','🌎 Corporate'],['events','🎪 Events'],['group','🏢 Group'],['fun','🎰 Leisure'],['rev','⭐ Reviews'],['books','📒 Books'],['stats','📊 Stats']];
   let body='';
@@ -3296,7 +3298,7 @@ function manage(tab){
   const head=MT==='hub'?`<div class="mhead"><h2>${L('Manage','Quản lý')}</h2><span><button class="hgear notr" aria-label="Guide" onclick="guide()" style="margin-right:6px">📖</button><button class="hgear notr" aria-label="Settings" onclick="settings()">⚙️</button></span></div>`:tabHeader()+(tabTip(MT),'');
   showModal(`<div class="sheet">${head}<div class="sbody">${body}</div><div class="sfoot"><button class="big" onclick="preDay()">${L('Go to market','Đi chợ')}</button></div></div>`,()=>manage());
   if(MT==='upg'||MT==='eq')renderUpg();
-  reapplyFilters();$('card').scrollTop=sc;
+  reapplyFilters();keepScroll(sameView?sc:0);if(!sameView)$('card').scrollTop=0;
 }
 // Quick cash (social lending): available from day 1, no checks, very expensive.
 // Bank loans: need day 5+, a good credit score and sometimes branches, but much cheaper. Better credit = lower rate.
@@ -4191,7 +4193,7 @@ function restock(){S.spike=S.spikeNext;
 }
 const MGROUPS=[['bar','☕ Bar'],['top','🍓 Toppings'],['kit','🥖 Kitchen'],['world','🌏 Sourced from the Lab']];
 const mgOf=k=>ING[k].world||(ING[k].src&&!['bar','top','kit'].includes(ING[k].st))?'world':ING[k].src?'world':ING[k].st;
-function restockGroup(g){const need=needSet();let spent=0;ING_ORDER.filter(k=>need.has(k)&&mgOf(k)===g).forEach(k=>{while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c)break;S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q;lotAdd(k,ING[k].q)}});save();sfx.coin();toast('Restocked for '+fmt(spent));const sc=$('card').scrollTop;market();$('card').scrollTop=sc}
+function restockGroup(g){const need=needSet();let spent=0;ING_ORDER.filter(k=>need.has(k)&&mgOf(k)===g).forEach(k=>{while((S.inv[k]||0)<restockTo(k)){const c=ingPrice(k);if(S.money<c)break;S.money-=c;spent+=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+ING[k].q;lotAdd(k,ING[k].q)}});save();sfx.coin();toast('Restocked for '+fmt(spent));const sc=$('card').scrollTop;market();keepScroll(sc)}
 function market(){
   R=null;S.spike=S.spikeNext||null;hud();buildStation();
   const need=needSet(),keys=ING_ORDER.filter(k=>need.has(k));
@@ -4213,11 +4215,13 @@ function market(){
   <button class="big alt" onclick="manage('hub')">Manage shop</button>`,()=>market());
   document.querySelectorAll('#card button[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k,g=ING[k],n=+b.dataset.n,c=n===5?ingPrice(k)*(S.upg.freezer&&PROTEINS.includes(k)?3.75:S.upg.shelving?4:4.25):ingPrice(k);
     if(S.money<c)return;S.money-=c;S.spend+=c;S.inv[k]=(S.inv[k]||0)+g.q*n;lotAdd(k,g.q*n);save();sfx.coin();
-    const sc=$('card').scrollTop;market();$('card').scrollTop=sc});
+    const sc=$('card').scrollTop;market();keepScroll(sc)});
 }
 /* modals */
 let RERENDER=null;
-function showModal(html,rr){$('card').innerHTML=html;$('modal').classList.add('show');RERENDER=rr||null}
+// iPhone Safari ignores scrollTop set right after replacing content, so set it again after layout
+function keepScroll(sc){const c=$('card');if(!c||!sc)return;c.scrollTop=sc;requestAnimationFrame(()=>{c.scrollTop=sc;requestAnimationFrame(()=>{c.scrollTop=sc})});setTimeout(()=>{if(Math.abs(c.scrollTop-sc)>2)c.scrollTop=sc},60)}
+function showModal(html,rr){try{const a=document.activeElement;if(a&&a!==document.body&&$('card').contains(a))a.blur()}catch(e){}$('card').innerHTML=html;$('modal').classList.add('show');RERENDER=rr||null}
 function closeModal(){$('modal').classList.remove('show')}
 function addonMenu(){return `<div class="addons"><b>Add-ons</b><div>🥤 Size L +$1</div><div>💪 Extra shot +$1</div><div>🧂 Salted cream top +$1.5</div><div>🍖 Extra meat +$2</div><div>🍳 Fried egg +$1.5</div><div>🌶️ Chili (free)</div></div>`}
 function recRow(r){return `<div class="rec"><span class="e">${r.e}</span><div><b>${r.n}</b>${r.vi?` <span class="vi">${r.vi}</span>`:''}${S.newIds.includes(r.id)?'<span class="new">new</span>':''}<br><span class="m">${r.ing.map(k=>ING[k].e).join(' ')}</span>${r.ing.includes('pate')&&r.ing.includes('butter')?'<br><small>Comes with pâté and butter. Some customers ask for no pâté or no butter.</small>':''}</div><b>${fmt(price(r))}</b></div>`}
@@ -4335,7 +4339,7 @@ Object.entries({"Install a packaging line to see bags here": "Lắp dây chuyề
 VI_RX.unshift([/^Last night: ([\d.,]+) kg roasted · (\d+) bags packed · (\d+) bags in the warehouse$/,"Tối qua: $1 kg đã rang · $2 bịch đã đóng · $3 bịch trong kho"]);
 Object.entries({"🍜 Phở kitchen": "🍜 Bếp phở", "🥘 Hotpot kitchen": "🥘 Bếp lẩu", "🍲 Big stock pots": "🍲 Nồi hầm xương lớn", "Broth is always hot and ready: staff work 8% faster per level": "Nước dùng luôn nóng sẵn: nhân viên làm nhanh hơn 8% mỗi cấp", "🔥 Commercial gas range": "🔥 Bếp gas công nghiệp", "More burners: staff work 6% faster per level": "Thêm họng bếp: nhân viên làm nhanh hơn 6% mỗi cấp", "🍜 Rice noodle maker": "🍜 Máy tráng bánh phở", "Make your own bánh phở and bún: noodles 15% cheaper per level": "Tự làm bánh phở và bún: rẻ hơn 15% mỗi cấp", "🌿 Herb & sprout garden": "🌿 Vườn rau thơm & giá", "Grow your own herbs and bean sprouts: 20% cheaper per level": "Tự trồng rau thơm và giá: rẻ hơn 20% mỗi cấp", "🧊 Meat freezer": "🧊 Tủ đông thịt", "Beef, chicken and pork keep the full 5 days": "Bò, gà, heo giữ được đủ 5 ngày", "🧽 Dishwasher": "🧽 Máy rửa chén", "Bowls come back faster: +1 dining table per level": "Tô chén quay vòng nhanh hơn: thêm 1 bàn mỗi cấp", "📟 Handheld order tablets": "📟 Máy gọi món cầm tay", "Guests wait 8% longer and tip 4% more per level": "Khách chờ lâu hơn 8% và tip thêm 4% mỗi cấp", "🔥 Built-in induction burners": "🔥 Bếp từ âm bàn", "A burner at every seat: staff work 8% faster per level": "Mỗi chỗ ngồi một bếp: nhân viên làm nhanh hơn 8% mỗi cấp", "🔁 Longer conveyor belt": "🔁 Nối dài băng chuyền", "+1 table along the belt per level": "Thêm 1 bàn dọc băng chuyền mỗi cấp", "🥩 Meat slicer": "🥩 Máy thái thịt", "Slice your own beef: meat platters 12% cheaper per level": "Tự thái thịt bò: đĩa thịt rẻ hơn 12% mỗi cấp", "🍢 Fish ball machine": "🍢 Máy làm cá viên", "Make your own fish and shrimp balls: 20% cheaper per level": "Tự làm cá viên, tôm viên: rẻ hơn 20% mỗi cấp", "🧊 Walk-in freezer": "🧊 Kho đông", "Meat, seafood and fresh sides keep the full 5 days": "Thịt, hải sản và đồ nhúng giữ được đủ 5 ngày", "🧋 Milk tea machine": "🧋 Máy pha trà sữa", "Drinks 10% cheaper per level and staff a little faster": "Đồ uống rẻ hơn 10% mỗi cấp, nhân viên nhanh hơn chút", "📟 Tablet ordering at every seat": "📟 Máy tính bảng gọi món mỗi bàn"}).forEach(([k,v])=>VI_EXACT.set(k,v));
 function setLang(l){LANG=l;try{localStorage.setItem('saigonesee-lang',l)}catch(e){}document.documentElement.lang=l==='vi'?'vi':'en';
-  const card=$('card'),sc=card?card.scrollTop:0;if(RERENDER&&$('modal').classList.contains('show')){try{RERENDER()}catch(e){}if(card)card.scrollTop=sc}
+  const card=$('card'),sc=card?card.scrollTop:0;if(RERENDER&&$('modal').classList.contains('show')){try{RERENDER()}catch(e){}keepScroll(sc)}
   document.querySelectorAll('.tutov').forEach(e=>{if(TI>=0&&e.querySelector('.tutdots'))tutShow()});
   buildStation&&R&&buildStation();hud&&hud();
   if(l==='vi')trTree(document.body);else untrTree(document.body);document.querySelectorAll('.langsw button').forEach(b=>b.classList.toggle('on',b.dataset.l===l))}
