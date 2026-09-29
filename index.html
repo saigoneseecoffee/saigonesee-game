@@ -1882,7 +1882,7 @@ if(S.inv&&S.inv.patemayo!=null){S.inv.pate=(S.inv.pate||0)+S.inv.patemayo;S.inv.
 if(S.lastUsed&&S.lastUsed.patemayo!=null){S.lastUsed.pate=Math.ceil(S.lastUsed.patemayo*.6);S.lastUsed.butter=Math.ceil(S.lastUsed.patemayo*.4);delete S.lastUsed.patemayo}
 if(!S.v17){if(S.upg.tu===1)S.upg.tu=2;S.v17=1}
 S.wx=S.wx||{t:rollWx(S.day),n:rollWx(S.day+1)};S.loans=S.loans||[];S.hist=S.hist||[];S.ipo=S.ipo||{sold:0};S.spend=S.spend||0;S.apps=S.apps||{};S.catOffers=S.catOffers||[];S.hof=S.hof||[];
-S.brLvl=S.brLvl||{};S.brRate=S.brRate||{};S.brStats=S.brStats||{};S.lastUsed=S.lastUsed||{};S.branches=(S.branches||[]).filter(b=>LOC[b]);
+S.brLvl=S.brLvl||{};S.brRate=S.brRate||{};S.brStats=S.brStats||{};S.lastUsed=S.lastUsed||{};S.branches=[...new Set(S.branches||[])];
 S.staff.forEach(x=>{if(x.mo==null)x.mo=70});
 const STINFO={"MA": ["Massachusetts", "ne"], "RI": ["Rhode Island", "ne"], "NH": ["New Hampshire", "ne"], "ME": ["Maine", "ne"], "CT": ["Connecticut", "ne"], "VT": ["Vermont", "ne"], "NY": ["New York", "ma"], "NJ": ["New Jersey", "ma"], "PA": ["Pennsylvania", "ma"], "DE": ["Delaware", "ma"], "MD": ["Maryland", "ma"], "DC": ["Washington, D.C.", "ma"], "VA": ["Virginia", "sa"], "NC": ["North Carolina", "sa"], "SC": ["South Carolina", "sa"], "GA": ["Georgia", "sa"], "FL": ["Florida", "sa"], "TN": ["Tennessee", "south"], "KY": ["Kentucky", "south"], "AL": ["Alabama", "south"], "LA": ["Louisiana", "south"], "MS": ["Mississippi", "south"], "AR": ["Arkansas", "south"], "WV": ["West Virginia", "south"], "TX": ["Texas", "south"], "OK": ["Oklahoma", "south"], "IL": ["Illinois", "mw"], "MI": ["Michigan", "mw"], "OH": ["Ohio", "mw"], "IN": ["Indiana", "mw"], "WI": ["Wisconsin", "mw"], "MN": ["Minnesota", "mw"], "MO": ["Missouri", "mw"], "NE": ["Nebraska", "mw"], "IA": ["Iowa", "mw"], "KS": ["Kansas", "mw"], "ND": ["North Dakota", "mw"], "SD": ["South Dakota", "mw"], "CO": ["Colorado", "mtn"], "UT": ["Utah", "mtn"], "ID": ["Idaho", "mtn"], "AZ": ["Arizona", "mtn"], "NM": ["New Mexico", "mtn"], "NV": ["Nevada", "mtn"], "MT": ["Montana", "mtn"], "WY": ["Wyoming", "mtn"], "CA": ["California", "pac"], "WA": ["Washington", "pac"], "OR": ["Oregon", "pac"], "AK": ["Alaska", "pac"], "HI": ["Hawaii", "pac"], "ON": ["Ontario", "can"], "QC": ["Québec", "can"], "BC": ["British Columbia", "can"], "AB": ["Alberta", "can"], "MB": ["Manitoba", "can"], "SK": ["Saskatchewan", "can"], "NS": ["Nova Scotia", "can"], "NL": ["Newfoundland", "can"], "CDMX": ["Ciudad de México", "mex"], "JAL": ["Jalisco", "mex"], "NL-MX": ["Nuevo León", "mex"], "QROO": ["Quintana Roo", "mex"], "BCS": ["Baja California Sur", "mex"], "BC-MX": ["Baja California", "mex"], "OAX": ["Oaxaca", "mex"], "PR": ["Puerto Rico", "mex"]};
 const BRREG=[["ne", "🦞", "New England", "New England"], ["ma", "🗽", "Mid-Atlantic", "Trung Đại Tây Dương"], ["sa", "🌴", "South Atlantic", "Nam Đại Tây Dương"], ["south", "🎸", "The South & Texas", "Miền Nam & Texas"], ["mw", "🌽", "Midwest", "Trung Tây"], ["mtn", "🏔️", "Mountain West", "Vùng núi phía Tây"], ["pac", "🌊", "Pacific Coast, Alaska & Hawaii", "Bờ Thái Bình Dương, Alaska & Hawaii"], ["can", "🍁", "Canada", "Canada"], ["mex", "🌮", "Mexico & Puerto Rico", "Mexico & Puerto Rico"]];
@@ -1935,8 +1935,8 @@ const totalWage=()=>S.staff.reduce((a,x)=>a+x.wage,0);
 let R=null, last=0, raf=0, uid=0;
 function fresh(){return {wx:{t:'sunny',n:rollWx(2)},loans:[],hist:[],ipo:{sold:0},spend:0,apps:{},catOffers:[],catJob:null,known:REC.filter(r=>r.d===1&&!r.inv).map(r=>r.id),rd:[],camps:[],comps:[],buzz:0,regs:[],newIds:[],prices:{},day:1,money:40,rating:4,upg:Object.fromEntries(UPG_IDS.map(k=>[k,0])),brLvl:{},brRate:{},brStats:{},lastUsed:{},best:1,inv:{...STARTER},staff:[],branches:[],cands:genCands(),lastBr:{}}}
 // ---------- Saving (v94): frequent autosave, backup copy, never fail silently ----------
-function load(){for(const k of [KEY,KEY+'-bak']){try{const v=localStorage.getItem(k);if(v){const o=JSON.parse(v);if(o&&typeof o==='object'&&o.day)return o}}catch(e){}}return null}
-let SAVE_AT=0,SAVE_FAILS=0,SAVE_WARNED=0;
+function load(){for(const k of [KEY,KEY+'-bak']){try{const v=localStorage.getItem(k);if(v){const o=JSON.parse(v);if(o&&typeof o==='object'&&(o.day||o.__reset))return o}}catch(e){}}return null}
+var SAVE_AT=SAVE_AT||0,SAVE_FAILS=SAVE_FAILS||0,SAVE_WARNED=SAVE_WARNED||0;
 const agoTxt=t=>{const d=Math.round((Date.now()-t)/1000);return d<5?L('just now','vừa xong'):d<60?L(d+' seconds ago',d+' giây trước'):L(Math.round(d/60)+' min ago',Math.round(d/60)+' phút trước')};
 function compactSave(){try{if(S.ledger&&S.ledger.length>420)S.ledger=S.ledger.slice(-420);if(S.hist&&S.hist.length>120)S.hist=S.hist.slice(-120);if(S.revFeed&&S.revFeed.length>60)S.revFeed=S.revFeed.slice(-60);
   Object.values(S.brStats||{}).forEach(b=>{if(b&&b.reviews)b.reviews=b.reviews.slice(-1)});if(S.fin&&S.fin.hist)Object.keys(S.fin.hist).forEach(k=>{if(S.fin.hist[k].length>90)S.fin.hist[k]=S.fin.hist[k].slice(-90)})}catch(e){}}
@@ -2157,7 +2157,14 @@ function exportSave(){save();const data=JSON.stringify(saveBlob());const name=`s
 function applyLoad(txt){let d;try{d=JSON.parse(txt.trim().startsWith('{')?txt:decodeURIComponent(escape(atob(txt.trim()))))}catch(e){toast(L('That file or code is not a Saigonesee save','File hoặc mã này không phải bản lưu Saigonesee'));return}
   if(!d||d.game!=='saigonesee'||!d.S||!d.S.day){toast(L('That file or code is not a Saigonesee save','File hoặc mã này không phải bản lưu Saigonesee'));return}
   if(!confirm(L(`Load ${d.S.player||'this'} save (day ${d.S.day})? Your current progress on this device will be replaced.`,`Mở bản lưu của ${d.S.player||'người chơi'} (ngày ${d.S.day})? Tiến độ hiện tại trên máy này sẽ bị thay thế.`)))return;
-  try{localStorage.setItem(KEY,JSON.stringify(d.S));if(d.settings)localStorage.setItem('saigonesee-settings',JSON.stringify(d.settings));if(d.lang)localStorage.setItem('saigonesee-lang',d.lang);if(d.hof)localStorage.setItem('saigonesee-hof',JSON.stringify(d.hof))}catch(e){}
+  // stop autosave first, so leaving the page can't write the old game over the one being loaded
+  if(S)S.__closed=1;R=null;
+  const js=JSON.stringify(d.S);
+  try{localStorage.removeItem(KEY+'-bak');localStorage.setItem(KEY,js)}catch(e){
+    try{Object.keys(localStorage).filter(k=>k.startsWith('saigonesee')&&k!==KEY&&!/settings|lang/.test(k)).forEach(k=>localStorage.removeItem(k));localStorage.setItem(KEY,js)}
+    catch(e2){if(S)delete S.__closed;toast('⚠️ '+L('Not enough space on this device to open that save.','Máy không đủ chỗ để mở bản lưu này.'));return}}
+  try{localStorage.setItem(KEY+'-bak',js)}catch(e){}
+  try{if(d.settings)localStorage.setItem('saigonesee-settings',JSON.stringify(d.settings));if(d.lang)localStorage.setItem('saigonesee-lang',d.lang);if(d.hof)localStorage.setItem('saigonesee-hof',JSON.stringify(d.hof))}catch(e){}
   location.reload()}
 function importFile(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>applyLoad(String(r.result));r.readAsText(f);inp.value=''}
 function copyCode(){save();const code=btoa(unescape(encodeURIComponent(JSON.stringify(saveBlob()))));
@@ -4229,7 +4236,7 @@ function confirmReset(){
 function pause2(){R.paused=false;pause()}
 // Start over = write a reset marker and reload, so every part of the game (lab inventions, farm, office…) starts clean
 function markReset(){try{localStorage.setItem(KEY,JSON.stringify({__reset:1,player:S.player,pid:S.pid,run:(S.run||1)+1,tips:S.tips||{}}))}catch(e){}}
-function doReset(){R=null;markReset();location.reload()}
+function doReset(){R=null;markReset();S.__closed=1;try{localStorage.removeItem(KEY+'-bak')}catch(e){}location.reload()}
 function intro(){
   hud();buildStreet();buildStation();renderTray();
   const cont=S.day>1;
@@ -4342,6 +4349,8 @@ function langSwitch(){return `<div class="langsw notr"><button data-l="en" class
   OVH.forEach(o=>o[4]*=2)})();
 initFin();initLab();initTax();initFarm();initOffice();initFun();
 (S.branches||[]).filter(id=>id.includes('@')).forEach(id=>{const [b,z]=id.split('@');if(LOC[b]&&BIZ[z])ensureBizLoc(b,z)});
+// drop only branches that truly don't exist, now that Asia and restaurant/hotpot branches are known
+{const before=S.branches.length;S.branches=S.branches.filter(b=>LOC[b]);if(S.branches.length<before)console.warn('dropped unknown branches',before-S.branches.length)}
 if(S.biz&&S.biz!=='cafe'&&REC_SETS[S.biz]){REC_SETS.cafe=REC.slice();REC.splice(0,REC.length,...REC_SETS[S.biz])}
 applyBiz();
 if(!S.unl){S.unl={};Object.keys(GATES).forEach(g=>{if(gateOk(g))S.unl[g]=1});if(S.day>3){S.tut=1;S.tips=S.tips||{};Object.keys(TAB_TIPS).forEach(t=>S.tips[t]=1)}save()}
