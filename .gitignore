@@ -1,0 +1,6 @@
+# Never publish the private source
+*SOURCE*
+*source*.html
+*-PRIVATE*
+*.bak
+node_modules/
