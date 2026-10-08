@@ -1,0 +1,35 @@
+Copyright (c) 2026 Saigonesee. All rights reserved.
+
+This repository, including its source code, game design, characters, artwork,
+pixel sprites, story, text and other assets (the "Software"), is the property
+of Saigonesee.
+
+You may view the Software and play the published game for personal,
+non-commercial purposes.
+
+Without prior written permission from Saigonesee, you may not:
+  - copy, modify, merge or create derivative works from the Software;
+  - publish, distribute, sublicense, sell or host copies of the Software,
+    in whole or in part, including modified or obfuscated versions;
+  - reuse the characters, artwork, sprites or story in other projects;
+  - remove or alter this notice or any copyright notice in the Software.
+
+Forking this repository on GitHub, as allowed by the GitHub Terms of Service,
+does not grant any of the rights above.
+
+Third-party components keep their own licenses (for example, map data from
+Natural Earth and US Atlas, which are public domain).
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL SAIGONESEE BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+To request permission: contact Saigonesee at <your-email@example.com>.
+
+---------------------------------------------------------------------------
+Tóm tắt tiếng Việt (bản tiếng Anh ở trên là bản chính thức):
+Mã nguồn, thiết kế, nhân vật, hình ảnh, cốt truyện và mọi tài nguyên trong
+repo này thuộc về Saigonesee. Bạn được xem mã và chơi game cho mục đích cá
+nhân, phi thương mại. Không được sao chép, chỉnh sửa, phát hành lại, bán, hay
+dùng lại nhân vật, hình ảnh, cốt truyện khi chưa có sự đồng ý bằng văn bản
+của Saigonesee. Không được xoá thông báo bản quyền này.
